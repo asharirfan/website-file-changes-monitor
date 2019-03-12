@@ -46,6 +46,31 @@ final class WP_File_Changes_Monitor {
 	 * Contructor.
 	 */
 	public function __construct() {
+		$this->define_constants();
 		do_action( 'wp_file_changes_monitor_loaded' );
+	}
+
+	/**
+	 * Define constants.
+	 */
+	public function define_constants() {
+		$this->define( 'WPFCM_VERSION', $this->version );
+		$this->define( 'WPFCM_BASE_NAME', plugin_basename( WPFCM_PLUGIN_FILE ) );
+		$this->define( 'WPFCM_BASE_URL', plugin_dir_url( WPFCM_PLUGIN_FILE ) );
+		$this->define( 'WPFCM_BASE_DIR', plugin_dir_path( WPFCM_PLUGIN_FILE ) );
+		$this->define( 'WPFCM_OPT_PREFIX', 'wpfcm-' );
+		$this->define( 'WPFCM_MIN_PHP_VERSION', '5.5.0' );
+	}
+
+	/**
+	 * Define constant if not defined already.
+	 *
+	 * @param string $name  - Constant name.
+	 * @param string $value - Constant value.
+	 */
+	public function define( $name, $value ) {
+		if ( ! defined( $name ) ) {
+			define( $name, $value );
+		}
 	}
 }
