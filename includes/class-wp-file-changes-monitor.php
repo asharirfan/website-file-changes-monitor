@@ -47,6 +47,7 @@ final class WP_File_Changes_Monitor {
 	 */
 	public function __construct() {
 		$this->define_constants();
+		$this->includes();
 		do_action( 'wp_file_changes_monitor_loaded' );
 	}
 
@@ -56,8 +57,8 @@ final class WP_File_Changes_Monitor {
 	public function define_constants() {
 		$this->define( 'WPFCM_VERSION', $this->version );
 		$this->define( 'WPFCM_BASE_NAME', plugin_basename( WPFCM_PLUGIN_FILE ) );
-		$this->define( 'WPFCM_BASE_URL', plugin_dir_url( WPFCM_PLUGIN_FILE ) );
-		$this->define( 'WPFCM_BASE_DIR', plugin_dir_path( WPFCM_PLUGIN_FILE ) );
+		$this->define( 'WPFCM_BASE_URL', trailingslashit( plugin_dir_url( WPFCM_PLUGIN_FILE ) ) );
+		$this->define( 'WPFCM_BASE_DIR', trailingslashit( plugin_dir_path( WPFCM_PLUGIN_FILE ) ) );
 		$this->define( 'WPFCM_OPT_PREFIX', 'wpfcm-' );
 		$this->define( 'WPFCM_MIN_PHP_VERSION', '5.5.0' );
 	}
@@ -72,5 +73,12 @@ final class WP_File_Changes_Monitor {
 		if ( ! defined( $name ) ) {
 			define( $name, $value );
 		}
+	}
+
+	/**
+	 * Include plugin files.
+	 */
+	public function includes() {
+		require_once WPFCM_BASE_DIR . 'includes/class-wpfcm-autoloader.php';
 	}
 }
