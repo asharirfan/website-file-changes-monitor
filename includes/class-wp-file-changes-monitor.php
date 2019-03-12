@@ -80,5 +80,9 @@ final class WP_File_Changes_Monitor {
 	 */
 	public function includes() {
 		require_once WPFCM_BASE_DIR . 'includes/class-wpfcm-autoloader.php';
+
+		if ( is_admin() ) {
+			require_once WPFCM_BASE_DIR . 'includes/admin/class-wpfcm-admin.php';
+		}
 	}
 }
