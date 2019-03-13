@@ -66,7 +66,15 @@ class WPFCM_Autoloader {
 		}
 
 		$file = $this->get_file_name( $class );
-		$this->load_file( $this->include_path . $file );
+		$path = '';
+
+		if ( 0 === strpos( $class, 'wpfcm_admin_' ) ) {
+			$path = $this->include_path . 'admin/';
+		}
+
+		if ( empty( $path ) || ! $this->load_file( $path . $file ) ) {
+			$this->load_file( $this->include_path . $file );
+		}
 	}
 }
 new WPFCM_Autoloader();
