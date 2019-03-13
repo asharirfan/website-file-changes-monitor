@@ -18,7 +18,9 @@ class WPFCM_Admin_Menus {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
+		add_action( 'admin_menu', array( $this, 'add_admin_menu' ), 10 );
+		add_action( 'admin_menu', array( $this, 'settings_menu' ), 20 );
+		add_action( 'admin_menu', array( $this, 'about_menu' ), 30 );
 	}
 
 	/**
@@ -33,7 +35,19 @@ class WPFCM_Admin_Menus {
 	public function add_admin_menu() {
 		add_menu_page( __( 'File Changes', 'wp-file-changes-monitor' ), __( 'File Changes', 'wp-file-changes-monitor' ), 'manage_options', 'wpfcm-file-changes', null, null, '20' );
 		add_submenu_page( 'wpfcm-file-changes', __( 'File Changes', 'wp-file-changes-monitor' ), __( 'File Changes', 'wp-file-changes-monitor' ), 'manage_options', 'wpfcm-file-changes', array( $this, 'file_changes_page' ) );
-		add_submenu_page( 'wpfcm-file-changes', __( 'Settings', 'wp-file-changes-monitor' ), __( 'Settings', 'wp-file-changes-monitor' ), 'manage_options', 'wpfcm-settings', array( $this, 'settings_page' ) );
+	}
+
+	/**
+	 * Add Settings Menu.
+	 */
+	public function settings_menu() {
+		add_submenu_page( 'wpfcm-file-changes', __( 'File Changes Settings', 'wp-file-changes-monitor' ), __( 'Settings', 'wp-file-changes-monitor' ), 'manage_options', 'wpfcm-settings', array( $this, 'settings_page' ) );
+	}
+
+	/**
+	 * Add About Menu.
+	 */
+	public function about_menu() {
 		add_submenu_page( 'wpfcm-file-changes', __( 'Help & About', 'wp-file-changes-monitor' ), __( 'Help & About', 'wp-file-changes-monitor' ), 'manage_options', 'wpfcm-about', array( $this, 'about_page' ) );
 	}
 
@@ -48,7 +62,7 @@ class WPFCM_Admin_Menus {
 	 * Settings Page.
 	 */
 	public function settings_page() {
-		echo 'Hello, World';
+		WPFCM_Admin_Settings::output();
 	}
 
 	/**
