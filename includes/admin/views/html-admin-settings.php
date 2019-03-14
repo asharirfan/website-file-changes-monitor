@@ -113,7 +113,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 
 ?>
 
-<div class="wrap">
+<div class="wrap wpfcm-settings">
 	<h1><?php esc_html_e( 'File Changes Settings', 'wp-file-changes-monitor' ); ?></h1>
 	<form method="post" action="" enctype="multipart/form-data">
 		<h3><?php esc_html_e( 'Which file changes events do you want to keep a log of in the activity log?', 'wp-file-changes-monitor' ); ?></h3>
@@ -171,7 +171,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 							<span class="description"><?php esc_html_e( 'Hour', 'wp-file-changes-monitor' ); ?></span>
 						</label>
 
-						<label class="hide">
+						<label>
 							<select name="wpfcm-settings[scan-day]">
 								<?php foreach ( $scan_days as $value => $html ) : ?>
 									<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $settings['day'] ); ?>><?php echo esc_html( $html ); ?></option>
@@ -181,7 +181,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 							<span class="description"><?php esc_html_e( 'Day', 'wp-file-changes-monitor' ); ?></span>
 						</label>
 
-						<label class="hide">
+						<label>
 							<select name="wpfcm-settings[scan-date]">
 								<?php foreach ( $scan_date as $value => $html ) : ?>
 									<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $settings['date'] ); ?>><?php echo esc_html( $html ); ?></option>
@@ -239,7 +239,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 				<th><label for="wpfcm-settings-exclude-dirs"><?php esc_html_e( 'Exclude All Files in These Directories', 'wp-file-changes-monitor' ); ?></label></th>
 				<td>
 					<div class="wpfcm-files-container">
-						<div id="wpfcm-exclude-dir-list">
+						<div class="exclude-list" id="wpfcm-exclude-dir-list">
 							<?php foreach ( $settings['exclude-dirs'] as $dir ) : ?>
 								<span id="wpfcm-dir-<?php echo esc_attr( $dir ); ?>">
 									<input type="checkbox" name="wpfcm-settings[scan-exclude-dirs][]" id="<?php echo esc_attr( $dir ); ?>" value="<?php echo esc_attr( $dir ); ?>" checked />
@@ -247,11 +247,11 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 								</span>
 							<?php endforeach; ?>
 						</div>
-						<input class="button" id="wpfcm-exclude-dir-remove" type="button" value="<?php esc_html_e( 'REMOVE', 'wp-file-changes-monitor' ); ?>" />
+						<input class="button remove" data-exclude-type="dir" type="button" value="<?php esc_html_e( 'REMOVE', 'wp-file-changes-monitor' ); ?>" />
 					</div>
 					<div class="wpfcm-files-container">
-						<input type="text" id="wpfcm-exclude-dir-name" />
-						<input id="wpfcm-exclude-dir-add" class="button" type="button" value="<?php esc_html_e( 'ADD', 'wp-file-changes-monitor' ); ?>" />
+						<input class="name" type="text">
+						<input class="button" data-exclude-type="dir" type="button" value="<?php esc_html_e( 'ADD', 'wp-file-changes-monitor' ); ?>" />
 					</div>
 					<p class="description">
 						<?php esc_html_e( 'Specify the name of the directory and the path to it in relation to the website\'s root. For example, if you want to want to exclude all files in the sub directory dir1/dir2 specify the following:', 'wp-file-changes-monitor' ); ?>
@@ -266,7 +266,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 				<th><label for="wpfcm-settings-exclude-filenames"><?php esc_html_e( 'Exclude These Files', 'wp-file-changes-monitor' ); ?></label></th>
 				<td>
 					<div class="wpfcm-files-container">
-						<div id="wpfcm-exclude-file-list">
+						<div class="exclude-list" id="wpfcm-exclude-file-list">
 							<?php foreach ( $settings['exclude-files'] as $file ) : ?>
 								<span id="wpfcm-file-<?php echo esc_attr( $file ); ?>">
 									<input type="checkbox" name="wpfcm-settings[scan-exclude-files][]" id="<?php echo esc_attr( $file ); ?>" value="<?php echo esc_attr( $file ); ?>" checked />
@@ -274,11 +274,11 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 								</span>
 							<?php endforeach; ?>
 						</div>
-						<input class="button" id="wpfcm-exclude-file-remove" type="button" value="<?php esc_html_e( 'REMOVE', 'wp-file-changes-monitor' ); ?>" />
+						<input class="button remove" data-exclude-type="file" type="button" value="<?php esc_html_e( 'REMOVE', 'wp-file-changes-monitor' ); ?>" />
 					</div>
 					<div class="wpfcm-files-container">
-						<input type="text" id="wpfcm-exclude-file-name" />
-						<input id="wpfcm-exclude-file-add" class="button" type="button" value="<?php esc_html_e( 'ADD', 'wp-file-changes-monitor' ); ?>" />
+						<input class="name" type="text">
+						<input class="button" data-exclude-type="file" type="button" value="<?php esc_html_e( 'ADD', 'wp-file-changes-monitor' ); ?>" />
 					</div>
 					<p class="description">
 						<?php esc_html_e( 'Specify the name and extension of the file(s) you want to exclude. Wildcard not supported. There is no need to specify the path of the file.', 'wp-file-changes-monitor' ); ?>
@@ -291,7 +291,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 				<th><label for="wpfcm-settings-exclude-extensions"><?php esc_html_e( 'Exclude these File Types', 'wp-file-changes-monitor' ); ?></label></th>
 				<td>
 					<div class="wpfcm-files-container">
-						<div id="wpfcm-exclude-extension-list">
+						<div class="exclude-list" id="wpfcm-exclude-extension-list">
 							<?php foreach ( $settings['exclude-exts'] as $file_type ) : ?>
 								<span id="wpfcm-extension-<?php echo esc_attr( $file_type ); ?>">
 									<input type="checkbox" name="wpfcm-settings[scan-exclude-exts][]" id="<?php echo esc_attr( $file_type ); ?>" value="<?php echo esc_attr( $file_type ); ?>" checked />
@@ -299,11 +299,11 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 								</span>
 							<?php endforeach; ?>
 						</div>
-						<input class="button" id="wpfcm-exclude-extension-remove" type="button" value="<?php esc_html_e( 'REMOVE', 'wp-file-changes-monitor' ); ?>" />
+						<input class="button remove" data-exclude-type="extension" type="button" value="<?php esc_html_e( 'REMOVE', 'wp-file-changes-monitor' ); ?>" />
 					</div>
 					<div class="wpfcm-files-container">
-						<input type="text" id="wpfcm-exclude-extension-name" />
-						<input id="wpfcm-exclude-extension-add" class="button" type="button" value="<?php esc_html_e( 'ADD', 'wp-file-changes-monitor' ); ?>" />
+						<input class="name" type="text">
+						<input class="button" type="button" data-exclude-type="extension" value="<?php esc_html_e( 'ADD', 'wp-file-changes-monitor' ); ?>" />
 					</div>
 					<p class="description">
 						<?php esc_html_e( 'Specify the extension of the file types you want to exclude. You should exclude any type of logs and backup files that tend to be very big.', 'wp-file-changes-monitor' ); ?>
