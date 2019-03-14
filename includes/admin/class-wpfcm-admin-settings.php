@@ -53,6 +53,16 @@ class WPFCM_Admin_Settings {
 	}
 
 	/**
+	 * Save plugin option.
+	 *
+	 * @param string $option - Option name.
+	 * @param mixed  $value  - Option value.
+	 */
+	public static function save_option( $option, $value ) {
+		update_option( WPFCM_OPT_PREFIX . $option, $value );
+	}
+
+	/**
 	 * Initiate Settings Page.
 	 */
 	public static function output() {
@@ -64,10 +74,22 @@ class WPFCM_Admin_Settings {
 	}
 
 	/**
-	 * Settings Page.
+	 * Save Settings.
 	 */
-	public static function settings_page() {
-		// Include the view file.
-		require_once trailingslashit( dirname( __FILE__ ) ) . 'views/html-admin-settings.php';
+	public static function save() {
+		check_admin_referer( 'wpfcm-save-admin-settings' );
+
+		if ( isset( $_POST['wpfcm-settings'] ) ) {
+			$wpfcm_settings = $_POST['wpfcm-settings']; // @codingStandardsIgnoreLine
+
+			foreach ( $wpfcm_settings as $key => $value ) {
+				if ( is_array( $value ) ) {
+					$value = array_map( 'sanitize_text_field', wp_unslash( $value ) );
+				} else {
+					$value = sanitize_text_field( wp_unslash( $value ) );
+				}
+				self::save_option( $key, $value );
+			}
+		}
 	}
 }

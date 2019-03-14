@@ -41,7 +41,8 @@ class WPFCM_Admin_Menus {
 	 * Add Settings Menu.
 	 */
 	public function settings_menu() {
-		add_submenu_page( 'wpfcm-file-changes', __( 'File Changes Settings', 'wp-file-changes-monitor' ), __( 'Settings', 'wp-file-changes-monitor' ), 'manage_options', 'wpfcm-settings', array( $this, 'settings_page' ) );
+		$settings_page = add_submenu_page( 'wpfcm-file-changes', __( 'File Changes Settings', 'wp-file-changes-monitor' ), __( 'Settings', 'wp-file-changes-monitor' ), 'manage_options', 'wpfcm-settings', array( $this, 'settings_page' ) );
+		add_action( "load-$settings_page", array( $this, 'settings_page_init' ) );
 	}
 
 	/**
@@ -63,6 +64,15 @@ class WPFCM_Admin_Menus {
 	 */
 	public function settings_page() {
 		WPFCM_Admin_Settings::output();
+	}
+
+	/**
+	 * Settings Page Initialized.
+	 */
+	public function settings_page_init() {
+		if ( ! empty( $_POST['submit'] ) ) { // @codingStandardsIgnoreLine
+			WPFCM_Admin_Settings::save();
+		}
 	}
 
 	/**
