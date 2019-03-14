@@ -66,6 +66,23 @@ class WPFCM_Admin_Settings {
 	 * Initiate Settings Page.
 	 */
 	public static function output() {
+		$suffix = ( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? '' : '.min'; // Check for debug mode.
+
+		wp_enqueue_style(
+			'wpfcm-settings-styles',
+			WPFCM_BASE_URL . 'assets/css/style' . $suffix . '.css',
+			array(),
+			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WPFCM_BASE_DIR . 'assets/css/style.css' ) : WPFCM_VERSION
+		);
+
+		wp_enqueue_script(
+			'wpfcm-settings',
+			WPFCM_BASE_URL . 'assets/js/custom' . $suffix . '.js',
+			array( 'jquery' ),
+			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WPFCM_BASE_DIR . 'assets/js/custom.js' ) : WPFCM_VERSION,
+			true
+		);
+
 		// Get plugin settings.
 		$settings = self::get_settings();
 
