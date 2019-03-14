@@ -1,0 +1,10 @@
+.wpfcm-settings td fieldset label.hidden{display:none}
+.wpfcm-files-container{display:table;margin-bottom:5px}
+.wpfcm-files-container .exclude-list{display:inline-block;vertical-align:top;background:#fff;width:250px;height:230px;overflow-y:scroll;border:1px solid #ddd;padding:10px}
+.wpfcm-files-container .exclude-list input[type="checkbox"]{display:none}
+.wpfcm-files-container .exclude-list input[type="checkbox"]+label{background:#f1f1f1}
+.wpfcm-files-container .exclude-list input[type="checkbox"]:checked+label{background:0}
+.wpfcm-files-container .exclude-list label{display:block;margin-bottom:2px;padding:5px;-webkit-transition:all .2s linear;transition:all .2s linear}
+.wpfcm-files-container .exclude-list label:hover{background:#f1f1f1;-webkit-transition:.2s all linear;transition:.2s all linear}
+.wpfcm-files-container .button{margin-left:10px}
+.wpfcm-files-container .name{display:inline-block;width:271px;padding:4px 5px}

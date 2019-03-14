@@ -1,0 +1,63 @@
+/**
+ * Plugin Styles.
+ */
+
+.wpfcm-settings {
+	td {
+		fieldset {
+			label.hidden {
+				display: none;
+			}
+		}
+	}
+}
+
+.wpfcm-files-container {
+	display: table;
+	margin-bottom: 5px;
+
+	.exclude-list {
+		display: inline-block;
+		vertical-align: top;
+		background: #fff;
+		width: 250px;
+		height: 230px;
+		overflow-y: scroll;
+		border: 1px solid #ddd;
+		padding: 10px;
+
+		input[type="checkbox"] {
+			display: none;
+		}
+
+		input[type="checkbox"] + label {
+			background: #f1f1f1;
+		}
+
+		input[type="checkbox"]:checked + label {
+			background: none;
+		}
+
+		label {
+			display: block;
+			margin-bottom: 2px;
+			padding: 5px;
+			transition: all 0.2s linear;
+
+			&:hover {
+				background: #f1f1f1;
+				transition: 0.2s all linear;
+			}
+		}
+	}
+
+	.button {
+		margin-left: 10px;
+	}
+
+	.name {
+		display: inline-block;
+		width: 271px;
+		padding: 4px 5px;
+	}
+}
