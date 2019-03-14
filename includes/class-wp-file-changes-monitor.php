@@ -85,4 +85,21 @@ final class WP_File_Changes_Monitor {
 			require_once WPFCM_BASE_DIR . 'includes/admin/class-wpfcm-admin.php';
 		}
 	}
+
+	/**
+	 * Error Logger
+	 *
+	 * Logs given input into debug.log file in debug mode.
+	 *
+	 * @param mixed $message - Error message.
+	 */
+	public function error_log( $message ) {
+		if ( WP_DEBUG === true ) {
+			if ( is_array( $message ) || is_object( $message ) ) {
+				error_log( print_r( $message, true ) );
+			} else {
+				error_log( $message );
+			}
+		}
+	}
 }
