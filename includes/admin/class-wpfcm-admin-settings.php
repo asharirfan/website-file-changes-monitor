@@ -56,7 +56,11 @@ class WPFCM_Admin_Settings {
 	 * Initiate Settings Page.
 	 */
 	public static function output() {
-		self::settings_page();
+		// Get plugin settings.
+		$settings = self::get_settings();
+
+		// Include the view file.
+		require_once trailingslashit( dirname( __FILE__ ) ) . 'views/html-admin-settings.php';
 	}
 
 	/**

@@ -123,17 +123,17 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 				<td>
 					<fieldset>
 						<label for="added">
-							<input type="checkbox" id="added" name="wpfcm-settings[type]">
+							<input type="checkbox" name="wpfcm-settings[scan-type][]" value="added" <?php echo in_array( 'added', $settings['type'], true ) ? 'checked' : false; ?>>
 							<span><?php esc_html_e( 'Files are added', 'wp-file-changes-monitor' ); ?></span>
 						</label>
 						<br>
 						<label for="deleted">
-							<input type="checkbox" id="deleted" name="wpfcm-settings[type]">
+							<input type="checkbox" name="wpfcm-settings[scan-type][]" value="deleted" <?php echo in_array( 'deleted', $settings['type'], true ) ? 'checked' : false; ?>>
 							<span><?php esc_html_e( 'Files are deleted', 'wp-file-changes-monitor' ); ?></span>
 						</label>
 						<br>
 						<label for="modified">
-							<input type="checkbox" id="modified" name="wpfcm-settings[type]">
+							<input type="checkbox" name="wpfcm-settings[scan-type][]" value="modified" <?php echo in_array( 'modified', $settings['type'], true ) ? 'checked' : false; ?>>
 							<span><?php esc_html_e( 'Files are modified', 'wp-file-changes-monitor' ); ?></span>
 						</label>
 					</fieldset>
@@ -143,19 +143,15 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 		<!-- Type of Changes -->
 
 		<h3><?php esc_html_e( 'When should the plugin scan your website for file changes?', 'wp-file-changes-monitor' ); ?></h3>
-		<p class="description">
-			<?php esc_html_e( 'By default the plugin will run file integrity scans once a week. If you can, ideally you should run file integrity scans on a daily basis. The file integrity scanner is very efficient and requires very little resources. Though if you have a fairly large website we recommend you to scan it when it is the least busy. The scan process should only take a few seconds to complete.', 'wp-file-changes-monitor' ); ?>
-		</p>
+		<p class="description"><?php esc_html_e( 'By default the plugin will run file changes scans once a week. If you can, ideally you should run file changes scans on a daily basis. The file changes scanner is very efficient and requires very little resources. Though if you have a fairly large website we recommend you to scan it when it is the least busy. The scan process should only take a few seconds to complete.', 'wp-file-changes-monitor' ); ?></p>
 		<table class="form-table">
 			<tr>
 				<th><label for="wpfcm-settings-frequency"><?php esc_html_e( 'Scan Frequency', 'wp-file-changes-monitor' ); ?></label></th>
 				<td>
 					<fieldset>
-						<select name="wpfcm-settings[frequency]">
+						<select name="wpfcm-settings[scan-frequency]">
 							<?php foreach ( $frequency_options as $value => $html ) : ?>
-								<option value="<?php echo esc_attr( $value ); ?>">
-									<?php echo esc_html( $html ); ?>
-								</option>
+								<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $settings['frequency'] ); ?>><?php echo esc_html( $html ); ?></option>
 							<?php endforeach; ?>
 						</select>
 					</fieldset>
@@ -168,43 +164,31 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 						<label>
 							<select name="wpfcm-settings[scan-hour]">
 								<?php foreach ( $scan_hours as $value => $html ) : ?>
-									<option value="<?php echo esc_attr( $value ); ?>">
-										<?php echo esc_html( $html ); ?>
-									</option>
+									<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $settings['hour'] ); ?>><?php echo esc_html( $html ); ?></option>
 								<?php endforeach; ?>
 							</select>
 							<br />
-							<span class="description">
-								<?php esc_html_e( 'Hour', 'wp-file-changes-monitor' ); ?>
-							</span>
+							<span class="description"><?php esc_html_e( 'Hour', 'wp-file-changes-monitor' ); ?></span>
 						</label>
 
 						<label class="hide">
 							<select name="wpfcm-settings[scan-day]">
 								<?php foreach ( $scan_days as $value => $html ) : ?>
-									<option value="<?php echo esc_attr( $value ); ?>">
-										<?php echo esc_html( $html ); ?>
-									</option>
+									<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $settings['day'] ); ?>><?php echo esc_html( $html ); ?></option>
 								<?php endforeach; ?>
 							</select>
 							<br />
-							<span class="description">
-								<?php esc_html_e( 'Day', 'wp-file-changes-monitor' ); ?>
-							</span>
+							<span class="description"><?php esc_html_e( 'Day', 'wp-file-changes-monitor' ); ?></span>
 						</label>
 
 						<label class="hide">
 							<select name="wpfcm-settings[scan-date]">
 								<?php foreach ( $scan_date as $value => $html ) : ?>
-									<option value="<?php echo esc_attr( $value ); ?>">
-										<?php echo esc_html( $html ); ?>
-									</option>
+									<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $settings['date'] ); ?>><?php echo esc_html( $html ); ?></option>
 								<?php endforeach; ?>
 							</select>
 							<br />
-							<span class="description">
-								<?php esc_html_e( 'Day', 'wp-file-changes-monitor' ); ?>
-							</span>
+							<span class="description"><?php esc_html_e( 'Day', 'wp-file-changes-monitor' ); ?></span>
 						</label>
 					</fieldset>
 				</td>
@@ -213,9 +197,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 		<!-- Scan frequency -->
 
 		<h3><?php esc_html_e( 'Which directories should be scanned for file changes?', 'wp-file-changes-monitor' ); ?></h3>
-		<p class="description">
-			<?php esc_html_e( 'The plugin will scan all the directories in your WordPress website by default because that is the most secure option. Though if for some reason you do not want the plugin to scan any of these directories you can uncheck them from the below list.', 'wp-file-changes-monitor' ); ?>
-		</p>
+		<p class="description"><?php esc_html_e( 'The plugin will scan all the directories in your WordPress website by default because that is the most secure option. Though if for some reason you do not want the plugin to scan any of these directories you can uncheck them from the below list.', 'wp-file-changes-monitor' ); ?></p>
 		<table class="form-table">
 			<tbody>
 				<tr>
@@ -224,11 +206,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 						<fieldset>
 							<?php foreach ( $wp_directories as $value => $html ) : ?>
 								<label>
-									<input
-										name="wpfcm-settings[directories][<?php echo esc_attr( $value ); ?>]"
-										type="checkbox"
-										value="<?php echo esc_attr( $value ); ?>"
-									/>
+									<input name="wpfcm-settings[scan-directories][]" type="checkbox" value="<?php echo esc_attr( $value ); ?>" <?php echo in_array( $value, $settings['directories'], true ) ? 'checked' : false; ?> />
 									<?php echo esc_html( $html ); ?>
 								</label>
 								<br />
@@ -247,7 +225,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 				<th><label for="wpfcm-settings-file-size"><?php esc_html_e( 'File Size Limit', 'wp-file-changes-monitor' ); ?></label></th>
 				<td>
 					<fieldset>
-						<input type="number" name="wpfcm-settings[file-size]" min="1" max="100" value="10" /> <?php esc_html_e( 'MB', 'wp-file-changes-monitor' ); ?>
+						<input type="number" name="wpfcm-settings[scan-file-size]" min="1" max="100" value="<?php echo esc_attr( $settings['file-size'] ); ?>" /> <?php esc_html_e( 'MB', 'wp-file-changes-monitor' ); ?>
 					</fieldset>
 				</td>
 			</tr>
@@ -262,12 +240,12 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 				<td>
 					<div class="wpfcm-files-container">
 						<div id="wpfcm-exclude-dir-list">
-							<?php // foreach ( $this->scan_settings['scan_excluded_dirs'] as $index => $dir ) : ?>
-								<!-- <span id="wsal_dir-<?php // echo esc_attr( $dir ); ?>">
-									<input type="checkbox" id="<?php // echo esc_attr( $dir ); ?>" value="<?php // echo esc_attr( $dir ); ?>" />
-									<label for="<?php // echo esc_attr( $dir ); ?>"><?php // echo esc_html( $dir ); ?></label>
-								</span> -->
-							<?php // endforeach; ?>
+							<?php foreach ( $settings['exclude-dirs'] as $dir ) : ?>
+								<span id="wpfcm-dir-<?php echo esc_attr( $dir ); ?>">
+									<input type="checkbox" name="wpfcm-settings[scan-exclude-dirs][]" id="<?php echo esc_attr( $dir ); ?>" value="<?php echo esc_attr( $dir ); ?>" checked />
+									<label for="<?php echo esc_attr( $dir ); ?>"><?php echo esc_html( $dir ); ?></label>
+								</span>
+							<?php endforeach; ?>
 						</div>
 						<input class="button" id="wpfcm-exclude-dir-remove" type="button" value="<?php esc_html_e( 'REMOVE', 'wp-file-changes-monitor' ); ?>" />
 					</div>
@@ -289,12 +267,12 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 				<td>
 					<div class="wpfcm-files-container">
 						<div id="wpfcm-exclude-file-list">
-							<?php // foreach ( $excluded_files as $index => $file ) : ?>
-								<!-- <span id="wsal_file-<?php // echo esc_attr( $file ); ?>">
-									<input type="checkbox" id="<?php // echo esc_attr( $file ); ?>" value="<?php // echo esc_attr( $file ); ?>" />
-									<label for="<?php // echo esc_attr( $file ); ?>"><?php // echo esc_html( $file ); ?></label>
-								</span> -->
-							<?php // endforeach; ?>
+							<?php foreach ( $settings['exclude-files'] as $file ) : ?>
+								<span id="wpfcm-file-<?php echo esc_attr( $file ); ?>">
+									<input type="checkbox" name="wpfcm-settings[scan-exclude-files][]" id="<?php echo esc_attr( $file ); ?>" value="<?php echo esc_attr( $file ); ?>" checked />
+									<label for="<?php echo esc_attr( $file ); ?>"><?php echo esc_html( $file ); ?></label>
+								</span>
+							<?php endforeach; ?>
 						</div>
 						<input class="button" id="wpfcm-exclude-file-remove" type="button" value="<?php esc_html_e( 'REMOVE', 'wp-file-changes-monitor' ); ?>" />
 					</div>
@@ -314,12 +292,12 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 				<td>
 					<div class="wpfcm-files-container">
 						<div id="wpfcm-exclude-extension-list">
-							<?php // foreach ( $this->scan_settings['scan_excluded_extensions'] as $index => $file_type ) : ?>
-								<!-- <span id="wsal_file_type-<?php // echo esc_attr( $file_type ); ?>">
-									<input type="checkbox" id="<?php // echo esc_attr( $file_type ); ?>" value="<?php // echo esc_attr( $file_type ); ?>" />
-									<label for="<?php // echo esc_attr( $file_type ); ?>"><?php // echo esc_html( $file_type ); ?></label>
-								</span> -->
-							<?php // endforeach; ?>
+							<?php foreach ( $settings['exclude-exts'] as $file_type ) : ?>
+								<span id="wpfcm-extension-<?php echo esc_attr( $file_type ); ?>">
+									<input type="checkbox" name="wpfcm-settings[scan-exclude-exts][]" id="<?php echo esc_attr( $file_type ); ?>" value="<?php echo esc_attr( $file_type ); ?>" checked />
+									<label for="<?php echo esc_attr( $file_type ); ?>"><?php echo esc_html( $file_type ); ?></label>
+								</span>
+							<?php endforeach; ?>
 						</div>
 						<input class="button" id="wpfcm-exclude-extension-remove" type="button" value="<?php esc_html_e( 'REMOVE', 'wp-file-changes-monitor' ); ?>" />
 					</div>
@@ -337,10 +315,8 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 		</table>
 		<!-- Exclude directories, files, extensions -->
 
-		<h3><?php esc_html_e( 'Launch an instant file integrity scan', 'wp-file-changes-monitor' ); ?></h3>
-		<p class="description">
-			<?php esc_html_e( 'Click the Scan Now button to launch an instant file integrity scan using the configured settings. You can navigate away from this page during the scan. Note that the instant scan can be more resource intensive than scheduled scans.', 'wp-file-changes-monitor' ); ?>
-		</p>
+		<h3><?php esc_html_e( 'Launch an instant file changes scan', 'wp-file-changes-monitor' ); ?></h3>
+		<p class="description"><?php esc_html_e( 'Click the Scan Now button to launch an instant file changes scan using the configured settings. You can navigate away from this page during the scan. Note that the instant scan can be more resource intensive than scheduled scans.', 'wp-file-changes-monitor' ); ?></p>
 		<table class="form-table wsal-tab">
 			<tbody>
 				<tr>
@@ -365,20 +341,20 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 		</table>
 		<!-- / Instant Scan -->
 
-		<h3><?php esc_html_e( 'Temporarily disable file changes scanning', 'wp-file-changes-monitor' ); ?></h3>
-		<p class="description"><?php esc_html_e( 'When you disable and re-enable file scanning the plugin will report all the file changes it identifies when it compares the files between the last scan before it was scanning was disabled and the first scan when it was enabled.', 'wp-file-changes-monitor' ); ?></p>
+		<h3><?php esc_html_e( 'Enable File Scanning', 'wp-file-changes-monitor' ); ?></h3>
+		<p class="description"><?php esc_html_e( 'Use this switch to temporarily disable file scanning. When you disable and re-enable file scanning the plugin will report all the file changes it identifies when it compares the files between the last scan before it was scanning was disabled and the first scan when it was enabled.', 'wp-file-changes-monitor' ); ?></p>
 		<table class="form-table">
 			<tr>
 				<th><label for="wpfcm-file-changes"><?php esc_html_e( 'Keep a Log of File Changes', 'wp-file-changes-monitor' ); ?></label></th>
 				<td>
 					<fieldset>
 						<label>
-							<input name="wpfcm-settings[enabled]" type="radio" value="1" <?php // checked(); ?>>
+							<input name="wpfcm-settings[keep-log]" type="radio" value="yes" <?php checked( $settings['enabled'], 'yes' ); ?>>
 							<?php esc_html_e( 'Yes', 'wp-file-changes-monitor' ); ?>
 						</label>
 						<br>
 						<label>
-							<input name="wpfcm-settings[enabled]" type="radio" value="0" <?php // checked(); ?>>
+							<input name="wpfcm-settings[keep-log]" type="radio" value="no" <?php checked( $settings['enabled'], 'no' ); ?>>
 							<?php esc_html_e( 'No', 'wp-file-changes-monitor' ); ?>
 						</label>
 					</fieldset>
@@ -386,5 +362,10 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 			</tr>
 		</table>
 		<!-- Disable File Changes -->
+
+		<?php
+		wp_nonce_field( 'wpfcm-save-admin-settings' );
+		submit_button();
+		?>
 	</form>
 </div>
