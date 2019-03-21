@@ -6,10 +6,8 @@ jQuery( document ).ready( function() {
 	const frequencySelect = jQuery( 'select[name="wpfcm-settings[scan-frequency]"]' );
 	const scanDay = jQuery( 'select[name="wpfcm-settings[scan-day]"]' ).parent();
 	const scanDate = jQuery( 'select[name="wpfcm-settings[scan-date]"]' ).parent();
-	const excludeName = jQuery( '.wpfcm-files-container .name' );
 	const excludeAdd = jQuery( '.wpfcm-files-container .add' );
 	const excludeRemove = jQuery( '.wpfcm-files-container .remove' );
-	const excludeList = jQuery( '.wpfcm-files-container .exclude-list' );
 
 	// Frequency handler.
 	jQuery( frequencySelect ).change( function() {
@@ -34,4 +32,79 @@ jQuery( document ).ready( function() {
 			scanDate.removeClass( 'hidden' );
 		}
 	}
+
+	/**
+	 * Add Exclude Item.
+	 */
+	jQuery( excludeAdd ).click( function( event ) {
+		event.preventDefault();
+
+		let pattern = '';
+		const excludeType = jQuery( this ).data( 'exclude-type' );
+
+		if ( 'dir' === excludeType ) {
+			pattern = /^\s*[a-z-._\d,\s/]+\s*$/i;
+		} else if ( 'file' === excludeType ) {
+			pattern = /^\s*[a-z-._\d,\s]+\s*$/i;
+		} else if ( 'extension' === excludeType ) {
+			pattern = /^\s*[a-z-._\d,\s]+\s*$/i;
+		}
+
+		const excludeList = jQuery( `#wpfcm-exclude-${excludeType}-list` );
+		const excludeNameInput = jQuery( this ).parent().find( '.name' );
+		const excludeName = excludeNameInput.val();
+
+		if ( excludeName.match( pattern ) ) {
+			const excludeItem = jQuery( '<span></span>' );
+			const excludeItemInput = jQuery( '<input>' );
+			const excludeItemLabel = jQuery( '<label></label>' );
+
+			excludeItemInput.prop( 'type', 'checkbox' );
+			excludeItemInput.prop( 'checked', true );
+			excludeItemInput.prop( 'name', `wpfcm-settings[scan-exclude-${excludeType}][]` );
+			excludeItemInput.prop( 'id', excludeName );
+			excludeItemInput.prop( 'value', excludeName );
+
+			excludeItemLabel.prop( 'for', excludeName );
+			excludeItemLabel.text( excludeName );
+
+			excludeItem.append( excludeItemInput );
+			excludeItem.append( excludeItemLabel );
+			excludeList.append( excludeItem );
+			excludeNameInput.removeAttr( 'value' );
+		} else {
+			if ( 'dir' === excludeType ) {
+				alert( wpfcmData.dirInvalid );
+			} else if ( 'file' === excludeType ) {
+				alert( wpfcmData.fileInvalid );
+			} else if ( 'extension' === excludeType ) {
+				alert( wpfcmData.extensionInvalid );
+			}
+		}
+	});
+
+	/**
+	 * Remove Exclude Item(s).
+	 */
+	jQuery( excludeRemove ).click( function( event ) {
+		event.preventDefault();
+
+		const excludeItems = jQuery( this ).parent().find( '.exclude-list input[type=checkbox]' );
+		let removedValues = [];
+
+		for ( let index = 0; index < excludeItems.length; index++ ) {
+			if ( ! jQuery( excludeItems[ index ]).is( ':checked' ) ) {
+				removedValues.push( jQuery( excludeItems[ index ]).val() );
+			}
+		}
+
+		if ( removedValues ) {
+			for ( let index = 0; index < removedValues.length; index++ ) {
+				let excludeItem = jQuery( 'input[value="' + removedValues[ index ] + '"]' );
+				if ( excludeItem ) {
+					excludeItem.parent().remove();
+				}
+			}
+		}
+	});
 });

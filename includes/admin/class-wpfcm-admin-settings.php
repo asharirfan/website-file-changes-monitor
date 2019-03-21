@@ -75,13 +75,23 @@ class WPFCM_Admin_Settings {
 			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WPFCM_BASE_DIR . 'assets/css/style.css' ) : WPFCM_VERSION
 		);
 
-		wp_enqueue_script(
+		wp_register_script(
 			'wpfcm-settings',
 			WPFCM_BASE_URL . 'assets/js/custom' . $suffix . '.js',
 			array( 'jquery' ),
 			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WPFCM_BASE_DIR . 'assets/js/custom.js' ) : WPFCM_VERSION,
 			true
 		);
+
+		wp_localize_script(
+			'wpfcm-settings', 'wpfcmData', array(
+				'fileInvalid'      => esc_html__( 'Filename cannot be added because it contains invalid characters.', 'wp-file-changes-monitor' ),
+				'extensionInvalid' => esc_html__( 'File extension cannot be added because it contains invalid characters.', 'wp-file-changes-monitor' ),
+				'dirInvalid'       => esc_html__( 'Directory cannot be added because it contains invalid characters.', 'wp-file-changes-monitor' ),
+			)
+		);
+
+		wp_enqueue_script( 'wpfcm-settings' );
 
 		// Get plugin settings.
 		$settings = self::get_settings();

@@ -7,10 +7,8 @@ jQuery(document).ready(function () {
   var frequencySelect = jQuery('select[name="wpfcm-settings[scan-frequency]"]');
   var scanDay = jQuery('select[name="wpfcm-settings[scan-day]"]').parent();
   var scanDate = jQuery('select[name="wpfcm-settings[scan-date]"]').parent();
-  var excludeName = jQuery('.wpfcm-files-container .name');
   var excludeAdd = jQuery('.wpfcm-files-container .add');
-  var excludeRemove = jQuery('.wpfcm-files-container .remove');
-  var excludeList = jQuery('.wpfcm-files-container .exclude-list'); // Frequency handler.
+  var excludeRemove = jQuery('.wpfcm-files-container .remove'); // Frequency handler.
 
   jQuery(frequencySelect).change(function () {
     showScanFields(jQuery(this).val());
@@ -33,4 +31,76 @@ jQuery(document).ready(function () {
       scanDate.removeClass('hidden');
     }
   }
+  /**
+   * Add Exclude Item.
+   */
+
+
+  jQuery(excludeAdd).click(function (event) {
+    event.preventDefault();
+    var pattern = '';
+    var excludeType = jQuery(this).data('exclude-type');
+
+    if ('dir' === excludeType) {
+      pattern = /^\s*[a-z-._\d,\s/]+\s*$/i;
+    } else if ('file' === excludeType) {
+      pattern = /^\s*[a-z-._\d,\s]+\s*$/i;
+    } else if ('extension' === excludeType) {
+      pattern = /^\s*[a-z-._\d,\s]+\s*$/i;
+    }
+
+    var excludeList = jQuery("#wpfcm-exclude-".concat(excludeType, "-list"));
+    var excludeNameInput = jQuery(this).parent().find('.name');
+    var excludeName = excludeNameInput.val();
+
+    if (excludeName.match(pattern)) {
+      var excludeItem = jQuery('<span></span>');
+      var excludeItemInput = jQuery('<input>');
+      var excludeItemLabel = jQuery('<label></label>');
+      excludeItemInput.prop('type', 'checkbox');
+      excludeItemInput.prop('checked', true);
+      excludeItemInput.prop('name', "wpfcm-settings[scan-exclude-".concat(excludeType, "][]"));
+      excludeItemInput.prop('id', excludeName);
+      excludeItemInput.prop('value', excludeName);
+      excludeItemLabel.prop('for', excludeName);
+      excludeItemLabel.text(excludeName);
+      excludeItem.append(excludeItemInput);
+      excludeItem.append(excludeItemLabel);
+      excludeList.append(excludeItem);
+      excludeNameInput.removeAttr('value');
+    } else {
+      if ('dir' === excludeType) {
+        alert(wpfcmData.dirInvalid);
+      } else if ('file' === excludeType) {
+        alert(wpfcmData.fileInvalid);
+      } else if ('extension' === excludeType) {
+        alert(wpfcmData.extensionInvalid);
+      }
+    }
+  });
+  /**
+   * Remove Exclude Item(s).
+   */
+
+  jQuery(excludeRemove).click(function (event) {
+    event.preventDefault();
+    var excludeItems = jQuery(this).parent().find('.exclude-list input[type=checkbox]');
+    var removedValues = [];
+
+    for (var index = 0; index < excludeItems.length; index++) {
+      if (!jQuery(excludeItems[index]).is(':checked')) {
+        removedValues.push(jQuery(excludeItems[index]).val());
+      }
+    }
+
+    if (removedValues) {
+      for (var _index = 0; _index < removedValues.length; _index++) {
+        var excludeItem = jQuery('input[value="' + removedValues[_index] + '"]');
+
+        if (excludeItem) {
+          excludeItem.parent().remove();
+        }
+      }
+    }
+  });
 });
