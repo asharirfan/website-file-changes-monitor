@@ -117,7 +117,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 	<h1><?php esc_html_e( 'File Changes Settings', 'wp-file-changes-monitor' ); ?></h1>
 	<form method="post" action="" enctype="multipart/form-data">
 		<h3><?php esc_html_e( 'Which file changes events do you want to keep a log of in the activity log?', 'wp-file-changes-monitor' ); ?></h3>
-		<table class="form-table">
+		<table class="form-table wpfcm-table">
 			<tr>
 				<th><label for="wpfcm-file-changes-type"><?php esc_html_e( 'Notify me when', 'wp-file-changes-monitor' ); ?></label></th>
 				<td>
@@ -144,7 +144,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 
 		<h3><?php esc_html_e( 'When should the plugin scan your website for file changes?', 'wp-file-changes-monitor' ); ?></h3>
 		<p class="description"><?php esc_html_e( 'By default the plugin will run file changes scans once a week. If you can, ideally you should run file changes scans on a daily basis. The file changes scanner is very efficient and requires very little resources. Though if you have a fairly large website we recommend you to scan it when it is the least busy. The scan process should only take a few seconds to complete.', 'wp-file-changes-monitor' ); ?></p>
-		<table class="form-table">
+		<table class="form-table wpfcm-table">
 			<tr>
 				<th><label for="wpfcm-settings-frequency"><?php esc_html_e( 'Scan Frequency', 'wp-file-changes-monitor' ); ?></label></th>
 				<td>
@@ -198,7 +198,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 
 		<h3><?php esc_html_e( 'Which directories should be scanned for file changes?', 'wp-file-changes-monitor' ); ?></h3>
 		<p class="description"><?php esc_html_e( 'The plugin will scan all the directories in your WordPress website by default because that is the most secure option. Though if for some reason you do not want the plugin to scan any of these directories you can uncheck them from the below list.', 'wp-file-changes-monitor' ); ?></p>
-		<table class="form-table">
+		<table class="form-table wpfcm-table">
 			<tbody>
 				<tr>
 					<th><label for="wpfcm-settings-directories"><?php esc_html_e( 'Directories to scan', 'wp-file-changes-monitor' ); ?></label></th>
@@ -220,7 +220,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 
 		<h3><?php esc_html_e( 'What is the biggest file size the plugin should scan?', 'wp-file-changes-monitor' ); ?></h3>
 		<p class="description"><?php esc_html_e( 'By default the plugin does not scan files that are bigger than 5MB. Such files are not common, hence typically not a target.', 'wp-file-changes-monitor' ); ?></p>
-		<table class="form-table">
+		<table class="form-table wpfcm-table">
 			<tr>
 				<th><label for="wpfcm-settings-file-size"><?php esc_html_e( 'File Size Limit', 'wp-file-changes-monitor' ); ?></label></th>
 				<td>
@@ -234,77 +234,80 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 
 		<h3><?php esc_html_e( 'Do you want to exclude specific files or files with a particular extension from the scan?', 'wp-file-changes-monitor' ); ?></h3>
 		<p class="description"><?php esc_html_e( 'The plugin will scan everything that is in the WordPress root directory or below, even if the files and directories are not part of WordPress. It is recommended to scan all source code files and only exclude files that cannot be tampered, such as text files, media files etc, most of which are already excluded by default.', 'wp-file-changes-monitor' ); ?></p>
-		<table class="form-table">
+		<table class="form-table wpfcm-table">
 			<tr>
 				<th><label for="wpfcm-settings-exclude-dirs"><?php esc_html_e( 'Exclude All Files in These Directories', 'wp-file-changes-monitor' ); ?></label></th>
 				<td>
-					<div class="wpfcm-files-container">
-						<div class="exclude-list" id="wpfcm-exclude-dir-list">
-							<?php foreach ( $settings['exclude-dirs'] as $dir ) : ?>
-								<span>
-									<input type="checkbox" name="wpfcm-settings[scan-exclude-dir][]" id="<?php echo esc_attr( $dir ); ?>" value="<?php echo esc_attr( $dir ); ?>" checked />
-									<label for="<?php echo esc_attr( $dir ); ?>"><?php echo esc_html( $dir ); ?></label>
-								</span>
-							<?php endforeach; ?>
+					<fieldset>
+						<div class="wpfcm-files-container">
+							<div class="exclude-list" id="wpfcm-exclude-dir-list">
+								<?php foreach ( $settings['exclude-dirs'] as $dir ) : ?>
+									<span>
+										<input type="checkbox" name="wpfcm-settings[scan-exclude-dir][]" id="<?php echo esc_attr( $dir ); ?>" value="<?php echo esc_attr( $dir ); ?>" checked />
+										<label for="<?php echo esc_attr( $dir ); ?>"><?php echo esc_html( $dir ); ?></label>
+									</span>
+								<?php endforeach; ?>
+							</div>
+							<input class="button remove" data-exclude-type="dir" type="button" value="<?php esc_html_e( 'REMOVE', 'wp-file-changes-monitor' ); ?>" />
 						</div>
-						<input class="button remove" data-exclude-type="dir" type="button" value="<?php esc_html_e( 'REMOVE', 'wp-file-changes-monitor' ); ?>" />
-					</div>
-					<div class="wpfcm-files-container">
-						<input class="name" type="text">
-						<input class="button add" data-exclude-type="dir" type="button" value="<?php esc_html_e( 'ADD', 'wp-file-changes-monitor' ); ?>" />
-					</div>
-					<p class="description">
-						<?php esc_html_e( 'Specify the name of the directory and the path to it in relation to the website\'s root. For example, if you want to want to exclude all files in the sub directory dir1/dir2 specify the following:', 'wp-file-changes-monitor' ); ?>
-						<br>
-						<?php echo esc_html( trailingslashit( ABSPATH ) ) . 'dir1/dir2/'; ?>
-					</p>
-					<span class="error hide" id="wpfcm-exclude-dir-error"></span>
+						<div class="wpfcm-files-container">
+							<input class="name" type="text">
+							<input class="button add" data-exclude-type="dir" type="button" value="<?php esc_html_e( 'ADD', 'wp-file-changes-monitor' ); ?>" />
+						</div>
+						<p class="description">
+							<?php esc_html_e( 'Specify the name of the directory and the path to it in relation to the website\'s root. For example, if you want to want to exclude all files in the sub directory dir1/dir2 specify the following:', 'wp-file-changes-monitor' ); ?>
+							<br>
+							<?php echo esc_html( trailingslashit( ABSPATH ) ) . 'dir1/dir2/'; ?>
+						</p>
+					</fieldset>
 				</td>
 			</tr>
 			<!-- Exclude directories -->
 			<tr>
 				<th><label for="wpfcm-settings-exclude-filenames"><?php esc_html_e( 'Exclude These Files', 'wp-file-changes-monitor' ); ?></label></th>
 				<td>
-					<div class="wpfcm-files-container">
-						<div class="exclude-list" id="wpfcm-exclude-file-list">
-							<?php foreach ( $settings['exclude-files'] as $file ) : ?>
-								<span>
-									<input type="checkbox" name="wpfcm-settings[scan-exclude-file][]" id="<?php echo esc_attr( $file ); ?>" value="<?php echo esc_attr( $file ); ?>" checked />
-									<label for="<?php echo esc_attr( $file ); ?>"><?php echo esc_html( $file ); ?></label>
-								</span>
-							<?php endforeach; ?>
+					<fieldset>
+						<div class="wpfcm-files-container">
+							<div class="exclude-list" id="wpfcm-exclude-file-list">
+								<?php foreach ( $settings['exclude-files'] as $file ) : ?>
+									<span>
+										<input type="checkbox" name="wpfcm-settings[scan-exclude-file][]" id="<?php echo esc_attr( $file ); ?>" value="<?php echo esc_attr( $file ); ?>" checked />
+										<label for="<?php echo esc_attr( $file ); ?>"><?php echo esc_html( $file ); ?></label>
+									</span>
+								<?php endforeach; ?>
+							</div>
+							<input class="button remove" data-exclude-type="file" type="button" value="<?php esc_html_e( 'REMOVE', 'wp-file-changes-monitor' ); ?>" />
 						</div>
-						<input class="button remove" data-exclude-type="file" type="button" value="<?php esc_html_e( 'REMOVE', 'wp-file-changes-monitor' ); ?>" />
-					</div>
-					<div class="wpfcm-files-container">
-						<input class="name" type="text">
-						<input class="button add" data-exclude-type="file" type="button" value="<?php esc_html_e( 'ADD', 'wp-file-changes-monitor' ); ?>" />
-					</div>
-					<p class="description"><?php esc_html_e( 'Specify the name and extension of the file(s) you want to exclude. Wildcard not supported. There is no need to specify the path of the file.', 'wp-file-changes-monitor' ); ?></p>
-					<span class="error hide" id="wpfcm-exclude-file-error"></span>
+						<div class="wpfcm-files-container">
+							<input class="name" type="text">
+							<input class="button add" data-exclude-type="file" type="button" value="<?php esc_html_e( 'ADD', 'wp-file-changes-monitor' ); ?>" />
+						</div>
+						<p class="description"><?php esc_html_e( 'Specify the name and extension of the file(s) you want to exclude. Wildcard not supported. There is no need to specify the path of the file.', 'wp-file-changes-monitor' ); ?></p>
+					</fieldset>
 				</td>
 			</tr>
 			<!-- Exclude filenames -->
 			<tr>
 				<th><label for="wpfcm-settings-exclude-extensions"><?php esc_html_e( 'Exclude these File Types', 'wp-file-changes-monitor' ); ?></label></th>
 				<td>
-					<div class="wpfcm-files-container">
-						<div class="exclude-list" id="wpfcm-exclude-extension-list">
-							<?php foreach ( $settings['exclude-exts'] as $file_type ) : ?>
-								<span>
-									<input type="checkbox" name="wpfcm-settings[scan-exclude-extension][]" id="<?php echo esc_attr( $file_type ); ?>" value="<?php echo esc_attr( $file_type ); ?>" checked />
-									<label for="<?php echo esc_attr( $file_type ); ?>"><?php echo esc_html( $file_type ); ?></label>
-								</span>
-							<?php endforeach; ?>
+					<fieldset>
+						<div class="wpfcm-files-container">
+							<div class="exclude-list" id="wpfcm-exclude-extension-list">
+								<?php foreach ( $settings['exclude-exts'] as $file_type ) : ?>
+									<span>
+										<input type="checkbox" name="wpfcm-settings[scan-exclude-extension][]" id="<?php echo esc_attr( $file_type ); ?>" value="<?php echo esc_attr( $file_type ); ?>" checked />
+										<label for="<?php echo esc_attr( $file_type ); ?>"><?php echo esc_html( $file_type ); ?></label>
+									</span>
+								<?php endforeach; ?>
+							</div>
+							<input class="button remove" data-exclude-type="extension" type="button" value="<?php esc_html_e( 'REMOVE', 'wp-file-changes-monitor' ); ?>" />
 						</div>
-						<input class="button remove" data-exclude-type="extension" type="button" value="<?php esc_html_e( 'REMOVE', 'wp-file-changes-monitor' ); ?>" />
-					</div>
-					<div class="wpfcm-files-container">
-						<input class="name" type="text">
-						<input class="button add" data-exclude-type="extension" type="button" value="<?php esc_html_e( 'ADD', 'wp-file-changes-monitor' ); ?>" />
-					</div>
-					<p class="description"><?php esc_html_e( 'Specify the extension of the file types you want to exclude. You should exclude any type of logs and backup files that tend to be very big.', 'wp-file-changes-monitor' ); ?></p>
-					<span class="error hide" id="wpfcm-exclude-extension-error"></span>
+						<div class="wpfcm-files-container">
+							<input class="name" type="text">
+							<input class="button add" data-exclude-type="extension" type="button" value="<?php esc_html_e( 'ADD', 'wp-file-changes-monitor' ); ?>" />
+						</div>
+						<p class="description"><?php esc_html_e( 'Specify the extension of the file types you want to exclude. You should exclude any type of logs and backup files that tend to be very big.', 'wp-file-changes-monitor' ); ?></p>
+					</fieldset>
 				</td>
 			</tr>
 			<!-- Exclude extensions -->
@@ -313,24 +316,26 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 
 		<h3><?php esc_html_e( 'Launch an instant file changes scan', 'wp-file-changes-monitor' ); ?></h3>
 		<p class="description"><?php esc_html_e( 'Click the Scan Now button to launch an instant file changes scan using the configured settings. You can navigate away from this page during the scan. Note that the instant scan can be more resource intensive than scheduled scans.', 'wp-file-changes-monitor' ); ?></p>
-		<table class="form-table wsal-tab">
+		<table class="form-table wpfcm-table">
 			<tbody>
 				<tr>
 					<th>
 						<label for="wsal-scan-now"><?php esc_html_e( 'Launch Instant Scan', 'wp-file-changes-monitor' ); ?></label>
 					</th>
 					<td>
-						<input type="button" class="button-primary" id="wsal-scan-now" value="<?php esc_attr_e( 'Scan Now', 'wp-file-changes-monitor' ); ?>">
-						<input type="button" class="button-secondary" id="wsal-stop-scan" value="<?php esc_attr_e( 'Stop Scan', 'wp-file-changes-monitor' ); ?>" disabled>
-						<?php // if ( 'enable' === $this->scan_settings['scan_file_changes'] && ! $this->scan_settings['scan_in_progress'] ) : ?>
-						<?php // elseif ( 'enable' === $this->scan_settings['scan_file_changes'] && $this->scan_settings['scan_in_progress'] ) : ?>
-							<!-- <input type="button" class="button button-primary" id="wsal-scan-now" value="<?php // esc_attr_e( 'Scan in Progress', 'wp-file-changes-monitor' ); ?>" disabled>
-							<input type="button" class="button button-ui-primary" id="wsal-stop-scan" value="<?php // esc_attr_e( 'Stop Scan', 'wp-file-changes-monitor' ); ?>"> -->
-							<!-- Scan in progress -->
-						<?php // else : ?>
-							<!-- <input type="button" class="button button-primary" id="wsal-scan-now" value="<?php // esc_attr_e( 'Scan Now', 'wp-file-changes-monitor' ); ?>" disabled>
-							<input type="button" class="button button-secondary" id="wsal-stop-scan" value="<?php // esc_attr_e( 'Stop Scan', 'wp-file-changes-monitor' ); ?>" disabled> -->
-						<?php // endif; ?>
+						<fieldset>
+							<input type="button" class="button-primary" id="wsal-scan-now" value="<?php esc_attr_e( 'Scan Now', 'wp-file-changes-monitor' ); ?>">
+							<input type="button" class="button-secondary" id="wsal-stop-scan" value="<?php esc_attr_e( 'Stop Scan', 'wp-file-changes-monitor' ); ?>" disabled>
+							<?php // if ( 'enable' === $this->scan_settings['scan_file_changes'] && ! $this->scan_settings['scan_in_progress'] ) : ?>
+							<?php // elseif ( 'enable' === $this->scan_settings['scan_file_changes'] && $this->scan_settings['scan_in_progress'] ) : ?>
+								<!-- <input type="button" class="button button-primary" id="wsal-scan-now" value="<?php // esc_attr_e( 'Scan in Progress', 'wp-file-changes-monitor' ); ?>" disabled>
+								<input type="button" class="button button-ui-primary" id="wsal-stop-scan" value="<?php // esc_attr_e( 'Stop Scan', 'wp-file-changes-monitor' ); ?>"> -->
+								<!-- Scan in progress -->
+							<?php // else : ?>
+								<!-- <input type="button" class="button button-primary" id="wsal-scan-now" value="<?php // esc_attr_e( 'Scan Now', 'wp-file-changes-monitor' ); ?>" disabled>
+								<input type="button" class="button button-secondary" id="wsal-stop-scan" value="<?php // esc_attr_e( 'Stop Scan', 'wp-file-changes-monitor' ); ?>" disabled> -->
+							<?php // endif; ?>
+						</fieldset>
 					</td>
 				</tr>
 			</tbody>
@@ -344,15 +349,9 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 				<th><label for="wpfcm-file-changes"><?php esc_html_e( 'Keep a Log of File Changes', 'wp-file-changes-monitor' ); ?></label></th>
 				<td>
 					<fieldset>
-						<label>
-							<input name="wpfcm-settings[keep-log]" type="radio" value="yes" <?php checked( $settings['enabled'], 'yes' ); ?>>
-							<?php esc_html_e( 'Yes', 'wp-file-changes-monitor' ); ?>
-						</label>
+						<label><input name="wpfcm-settings[keep-log]" type="radio" value="yes" <?php checked( $settings['enabled'], 'yes' ); ?>><?php esc_html_e( 'Yes', 'wp-file-changes-monitor' ); ?></label>
 						<br>
-						<label>
-							<input name="wpfcm-settings[keep-log]" type="radio" value="no" <?php checked( $settings['enabled'], 'no' ); ?>>
-							<?php esc_html_e( 'No', 'wp-file-changes-monitor' ); ?>
-						</label>
+						<label><input name="wpfcm-settings[keep-log]" type="radio" value="no" <?php checked( $settings['enabled'], 'no' ); ?>><?php esc_html_e( 'No', 'wp-file-changes-monitor' ); ?></label>
 					</fieldset>
 				</td>
 			</tr>

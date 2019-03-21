@@ -3,6 +3,7 @@
  */
 jQuery( document ).ready( function() {
 
+	const keepLog = jQuery( 'input[name="wpfcm-settings[keep-log]"]' );
 	const frequencySelect = jQuery( 'select[name="wpfcm-settings[scan-frequency]"]' );
 	const scanDay = jQuery( 'select[name="wpfcm-settings[scan-day]"]' ).parent();
 	const scanDate = jQuery( 'select[name="wpfcm-settings[scan-date]"]' ).parent();
@@ -107,4 +108,27 @@ jQuery( document ).ready( function() {
 			}
 		}
 	});
+
+	// Update settings state on change.
+	keepLog.change( function() {
+		toggleSettings( jQuery( this ).val() );
+	});
+
+	// Toggle settings state on page load.
+	toggleSettings( keepLog.val() );
+
+	/**
+	 * Toggle Plugin Settings State.
+	 *
+	 * @param {string} settingValue - Keep log setting value.
+	 */
+	function toggleSettings( settingValue ) {
+		const settingFields = jQuery( '.wpfcm-table fieldset' );
+
+		if ( 'no' === settingValue ) {
+			settingFields.attr( 'disabled', true );
+		} else {
+			settingFields.removeAttr( 'disabled' );
+		}
+	}
 });
