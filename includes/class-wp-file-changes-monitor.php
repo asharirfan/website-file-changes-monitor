@@ -29,6 +29,13 @@ final class WP_File_Changes_Monitor {
 	protected static $instance = null;
 
 	/**
+	 * File Changes Monitoring Sensor.
+	 *
+	 * @var WPFCM_Sensor
+	 */
+	public $sensor = null;
+
+	/**
 	 * Main WP File Changes Monitor Instance.
 	 *
 	 * Ensures only one instance of WP File Changes Monitor is loaded or can be loaded.
@@ -48,6 +55,7 @@ final class WP_File_Changes_Monitor {
 	public function __construct() {
 		$this->define_constants();
 		$this->includes();
+		$this->register_hooks();
 		do_action( 'wp_file_changes_monitor_loaded' );
 	}
 
@@ -85,6 +93,20 @@ final class WP_File_Changes_Monitor {
 		if ( is_admin() ) {
 			require_once WPFCM_BASE_DIR . 'includes/admin/class-wpfcm-admin.php';
 		}
+	}
+
+	/**
+	 * Register Hooks.
+	 */
+	public function register_hooks() {
+		add_action( 'init', array( $this, 'plugin_init' ) );
+	}
+
+	/**
+	 * Initialize plugin hooks.
+	 */
+	public function plugin_init() {
+		$this->sensor = new WPFCM_Sensor();
 	}
 
 	/**
