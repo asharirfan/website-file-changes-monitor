@@ -35,3 +35,15 @@ function wpfcm_get_setting( $setting, $default = '' ) {
 	return false;
 }
 
+/**
+ * Save plugin setting.
+ *
+ * @param string $setting - Setting name.
+ * @param mixed  $value   - Setting value.
+ */
+function wpfcm_save_setting( $setting, $value ) {
+	if ( class_exists( 'WPFCM_Settings' ) ) {
+		return WPFCM_Settings::save_setting( $setting, $value );
+	}
+}
+
