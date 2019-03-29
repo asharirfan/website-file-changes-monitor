@@ -42,11 +42,11 @@ jQuery(document).ready(function () {
     var pattern = '';
     var excludeType = jQuery(this).data('exclude-type');
 
-    if ('dir' === excludeType) {
+    if ('dirs' === excludeType) {
       pattern = /^\s*[a-z-._\d,\s/]+\s*$/i;
-    } else if ('file' === excludeType) {
+    } else if ('files' === excludeType) {
       pattern = /^\s*[a-z-._\d,\s]+\s*$/i;
-    } else if ('extension' === excludeType) {
+    } else if ('exts' === excludeType) {
       pattern = /^\s*[a-z-._\d,\s]+\s*$/i;
     }
 
@@ -70,11 +70,11 @@ jQuery(document).ready(function () {
       excludeList.append(excludeItem);
       excludeNameInput.removeAttr('value');
     } else {
-      if ('dir' === excludeType) {
+      if ('dirs' === excludeType) {
         alert(wpfcmData.dirInvalid);
-      } else if ('file' === excludeType) {
+      } else if ('files' === excludeType) {
         alert(wpfcmData.fileInvalid);
-      } else if ('extension' === excludeType) {
+      } else if ('exts' === excludeType) {
         alert(wpfcmData.extensionInvalid);
       }
     }
