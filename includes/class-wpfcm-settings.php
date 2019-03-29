@@ -29,14 +29,11 @@ class WPFCM_Settings {
 	 * @return mixed
 	 */
 	public static function get_setting( $setting, $default = false ) {
-		if ( isset( self::$settings[ $setting ] ) ) {
-			$value = self::$settings[ $setting ];
-		} else {
-			$value                      = get_option( WPFCM_OPT_PREFIX . $setting, $default );
-			self::$settings[ $setting ] = $value;
+		if ( ! isset( self::$settings[ $setting ] ) ) {
+			self::$settings[ $setting ] = get_option( WPFCM_OPT_PREFIX . $setting, $default );
 		}
 
-		return $value;
+		return self::$settings[ $setting ];
 	}
 
 	/**
