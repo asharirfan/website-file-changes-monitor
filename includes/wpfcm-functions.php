@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return array
  */
-function wpfcm_get_settings() {
+function wpfcm_get_monitor_settings() {
 	if ( class_exists( 'WPFCM_Settings' ) ) {
 		return WPFCM_Settings::get_monitor_settings();
 	}
@@ -47,3 +47,21 @@ function wpfcm_save_setting( $setting, $value ) {
 	}
 }
 
+/**
+ * Create a new event.
+ *
+ * @param string $type      - Type of event: added, modified, deleted.
+ * @param string $file      - File.
+ * @param string $file_hash - File hash.
+ */
+function wpfcm_create_event( $type, $file, $file_hash ) {
+	// Create a resource object.
+	$data = (object) array(
+		'file' => $file,
+		'hash' => $file_hash,
+	);
+
+	$event = new WPFCM_Event();
+	$event->save( $file, $type );
+	$event->set_resources( 'file', $data );
+}
