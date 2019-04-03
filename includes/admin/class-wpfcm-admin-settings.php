@@ -15,6 +15,33 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WPFCM_Admin_Settings {
 
 	/**
+	 * Admin Messages.
+	 *
+	 * @var array
+	 */
+	private static $messages = array();
+
+	/**
+	 * Add Admin Message.
+	 *
+	 * @param string $message - Admin message.
+	 */
+	public static function add_message( $message ) {
+		self::$messages[] = $message;
+	}
+
+	/**
+	 * Show Admin Message.
+	 */
+	public static function show_messages() {
+		if ( ! empty( self::$messages ) ) {
+			foreach ( self::$messages as $message ) {
+				echo '<div id="message" class="updated"><p><strong>' . esc_html( $message ) . '</strong></p></div>';
+			}
+		}
+	}
+
+	/**
 	 * Initiate Settings Page.
 	 */
 	public static function output() {
