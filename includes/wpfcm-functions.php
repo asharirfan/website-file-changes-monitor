@@ -111,49 +111,56 @@ function wpfcm_set_site_content() {
 	}
 }
 
-}
-
 /**
- * Get directory name.
+ * Add plugin(s) to site content plugins list.
  *
- * @param string $plugin - Plugin name.
- * @return string
+ * @param string $plugin - (Optional) Plugin directory name.
  */
-function wpfcm_get_dirname( $plugin ) {
-	return dirname( $plugin );
+function wpfcm_add_site_plugin( $plugin = '' ) {
+	WPFCM_Settings::set_site_content( 'plugins', $plugin );
 }
 
 /**
- * Get site themes.
+ * Add theme(s) to site content themes list.
  *
- * @return array
+ * @param string $theme - (Optional) Theme name.
  */
-function wpfcm_get_site_themes() {
-	return array_keys( wp_get_themes() ); // Get themes.
+function wpfcm_add_site_theme( $theme = '' ) {
+	WPFCM_Settings::set_site_content( 'themes', $theme );
 }
 
 /**
- * Add plugins and themes to site content setting.
- */
-function wpfcm_set_site_content() {
-	wpfcm_set_site_plugins();
-	wpfcm_set_site_themes();
-}
-
-/**
- * Add plugin(s) to site plugins list.
+ * Remove plugin from site content plugins list.
  *
- * @param string $plugin - Plugin directory name.
+ * @param string $plugin - Plugin directory.
  */
-function wpfcm_set_site_plugins( $plugin = '' ) {
-	WPFCM_Settings::set_site_content( 'plugin', $plugin );
+function wpfcm_remove_site_plugin( $plugin ) {
+	WPFCM_Settings::remove_site_content( 'plugins', $plugin );
 }
 
 /**
- * Add theme(s) to site themes list.
+ * Remove theme from site content themes list.
  *
- * @param string $theme - Theme name.
+ * @param string $theme - Theme directory.
  */
-function wpfcm_set_site_themes( $theme = '' ) {
-	WPFCM_Settings::set_site_content( 'theme', $theme );
+function wpfcm_remove_site_theme( $theme ) {
+	WPFCM_Settings::remove_site_content( 'themes', $theme );
+}
+
+/**
+ * Skip plugin in the next file changes scan.
+ *
+ * @param string $plugin - Plugin directory.
+ */
+function wpfcm_skip_plugin_scan( $plugin ) {
+	WPFCM_Settings::set_skip_site_content( 'plugins', $plugin );
+}
+
+/**
+ * Skip theme in the next file changes scan.
+ *
+ * @param string $theme - Theme directory.
+ */
+function wpfcm_skip_theme_scan( $theme ) {
+	WPFCM_Settings::set_skip_site_content( 'themes', $theme );
 }
