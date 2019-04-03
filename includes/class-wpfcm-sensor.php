@@ -356,7 +356,7 @@ class WPFCM_Sensor {
 						$directory_name = dirname( $file );
 
 						// Check if the directory is in excluded directories list.
-						if ( ! empty( $site_content->skip_directories ) && in_array( $directory_name, $site_content->skip_directories, true ) ) {
+						if ( ! empty( $site_content->skip_dirs ) && in_array( $directory_name, $site_content->skip_dirs, true ) ) {
 							continue; // If true, then skip the loop.
 						}
 
@@ -369,7 +369,7 @@ class WPFCM_Sensor {
 						}
 
 						// Check for allowed extensions.
-						if ( ! empty( $site_content->skip_extensions ) && in_array( pathinfo( $filename, PATHINFO_EXTENSION ), $site_content->skip_extensions, true ) ) {
+						if ( ! empty( $site_content->skip_exts ) && in_array( pathinfo( $filename, PATHINFO_EXTENSION ), $site_content->skip_exts, true ) ) {
 							continue; // If true, then skip the loop.
 						}
 
@@ -961,10 +961,10 @@ class WPFCM_Sensor {
 
 			// Check if the option is instance of stdClass.
 			if ( false !== $site_content && $site_content instanceof stdClass ) {
-				$site_content->skip_core        = false;   // Reset skip core after the scan is complete.
-				$site_content->skip_files       = array(); // Empty the skip files at the end of the scan.
-				$site_content->skip_extensions  = array(); // Empty the skip extensions at the end of the scan.
-				$site_content->skip_directories = array(); // Empty the skip directories at the end of the scan.
+				$site_content->skip_core  = false;   // Reset skip core after the scan is complete.
+				$site_content->skip_files = array(); // Empty the skip files at the end of the scan.
+				$site_content->skip_exts  = array(); // Empty the skip extensions at the end of the scan.
+				$site_content->skip_dirs  = array(); // Empty the skip directories at the end of the scan.
 				wpfcm_save_setting( 'site_content', $site_content ); // Save the option.
 			}
 		}
