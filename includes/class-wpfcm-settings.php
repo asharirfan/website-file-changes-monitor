@@ -123,48 +123,45 @@ class WPFCM_Settings {
 			self::save_setting( self::$site_content, $site_content );
 		}
 	}
-		/**
-		 * Initiate the content option.
-		 *
-		 * If option does not exists then set the option.
-		 */
-		if ( false === $site_content ) {
-			$site_content = new stdClass(); // New stdClass object.
-			$plugins      = wpfcm_get_site_plugins(); // Get plugins on the site.
-			$themes       = wpfcm_get_site_themes(); // Get themes on the site.
 
-			// Assign the plugins to content object.
-			foreach ( $plugins as $index => $plugin ) {
-				$site_content->plugins[]      = strtolower( $plugin );
-				$site_content->skip_plugins[] = strtolower( $plugin );
+	/**
+	 * Remove plugin(s) or theme(s) to site content setting.
+	 *
+	 * @param string $type    - Type of content i.e. `plugins` or `themes`.
+	 * @param string $content - Name of the content. It can be a plugin or a theme.
+	 */
+	public static function remove_site_content( $type, $content ) {
+		// Get site content.
+		$site_content = self::get_setting( self::$site_content, false );
+
+		if ( false !== $site_content && $type && isset( $site_content->$type ) && in_array( $content, $site_content->$type, true ) ) {
+			// Get array key of the content.
+			$key = array_search( $content, $site_content->$type, true );
+
+			// If the key is found then remove it from the array and save it.
+			if ( false !== $key ) {
+				unset( $site_content->$type[ $key ] );
+				self::save_setting( self::$site_content, $site_content );
 			}
-
-			// Assign the themes to content object.
-			foreach ( $themes as $index => $theme ) {
-				$site_content->themes[]      = strtolower( $theme );
-				$site_content->skip_themes[] = strtolower( $theme );
-			}
-
-			self::save_setting( $content_option, $site_content );
 		}
+	}
 
-		// Check if type is plugin and content is not empty.
-		if ( 'plugin' === $type && ! empty( $content ) ) {
-			// If the plugin is not already present in the current list then.
-			if ( ! in_array( $content, $site_content->plugins, true ) ) {
-				// Add the plugin to the list and save it.
-				$site_content->plugins[]      = strtolower( $content );
-				$site_content->skip_plugins[] = strtolower( $content );
-				self::save_setting( $content_option, $site_content );
-			}
-		} elseif ( 'theme' === $type && ! empty( $content ) ) {
-			// If the theme is not already present in the current list then.
-			if ( ! in_array( $content, $site_content->themes, true ) ) {
-				// Add the theme to the list and save it.
-				$site_content->themes[]      = strtolower( $content );
-				$site_content->skip_themes[] = strtolower( $content );
-				self::save_setting( $content_option, $site_content );
-			}
+	/**
+	 * Set Skip Site Content.
+	 *
+	 * This content will be skipped during the next file changes scan.
+	 *
+	 * @param string $type    - Skip type.
+	 * @param string $content - Skip content.
+	 */
+	public static function set_skip_site_content( $type, $content ) {
+		$site_content = self::get_setting( 'site_content', false );
+		$skip_type    = "skip_$type";
+
+		if ( false !== $site_content && $content && isset( $site_content->$skip_type ) ) {
+			$site_content->$skip_type[] = $content;
+			$site_content->$skip_type   = array_unique( $site_content->$skip_type ); // Remove duplicate entries.
+			self::save_setting( 'site_content', $site_content );
 		}
 	}
 }
