@@ -1,8 +1,8 @@
 <?php
 /**
- * File Changes Monitoring Sensor.
+ * File Changes Monitor.
  *
- * @package wp-file-changes-monitor
+ * @package wpfcm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,9 +10,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * File Changes Monitoring Sensor.
+ * File Changes Monitor Class.
+ *
+ * This class is responsible for monitoring
+ * the file changes on the server.
  */
-class WPFCM_Sensor {
+class WPFCM_Monitor {
+
+	/**
+	 * Sensor Instance.
+	 *
+	 * @var WPFCM_Monitor
+	 */
+	protected static $instance = null;
 
 	/**
 	 * WP Root Path.
@@ -90,6 +100,20 @@ class WPFCM_Sensor {
 	const SCAN_WEEKLY     = 'weekly';
 	const SCAN_MONTHLY    = 'monthly';
 	const SCAN_FILE_LIMIT = 1000000;
+
+	/**
+	 * Return WPFCM_Monitor Instance.
+	 *
+	 * Ensures only one instance of monitor is loaded or can be loaded.
+	 *
+	 * @return WPFCM_Monitor
+	 */
+	public static function get_instance() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
 
 	/**
 	 * Constructor.
@@ -970,3 +994,5 @@ class WPFCM_Sensor {
 		}
 	}
 }
+
+wpfcm_get_monitor();

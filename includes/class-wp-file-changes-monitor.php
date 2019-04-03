@@ -90,6 +90,7 @@ final class WP_File_Changes_Monitor {
 		require_once WPFCM_BASE_DIR . 'includes/class-wpfcm-autoloader.php';
 		require_once WPFCM_BASE_DIR . 'includes/wpfcm-functions.php';
 		require_once WPFCM_BASE_DIR . 'includes/class-wpfcm-post-types.php';
+		require_once WPFCM_BASE_DIR . 'includes/class-wpfcm-monitor.php';
 
 		if ( is_admin() ) {
 			require_once WPFCM_BASE_DIR . 'includes/admin/class-wpfcm-admin.php';
@@ -101,14 +102,6 @@ final class WP_File_Changes_Monitor {
 	 */
 	public function register_hooks() {
 		register_activation_hook( WPFCM_PLUGIN_FILE, 'wpfcm_set_site_content' );
-		add_action( 'init', array( $this, 'plugin_init' ) );
-	}
-
-	/**
-	 * Initialize plugin hooks.
-	 */
-	public function plugin_init() {
-		$this->sensor = new WPFCM_Sensor();
 	}
 
 	/**
