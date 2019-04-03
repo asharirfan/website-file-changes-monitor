@@ -93,3 +93,13 @@ function wpfcm_get_dirname( $plugin ) {
 function wpfcm_get_site_themes() {
 	return array_keys( wp_get_themes() ); // Get themes.
 }
+
+/**
+ * Add plugin(s) to site plugins list.
+ *
+ * @param string $plugin - Plugin directory name.
+ */
+function wpfcm_set_site_plugins( $plugin = '' ) {
+	WPFCM_Settings::set_site_content( 'plugin', $plugin );
+}
+
