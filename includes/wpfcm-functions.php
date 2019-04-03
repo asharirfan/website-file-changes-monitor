@@ -85,3 +85,11 @@ function wpfcm_get_dirname( $plugin ) {
 	return dirname( $plugin );
 }
 
+/**
+ * Get site themes.
+ *
+ * @return array
+ */
+function wpfcm_get_site_themes() {
+	return array_keys( wp_get_themes() ); // Get themes.
+}
