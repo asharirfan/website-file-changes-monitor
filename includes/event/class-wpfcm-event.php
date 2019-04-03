@@ -2,7 +2,7 @@
 /**
  * WPFCM Event.
  *
- * @package wp-file-changes-monitor
+ * @package wpfcm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
