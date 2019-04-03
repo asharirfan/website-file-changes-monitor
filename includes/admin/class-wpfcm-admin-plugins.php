@@ -30,7 +30,8 @@ class WPFCM_Admin_Plugins {
 	public function __construct() {
 		$has_permission = ( current_user_can( 'install_plugins' ) || current_user_can( 'delete_plugins' ) || current_user_can( 'update_plugins' ) );
 
-		if ( $has_permission ) {
+		// Only hook when handling AJAX request.
+		if ( $has_permission && defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			add_action( 'admin_init', array( $this, 'set_old_plugins' ) );
 			add_action( 'shutdown', array( $this, 'monitor_plugin_events' ) );
 		}
@@ -47,10 +48,6 @@ class WPFCM_Admin_Plugins {
 	 * Monitor Plugin Events.
 	 */
 	public function monitor_plugin_events() {
-		if ( ! defined( 'DOING_AJAX' ) ) {
-			return;
-		}
-
 		// Get $_POST action data.
 		$action = isset( $_POST['action'] ) ? sanitize_text_field( wp_unslash( $_POST['action'] ) ) : false; // @codingStandardsIgnoreLine
 
