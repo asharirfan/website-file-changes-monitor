@@ -65,3 +65,13 @@ function wpfcm_create_event( $type, $file, $file_hash ) {
 	$event->save( $file, $type );
 	$event->set_resources( 'file', $data );
 }
+
+/**
+ * Get site plugin directories.
+ *
+ * @return array
+ */
+function wpfcm_get_site_plugins() {
+	return array_map( array( $this, 'wpfcm_get_dirname' ), array_keys( get_plugins() ) ); // Remove php file name from the plugins.
+}
+
