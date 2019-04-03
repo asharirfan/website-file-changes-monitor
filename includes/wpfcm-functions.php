@@ -75,3 +75,13 @@ function wpfcm_get_site_plugins() {
 	return array_map( array( $this, 'wpfcm_get_dirname' ), array_keys( get_plugins() ) ); // Remove php file name from the plugins.
 }
 
+/**
+ * Get directory name.
+ *
+ * @param string $plugin - Plugin name.
+ * @return string
+ */
+function wpfcm_get_dirname( $plugin ) {
+	return dirname( $plugin );
+}
+
