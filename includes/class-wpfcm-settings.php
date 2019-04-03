@@ -83,4 +83,62 @@ class WPFCM_Settings {
 			'exclude-exts'  => self::get_setting( 'scan-exclude-exts', array( 'jpg', 'jpeg', 'png', 'bmp', 'pdf', 'txt', 'log', 'mo', 'po', 'mp3', 'wav', 'gif', 'ico', 'jpe', 'psd', 'raw', 'svg', 'tif', 'tiff', 'aif', 'flac', 'm4a', 'oga', 'ogg', 'ra', 'wma', 'asf', 'avi', 'mkv', 'mov', 'mp4', 'mpe', 'mpeg', 'mpg', 'ogv', 'qt', 'rm', 'vob', 'webm', 'wm', 'wmv' ) ),
 		);
 	}
+
+	/**
+	 * Add plugins or themes to site content setting.
+	 *
+	 * @param string $type    - Type of content i.e. `plugin` or `theme`.
+	 * @param string $content - Name of the content. It can be a plugin or a theme.
+	 */
+	public static function set_site_content( $type, $content ) {
+		// Set content option.
+		$content_option = 'site_content';
+
+		// Get site plugins options.
+		$site_content = self::get_setting( $content_option, false );
+
+		/**
+		 * Initiate the content option.
+		 *
+		 * If option does not exists then set the option.
+		 */
+		if ( false === $site_content ) {
+			$site_content = new stdClass(); // New stdClass object.
+			$plugins      = wpfcm_get_site_plugins(); // Get plugins on the site.
+			$themes       = wpfcm_get_site_themes(); // Get themes on the site.
+
+			// Assign the plugins to content object.
+			foreach ( $plugins as $index => $plugin ) {
+				$site_content->plugins[]      = strtolower( $plugin );
+				$site_content->skip_plugins[] = strtolower( $plugin );
+			}
+
+			// Assign the themes to content object.
+			foreach ( $themes as $index => $theme ) {
+				$site_content->themes[]      = strtolower( $theme );
+				$site_content->skip_themes[] = strtolower( $theme );
+			}
+
+			self::save_setting( $content_option, $site_content );
+		}
+
+		// Check if type is plugin and content is not empty.
+		if ( 'plugin' === $type && ! empty( $content ) ) {
+			// If the plugin is not already present in the current list then.
+			if ( ! in_array( $content, $site_content->plugins, true ) ) {
+				// Add the plugin to the list and save it.
+				$site_content->plugins[]      = strtolower( $content );
+				$site_content->skip_plugins[] = strtolower( $content );
+				self::save_setting( $content_option, $site_content );
+			}
+		} elseif ( 'theme' === $type && ! empty( $content ) ) {
+			// If the theme is not already present in the current list then.
+			if ( ! in_array( $content, $site_content->themes, true ) ) {
+				// Add the theme to the list and save it.
+				$site_content->themes[]      = strtolower( $content );
+				$site_content->skip_themes[] = strtolower( $content );
+				self::save_setting( $content_option, $site_content );
+			}
+		}
+	}
 }
