@@ -30,6 +30,7 @@ class WPFCM_Admin {
 		require_once trailingslashit( dirname( __FILE__ ) ) . 'class-wpfcm-admin-menus.php';
 		require_once trailingslashit( dirname( __FILE__ ) ) . 'class-wpfcm-admin-plugins.php';
 		require_once trailingslashit( dirname( __FILE__ ) ) . 'class-wpfcm-admin-themes.php';
+		require_once trailingslashit( dirname( __FILE__ ) ) . 'class-wpfcm-admin-system.php';
 	}
 }
 
