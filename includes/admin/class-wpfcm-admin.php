@@ -28,6 +28,8 @@ class WPFCM_Admin {
 	 */
 	public function include_admin_files() {
 		require_once trailingslashit( dirname( __FILE__ ) ) . 'class-wpfcm-admin-menus.php';
+		require_once trailingslashit( dirname( __FILE__ ) ) . 'class-wpfcm-admin-plugins.php';
+		require_once trailingslashit( dirname( __FILE__ ) ) . 'class-wpfcm-admin-themes.php';
 	}
 }
 
