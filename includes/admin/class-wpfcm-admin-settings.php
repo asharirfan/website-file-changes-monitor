@@ -36,7 +36,9 @@ class WPFCM_Admin_Settings {
 		);
 
 		wp_localize_script(
-			'wpfcm-settings', 'wpfcmData', array(
+			'wpfcm-settings',
+			'wpfcmData',
+			array(
 				'fileInvalid'      => esc_html__( 'Filename cannot be added because it contains invalid characters.', 'wp-file-changes-monitor' ),
 				'extensionInvalid' => esc_html__( 'File extension cannot be added because it contains invalid characters.', 'wp-file-changes-monitor' ),
 				'dirInvalid'       => esc_html__( 'Directory cannot be added because it contains invalid characters.', 'wp-file-changes-monitor' ),
@@ -46,7 +48,7 @@ class WPFCM_Admin_Settings {
 		wp_enqueue_script( 'wpfcm-settings' );
 
 		// Get plugin settings.
-		$settings = WPFCM_Settings::get_monitor_settings();
+		$settings = wpfcm_get_monitor_settings();
 
 		// Include the view file.
 		require_once trailingslashit( dirname( __FILE__ ) ) . 'views/html-admin-settings.php';
