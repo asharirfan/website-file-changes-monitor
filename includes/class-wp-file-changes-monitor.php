@@ -100,6 +100,7 @@ final class WP_File_Changes_Monitor {
 	 * Register Hooks.
 	 */
 	public function register_hooks() {
+		register_activation_hook( WPFCM_PLUGIN_FILE, 'wpfcm_set_site_content' );
 		add_action( 'init', array( $this, 'plugin_init' ) );
 	}
 
