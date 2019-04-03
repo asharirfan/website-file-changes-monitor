@@ -164,3 +164,12 @@ function wpfcm_skip_plugin_scan( $plugin ) {
 function wpfcm_skip_theme_scan( $theme ) {
 	WPFCM_Settings::set_skip_site_content( 'themes', $theme );
 }
+
+/**
+ * Returns the instance of file changes montior.
+ *
+ * @return WPFCM_Monitor
+ */
+function wpfcm_get_monitor() {
+	WPFCM_Monitor::get_instance();
+}
