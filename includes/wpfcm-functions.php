@@ -95,6 +95,14 @@ function wpfcm_get_site_themes() {
 }
 
 /**
+ * Add plugins and themes to site content setting.
+ */
+function wpfcm_set_site_content() {
+	wpfcm_set_site_plugins();
+	wpfcm_set_site_themes();
+}
+
+/**
  * Add plugin(s) to site plugins list.
  *
  * @param string $plugin - Plugin directory name.
