@@ -72,10 +72,12 @@ class WPFCM_Admin_Settings {
 					$value = array_filter( $value, array( __CLASS__, 'filter_exclude_directory' ) );
 				}
 
-				// $exclude_settings = array( 'scan-exclude-dirs', 'scan-exclude-exts', 'scan-exclude-files' );
-				// if ( in_array( $key, $exclude_settings, true ) ) {
-				// self::set_skip_monitor_content( $key, $value );
-				// }
+				$exclude_settings = array( 'scan-exclude-dirs', 'scan-exclude-exts', 'scan-exclude-files' );
+
+				if ( in_array( $key, $exclude_settings, true ) ) {
+					self::set_skip_monitor_content( $key, $value );
+				}
+
 				wpfcm_save_setting( $key, $value );
 			}
 		}
@@ -111,7 +113,32 @@ class WPFCM_Admin_Settings {
 		}
 	}
 
+	/**
+	 * Set Skip Monitor Content.
+	 *
+	 * Set skip content for file changes scan to avoid useless notifications.
+	 *
+	 * @param string $setting - Setting name.
+	 * @param array  $value   - Setting value.
+	 */
+	private static function set_skip_monitor_content( $setting, $value ) {
+		$site_content = new stdClass();
+		$site_content = wpfcm_get_setting( 'site_content', $site_content );
+
+		$stored_setting  = wpfcm_get_setting( $setting, array() );
+		$removed_content = array_diff( $stored_setting, $value );
+
+		if ( ! empty( $removed_content ) ) {
+			$type         = str_replace( 'scan-exclude-', '', $setting );
+			$content_type = "skip_$type";
+
+			if ( isset( $site_content->$content_type ) ) {
+				array_merge( $site_content->$content_type, $removed_content );
+			} else {
+				$site_content->$content_type = $removed_content;
 			}
+
+			wpfcm_save_setting( 'site_content', $site_content );
 		}
 	}
 }
