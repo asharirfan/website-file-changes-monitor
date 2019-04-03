@@ -13,7 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Scan Frequencies.
  */
 $frequency_options = apply_filters(
-	'wpfcm_file_changes_scan_frequency', array(
+	'wpfcm_file_changes_scan_frequency',
+	array(
 		'daily'   => __( 'Daily', 'wp-file-changes-monitor' ),
 		'weekly'  => __( 'Weekly', 'wp-file-changes-monitor' ),
 		'monthly' => __( 'Monthly', 'wp-file-changes-monitor' ),
@@ -115,6 +116,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 
 <div class="wrap wpfcm-settings">
 	<h1><?php esc_html_e( 'File Changes Settings', 'wp-file-changes-monitor' ); ?></h1>
+	<?php self::show_messages(); ?>
 	<form method="post" action="" enctype="multipart/form-data">
 		<h3><?php esc_html_e( 'Which file changes events do you want to keep a log of in the activity log?', 'wp-file-changes-monitor' ); ?></h3>
 		<table class="form-table wpfcm-table">
