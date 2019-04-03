@@ -22,6 +22,17 @@ class WPFCM_Settings {
 	private static $settings = array();
 
 	/**
+	 * Site Content.
+	 *
+	 * Site content setting keeps track of plugins, themes, and
+	 * other necessary information required during file changes
+	 * monitoring scan.
+	 *
+	 * @var string
+	 */
+	public static $site_content = 'site_content';
+
+	/**
 	 * Return plugin setting.
 	 *
 	 * @param string $setting - Setting name.
@@ -85,18 +96,33 @@ class WPFCM_Settings {
 	}
 
 	/**
-	 * Add plugins or themes to site content setting.
+	 * Add plugin(s) or theme(s) to site content setting.
 	 *
 	 * @param string $type    - Type of content i.e. `plugin` or `theme`.
 	 * @param string $content - Name of the content. It can be a plugin or a theme.
 	 */
 	public static function set_site_content( $type, $content ) {
-		// Set content option.
-		$content_option = 'site_content';
+		// Get site content.
+		$site_content = self::get_setting( self::$site_content, false );
 
-		// Get site plugins options.
-		$site_content = self::get_setting( $content_option, false );
+		// Site content skip array according to $type.
+		$skip_type = "skip_$type";
 
+		// Check if the type is not empty.
+		if ( $content ) {
+			if ( isset( $site_content->$type ) && is_array( $site_content->$type ) ) {
+				$site_content->$type[] = strtolower( $content );               // Add content to its corresponding type array.
+				$site_content->$type   = array_unique( $site_content->$type ); // Remove duplicate entries.
+			}
+
+			if ( isset( $site_content->$skip_type ) && is_array( $site_content->$skip_type ) ) {
+				$site_content->$skip_type[] = strtolower( $content );                    // Add skip content to its corresponding type array.
+				$site_content->$skip_type   = array_unique( $site_content->$skip_type ); // Remove duplicate entries.
+			}
+
+			self::save_setting( self::$site_content, $site_content );
+		}
+	}
 		/**
 		 * Initiate the content option.
 		 *
