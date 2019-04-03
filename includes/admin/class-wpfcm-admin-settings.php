@@ -67,7 +67,50 @@ class WPFCM_Admin_Settings {
 				} else {
 					$value = sanitize_text_field( wp_unslash( $value ) );
 				}
-				WPFCM_Settings::save_setting( $key, $value );
+
+				if ( 'scan-exclude-dirs' === $key ) {
+					$value = array_filter( $value, array( __CLASS__, 'filter_exclude_directory' ) );
+				}
+
+				// $exclude_settings = array( 'scan-exclude-dirs', 'scan-exclude-exts', 'scan-exclude-files' );
+				// if ( in_array( $key, $exclude_settings, true ) ) {
+				// self::set_skip_monitor_content( $key, $value );
+				// }
+				wpfcm_save_setting( $key, $value );
+			}
+		}
+	}
+
+	/**
+	 * Filter Excluded Directories.
+	 *
+	 * @param string $directory - Excluded directory.
+	 * @return string
+	 */
+	private static function filter_exclude_directory( $directory ) {
+		// Get uploads directory.
+		$uploads_dir = wp_upload_dir();
+
+		// Server directories.
+		$server_dirs = array(
+			untrailingslashit( ABSPATH ), // Root directory.
+			ABSPATH . 'wp-admin',         // WordPress Admin.
+			ABSPATH . WPINC,              // wp-includes.
+			WP_CONTENT_DIR,               // wp-content.
+			WP_CONTENT_DIR . '/themes',   // Themes.
+			WP_PLUGIN_DIR,                // Plugins.
+			$uploads_dir['basedir'],      // Uploads.
+		);
+
+		if ( '/' === substr( $directory, -1 ) ) {
+			$directory = untrailingslashit( $directory );
+		}
+
+		if ( ! in_array( $directory, $server_dirs, true ) ) {
+			return $directory;
+		}
+	}
+
 			}
 		}
 	}
