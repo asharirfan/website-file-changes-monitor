@@ -109,6 +109,8 @@ class WPFCM_Admin_Settings {
 
 				wpfcm_save_setting( $key, $value );
 			}
+
+			self::add_message( __( 'Your settings have been saved.', 'wp-file-changes-monitor' ) );
 		}
 	}
 
