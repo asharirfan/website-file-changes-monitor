@@ -348,7 +348,7 @@ class WPFCM_Sensor {
 				// Files added alert.
 				if ( count( $files_added ) > 0 ) {
 					// Get excluded site content.
-					$site_content = wpfcm_get_setting( 'site_content' );
+					$site_content = wpfcm_get_setting( WPFCM_Settings::$site_content );
 
 					// Log the alert.
 					foreach ( $files_added as $file => $file_hash ) {
@@ -834,7 +834,7 @@ class WPFCM_Sensor {
 			|| false !== strpos( $path_to_scan, 'wp-includes' ) // wp-includes then check it for core updates skip.
 		) {
 			// Get `site_content` option.
-			$site_content = wpfcm_get_setting( 'site_content' );
+			$site_content = wpfcm_get_setting( WPFCM_Settings::$site_content );
 
 			// If the `skip_core` is set and its value is equal to true then.
 			if ( isset( $site_content->skip_core ) && true === $site_content->skip_core ) {
@@ -865,7 +865,7 @@ class WPFCM_Sensor {
 		}
 
 		// Get list of excluded plugins/themes.
-		$excluded_contents = wpfcm_get_setting( 'site_content' );
+		$excluded_contents = wpfcm_get_setting( WPFCM_Settings::$site_content );
 
 		// If excluded files exists then.
 		if ( ! empty( $excluded_contents ) ) {
@@ -927,24 +927,24 @@ class WPFCM_Sensor {
 		// If path to scan is of plugins then empty the skip plugins array.
 		if ( false !== strpos( $path_to_scan, 'wp-content/plugins' ) ) {
 			// Get contents list.
-			$site_content = wpfcm_get_setting( 'site_content', false );
+			$site_content = wpfcm_get_setting( WPFCM_Settings::$site_content, false );
 
 			// Empty skip plugins array.
 			$site_content->skip_plugins = array();
 
 			// Save it.
-			wpfcm_save_setting( 'site_content', $site_content );
+			wpfcm_save_setting( WPFCM_Settings::$site_content, $site_content );
 
 			// If path to scan is of themes then empty the skip themes array.
 		} elseif ( false !== strpos( $path_to_scan, 'wp-content/themes' ) ) {
 			// Get contents list.
-			$site_content = wpfcm_get_setting( 'site_content', false );
+			$site_content = wpfcm_get_setting( WPFCM_Settings::$site_content, false );
 
 			// Empty skip themes array.
 			$site_content->skip_themes = array();
 
 			// Save it.
-			wpfcm_save_setting( 'site_content', $site_content );
+			wpfcm_save_setting( WPFCM_Settings::$site_content, $site_content );
 		}
 	}
 
@@ -957,7 +957,7 @@ class WPFCM_Sensor {
 		// Check if last scanned directory exists and it is at last directory.
 		if ( ! empty( $last_scanned_dir ) && 6 === $last_scanned_dir ) {
 			// Get `site_content` option.
-			$site_content = wpfcm_get_setting( 'site_content', false );
+			$site_content = wpfcm_get_setting( WPFCM_Settings::$site_content, false );
 
 			// Check if the option is instance of stdClass.
 			if ( false !== $site_content && $site_content instanceof stdClass ) {
@@ -965,7 +965,7 @@ class WPFCM_Sensor {
 				$site_content->skip_files = array(); // Empty the skip files at the end of the scan.
 				$site_content->skip_exts  = array(); // Empty the skip extensions at the end of the scan.
 				$site_content->skip_dirs  = array(); // Empty the skip directories at the end of the scan.
-				wpfcm_save_setting( 'site_content', $site_content ); // Save the option.
+				wpfcm_save_setting( WPFCM_Settings::$site_content, $site_content ); // Save the option.
 			}
 		}
 	}

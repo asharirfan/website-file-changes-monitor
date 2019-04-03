@@ -155,13 +155,13 @@ class WPFCM_Settings {
 	 * @param string $content - Skip content.
 	 */
 	public static function set_skip_site_content( $type, $content ) {
-		$site_content = self::get_setting( 'site_content', false );
+		$site_content = self::get_setting( self::$site_content, false );
 		$skip_type    = "skip_$type";
 
 		if ( false !== $site_content && $content && isset( $site_content->$skip_type ) ) {
 			$site_content->$skip_type[] = $content;
 			$site_content->$skip_type   = array_unique( $site_content->$skip_type ); // Remove duplicate entries.
-			self::save_setting( 'site_content', $site_content );
+			self::save_setting( self::$site_content, $site_content );
 		}
 	}
 }

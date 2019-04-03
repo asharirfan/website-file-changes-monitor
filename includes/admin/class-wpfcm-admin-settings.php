@@ -125,7 +125,7 @@ class WPFCM_Admin_Settings {
 	 */
 	private static function set_skip_monitor_content( $setting, $value ) {
 		$site_content = new stdClass();
-		$site_content = wpfcm_get_setting( 'site_content', $site_content );
+		$site_content = wpfcm_get_setting( WPFCM_Settings::$site_content, $site_content );
 
 		$stored_setting  = wpfcm_get_setting( $setting, array() );
 		$removed_content = array_diff( $stored_setting, $value );
@@ -140,7 +140,7 @@ class WPFCM_Admin_Settings {
 				$site_content->$content_type = $removed_content;
 			}
 
-			wpfcm_save_setting( 'site_content', $site_content );
+			wpfcm_save_setting( WPFCM_Settings::$site_content, $site_content );
 		}
 	}
 }
