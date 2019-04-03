@@ -103,3 +103,11 @@ function wpfcm_set_site_plugins( $plugin = '' ) {
 	WPFCM_Settings::set_site_content( 'plugin', $plugin );
 }
 
+/**
+ * Add theme(s) to site themes list.
+ *
+ * @param string $theme - Theme name.
+ */
+function wpfcm_set_site_themes( $theme = '' ) {
+	WPFCM_Settings::set_site_content( 'theme', $theme );
+}
