@@ -72,7 +72,45 @@ function wpfcm_create_event( $type, $file, $file_hash ) {
  * @return array
  */
 function wpfcm_get_site_plugins() {
-	return array_map( 'wpfcm_get_dirname', array_keys( get_plugins() ) ); // Remove php file name from the plugins.
+	return array_map( 'dirname', array_keys( get_plugins() ) ); // Get plugin directories.
+}
+
+/**
+ * Get site themes.
+ *
+ * @return array
+ */
+function wpfcm_get_site_themes() {
+	return array_keys( wp_get_themes() ); // Get themes.
+}
+
+/**
+ * Initial Site Content Setup.
+ *
+ * Add plugins and themes to site content setting of the plugin.
+ */
+function wpfcm_set_site_content() {
+	// Get site plugins options.
+	$site_content = wpfcm_get_setting( WPFCM_Settings::$site_content, false );
+
+	// Initiate the site content option.
+	if ( false === $site_content ) {
+		// New stdClass object.
+		$site_content = new stdClass();
+
+		$plugins                    = array_map( 'strtolower', wpfcm_get_site_plugins() );
+		$site_content->plugins      = $plugins;
+		$site_content->skip_plugins = $plugins;
+
+		$themes                    = array_map( 'strtolower', wpfcm_get_site_themes() );
+		$site_content->themes      = $themes;
+		$site_content->skip_themes = $themes;
+
+		// Save site content.
+		wpfcm_save_setting( WPFCM_Settings::$site_content, $site_content );
+	}
+}
+
 }
 
 /**
