@@ -179,8 +179,8 @@ class WPFCM_Monitor {
 			// Schedule event if there isn't any already.
 			if ( ! wp_next_scheduled( self::$schedule_hook ) ) {
 				wp_schedule_event(
-					time(), // Timestamp.
-					'tenminutes', // Frequency.
+					time(),              // Timestamp.
+					'tenminutes',        // Frequency.
 					self::$schedule_hook // Scheduled event.
 				);
 			}
