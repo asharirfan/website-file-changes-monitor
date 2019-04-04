@@ -323,21 +323,21 @@ $disabled = 'no' === $settings['enabled'] ? 'disabled' : false;
 			<tbody>
 				<tr>
 					<th>
-						<label for="wsal-scan-now"><?php esc_html_e( 'Launch Instant Scan', 'wp-file-changes-monitor' ); ?></label>
+						<label><?php esc_html_e( 'Launch Instant Scan', 'wp-file-changes-monitor' ); ?></label>
 					</th>
 					<td>
 						<fieldset <?php echo esc_attr( $disabled ); ?>>
-							<input type="button" class="button-primary" id="wsal-scan-now" value="<?php esc_attr_e( 'Scan Now', 'wp-file-changes-monitor' ); ?>">
-							<input type="button" class="button-secondary" id="wsal-stop-scan" value="<?php esc_attr_e( 'Stop Scan', 'wp-file-changes-monitor' ); ?>" disabled>
-							<?php // if ( 'enable' === $this->scan_settings['scan_file_changes'] && ! $this->scan_settings['scan_in_progress'] ) : ?>
-							<?php // elseif ( 'enable' === $this->scan_settings['scan_file_changes'] && $this->scan_settings['scan_in_progress'] ) : ?>
-								<!-- <input type="button" class="button button-primary" id="wsal-scan-now" value="<?php // esc_attr_e( 'Scan in Progress', 'wp-file-changes-monitor' ); ?>" disabled>
-								<input type="button" class="button button-ui-primary" id="wsal-stop-scan" value="<?php // esc_attr_e( 'Stop Scan', 'wp-file-changes-monitor' ); ?>"> -->
+							<?php if ( 'yes' === $settings['enabled'] && ! wpfcm_get_setting( 'scan-in-progress', false ) ) : ?>
+								<input type="button" class="button-primary" id="wpfcm-scan-start" value="<?php esc_attr_e( 'Scan Now', 'wp-file-changes-monitor' ); ?>">
+								<input type="button" class="button-secondary" id="wpfcm-scan-stop" value="<?php esc_attr_e( 'Stop Scan', 'wp-file-changes-monitor' ); ?>" disabled>
+							<?php elseif ( 'no' === $settings['enabled'] && wpfcm_get_setting( 'scan-in-progress', false ) ) : ?>
+								<input type="button" class="button button-primary" id="wpfcm-scan-start" value="<?php esc_attr_e( 'Scan in Progress', 'wp-file-changes-monitor' ); ?>" disabled>
+								<input type="button" class="button button-ui-primary" id="wpfcm-scan-stop" value="<?php esc_attr_e( 'Stop Scan', 'wp-file-changes-monitor' ); ?>">
 								<!-- Scan in progress -->
-							<?php // else : ?>
-								<!-- <input type="button" class="button button-primary" id="wsal-scan-now" value="<?php // esc_attr_e( 'Scan Now', 'wp-file-changes-monitor' ); ?>" disabled>
-								<input type="button" class="button button-secondary" id="wsal-stop-scan" value="<?php // esc_attr_e( 'Stop Scan', 'wp-file-changes-monitor' ); ?>" disabled> -->
-							<?php // endif; ?>
+							<?php else : ?>
+								<input type="button" class="button button-primary" id="wpfcm-scan-start" value="<?php esc_attr_e( 'Scan Now', 'wp-file-changes-monitor' ); ?>" disabled>
+								<input type="button" class="button button-secondary" id="wpfcm-scan-stop" value="<?php esc_attr_e( 'Stop Scan', 'wp-file-changes-monitor' ); ?>" disabled>
+							<?php endif; ?>
 						</fieldset>
 					</td>
 				</tr>
