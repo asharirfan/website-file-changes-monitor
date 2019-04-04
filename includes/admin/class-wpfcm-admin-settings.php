@@ -66,6 +66,18 @@ class WPFCM_Admin_Settings {
 			'wpfcm-settings',
 			'wpfcmData',
 			array(
+				'monitor'          => array(
+					'start' => esc_url_raw( rest_url( 'wp-file-changes-monitor/v1/monitor/start' ) ),
+					'stop'  => esc_url_raw( rest_url( 'wp-file-changes-monitor/v1/monitor/stop' ) ),
+				),
+				'restRequestNonce' => wp_create_nonce( 'wp_rest' ),
+				'scanButtons'      => array(
+					'scanNow'    => esc_html__( 'Scan Now', 'wp-file-changes-monitor' ),
+					'scanStop'   => esc_html__( 'Stop Scan', 'wp-file-changes-monitor' ),
+					'scanning'   => esc_html__( 'Scanning...', 'wp-file-changes-monitor' ),
+					'stopping'   => esc_html__( 'Stopping scan...', 'wp-file-changes-monitor' ),
+					'scanFailed' => esc_html__( 'Scan Failed!', 'wp-file-changes-monitor' ),
+				),
 				'fileInvalid'      => esc_html__( 'Filename cannot be added because it contains invalid characters.', 'wp-file-changes-monitor' ),
 				'extensionInvalid' => esc_html__( 'File extension cannot be added because it contains invalid characters.', 'wp-file-changes-monitor' ),
 				'dirInvalid'       => esc_html__( 'Directory cannot be added because it contains invalid characters.', 'wp-file-changes-monitor' ),
