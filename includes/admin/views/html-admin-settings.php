@@ -112,6 +112,7 @@ if ( is_multisite() ) {
 
 $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_directories );
 
+$disabled = 'no' === $settings['enabled'] ? 'disabled' : false;
 ?>
 
 <div class="wrap wpfcm-settings">
@@ -123,7 +124,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 			<tr>
 				<th><label for="wpfcm-file-changes-type"><?php esc_html_e( 'Notify me when', 'wp-file-changes-monitor' ); ?></label></th>
 				<td>
-					<fieldset>
+					<fieldset <?php echo esc_attr( $disabled ); ?>>
 						<label for="added">
 							<input type="checkbox" name="wpfcm-settings[scan-type][]" value="added" <?php echo in_array( 'added', $settings['type'], true ) ? 'checked' : false; ?>>
 							<span><?php esc_html_e( 'Files are added', 'wp-file-changes-monitor' ); ?></span>
@@ -150,7 +151,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 			<tr>
 				<th><label for="wpfcm-settings-frequency"><?php esc_html_e( 'Scan Frequency', 'wp-file-changes-monitor' ); ?></label></th>
 				<td>
-					<fieldset>
+					<fieldset <?php echo esc_attr( $disabled ); ?>>
 						<select name="wpfcm-settings[scan-frequency]">
 							<?php foreach ( $frequency_options as $value => $html ) : ?>
 								<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $settings['frequency'] ); ?>><?php echo esc_html( $html ); ?></option>
@@ -162,7 +163,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 			<tr>
 				<th><label for="wpfcm-settings-scan-hour"><?php esc_html_e( 'Scan Time', 'wp-file-changes-monitor' ); ?></label></th>
 				<td>
-					<fieldset>
+					<fieldset <?php echo esc_attr( $disabled ); ?>>
 						<label>
 							<select name="wpfcm-settings[scan-hour]">
 								<?php foreach ( $scan_hours as $value => $html ) : ?>
@@ -205,7 +206,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 				<tr>
 					<th><label for="wpfcm-settings-directories"><?php esc_html_e( 'Directories to scan', 'wp-file-changes-monitor' ); ?></label></th>
 					<td>
-						<fieldset>
+						<fieldset <?php echo esc_attr( $disabled ); ?>>
 							<?php foreach ( $wp_directories as $value => $html ) : ?>
 								<label>
 									<input name="wpfcm-settings[scan-directories][]" type="checkbox" value="<?php echo esc_attr( $value ); ?>" <?php echo in_array( $value, $settings['directories'], true ) ? 'checked' : false; ?> />
@@ -226,7 +227,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 			<tr>
 				<th><label for="wpfcm-settings-file-size"><?php esc_html_e( 'File Size Limit', 'wp-file-changes-monitor' ); ?></label></th>
 				<td>
-					<fieldset>
+					<fieldset <?php echo esc_attr( $disabled ); ?>>
 						<input type="number" name="wpfcm-settings[scan-file-size]" min="1" max="100" value="<?php echo esc_attr( $settings['file-size'] ); ?>" /> <?php esc_html_e( 'MB', 'wp-file-changes-monitor' ); ?>
 					</fieldset>
 				</td>
@@ -240,7 +241,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 			<tr>
 				<th><label for="wpfcm-settings-exclude-dirs"><?php esc_html_e( 'Exclude All Files in These Directories', 'wp-file-changes-monitor' ); ?></label></th>
 				<td>
-					<fieldset>
+					<fieldset <?php echo esc_attr( $disabled ); ?>>
 						<div class="wpfcm-files-container">
 							<div class="exclude-list" id="wpfcm-exclude-dirs-list">
 								<?php foreach ( $settings['exclude-dirs'] as $dir ) : ?>
@@ -268,7 +269,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 			<tr>
 				<th><label for="wpfcm-settings-exclude-filenames"><?php esc_html_e( 'Exclude These Files', 'wp-file-changes-monitor' ); ?></label></th>
 				<td>
-					<fieldset>
+					<fieldset <?php echo esc_attr( $disabled ); ?>>
 						<div class="wpfcm-files-container">
 							<div class="exclude-list" id="wpfcm-exclude-files-list">
 								<?php foreach ( $settings['exclude-files'] as $file ) : ?>
@@ -292,7 +293,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 			<tr>
 				<th><label for="wpfcm-settings-exclude-extensions"><?php esc_html_e( 'Exclude these File Types', 'wp-file-changes-monitor' ); ?></label></th>
 				<td>
-					<fieldset>
+					<fieldset <?php echo esc_attr( $disabled ); ?>>
 						<div class="wpfcm-files-container">
 							<div class="exclude-list" id="wpfcm-exclude-exts-list">
 								<?php foreach ( $settings['exclude-exts'] as $file_type ) : ?>
@@ -325,7 +326,7 @@ $wp_directories = apply_filters( 'wpfcm_file_changes_scan_directories', $wp_dire
 						<label for="wsal-scan-now"><?php esc_html_e( 'Launch Instant Scan', 'wp-file-changes-monitor' ); ?></label>
 					</th>
 					<td>
-						<fieldset>
+						<fieldset <?php echo esc_attr( $disabled ); ?>>
 							<input type="button" class="button-primary" id="wsal-scan-now" value="<?php esc_attr_e( 'Scan Now', 'wp-file-changes-monitor' ); ?>">
 							<input type="button" class="button-secondary" id="wsal-stop-scan" value="<?php esc_attr_e( 'Stop Scan', 'wp-file-changes-monitor' ); ?>" disabled>
 							<?php // if ( 'enable' === $this->scan_settings['scan_file_changes'] && ! $this->scan_settings['scan_in_progress'] ) : ?>
