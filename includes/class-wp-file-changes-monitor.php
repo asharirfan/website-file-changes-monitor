@@ -91,6 +91,7 @@ final class WP_File_Changes_Monitor {
 		require_once WPFCM_BASE_DIR . 'includes/wpfcm-functions.php';
 		require_once WPFCM_BASE_DIR . 'includes/class-wpfcm-post-types.php';
 		require_once WPFCM_BASE_DIR . 'includes/class-wpfcm-monitor.php';
+		require_once WPFCM_BASE_DIR . 'includes/class-wpfcm-api.php';
 
 		if ( is_admin() ) {
 			require_once WPFCM_BASE_DIR . 'includes/admin/class-wpfcm-admin.php';
