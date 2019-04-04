@@ -174,7 +174,7 @@ class WPFCM_Monitor {
 			wp_clear_scheduled_hook( self::$schedule_hook );
 		} elseif ( 'yes' === $this->scan_settings['enabled'] ) {
 			// Hook scheduled method.
-			add_action( self::$schedule_hook, array( $this, 'monitor_file_changes' ) );
+			add_action( self::$schedule_hook, array( $this, 'scan_file_changes' ) );
 
 			// Schedule event if there isn't any already.
 			if ( ! wp_next_scheduled( self::$schedule_hook ) ) {
@@ -205,13 +205,13 @@ class WPFCM_Monitor {
 	}
 
 	/**
-	 * Monitor File Changes.
+	 * Scan File Changes.
 	 *
 	 * @param bool $manual       - Set to true for manual scan.
 	 * @param int  $last_scanned - Last scanned directory index of server directories.
 	 *                             Helpful in performing manual scan.
 	 */
-	public function monitor_file_changes( $manual = false, $last_scanned = null ) {
+	public function scan_file_changes( $manual = false, $last_scanned = null ) {
 		// Check scan time frequency & last scanned directory list.
 		if ( ! $manual && ! $this->check_start_scan( $this->scan_settings['frequency'] ) ) {
 			return;
