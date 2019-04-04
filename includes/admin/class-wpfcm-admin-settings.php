@@ -57,7 +57,7 @@ class WPFCM_Admin_Settings {
 		wp_register_script(
 			'wpfcm-settings',
 			WPFCM_BASE_URL . 'assets/js/custom' . $suffix . '.js',
-			array( 'jquery' ),
+			array(),
 			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WPFCM_BASE_DIR . 'assets/js/custom.js' ) : WPFCM_VERSION,
 			true
 		);
