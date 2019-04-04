@@ -1,21 +1,30 @@
 "use strict";
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
 /**
  * Settings JS.
  */
-jQuery(document).ready(function () {
-  var keepLog = jQuery('input[name="wpfcm-settings[keep-log]"]');
-  var frequencySelect = jQuery('select[name="wpfcm-settings[scan-frequency]"]');
-  var scanDay = jQuery('select[name="wpfcm-settings[scan-day]"]').parent();
-  var scanDate = jQuery('select[name="wpfcm-settings[scan-date]"]').parent();
-  var excludeAdd = jQuery('.wpfcm-files-container .add');
-  var excludeRemove = jQuery('.wpfcm-files-container .remove'); // Frequency handler.
+window.addEventListener('load', function () {
+  var $ = document.querySelector.bind(document);
+  var keepLog = document.querySelectorAll('input[name="wpfcm-settings[keep-log]"]');
+  var frequencySelect = $('select[name="wpfcm-settings[scan-frequency]"]');
+  var scanDay = $('select[name="wpfcm-settings[scan-day]"]').parentNode;
+  var scanDate = $('select[name="wpfcm-settings[scan-date]"]').parentNode;
+  var excludeAdd = document.querySelectorAll('.wpfcm-files-container .add');
+  var excludeRemove = document.querySelectorAll('.wpfcm-files-container .remove'); // Frequency handler.
 
-  jQuery(frequencySelect).change(function () {
-    showScanFields(jQuery(this).val());
+  frequencySelect.addEventListener('change', function () {
+    showScanFields(this.value);
   }); // Manage appearance on load.
 
-  showScanFields(frequencySelect.val());
+  showScanFields(frequencySelect.value);
   /**
    * Show Scan Time fields according to selected frequency.
    *
@@ -23,24 +32,35 @@ jQuery(document).ready(function () {
    */
 
   function showScanFields(frequency) {
-    scanDay.addClass('hidden');
-    scanDate.addClass('hidden');
+    scanDay.classList.add('hidden');
+    scanDate.classList.add('hidden');
 
     if ('weekly' === frequency) {
-      scanDay.removeClass('hidden');
+      scanDay.classList.remove('hidden');
     } else if ('monthly' === frequency) {
-      scanDate.removeClass('hidden');
+      scanDate.classList.remove('hidden');
     }
-  }
+  } // Add Exclude Item.
+
+
+  _toConsumableArray(excludeAdd).forEach(function (excludeAddButton) {
+    excludeAddButton.addEventListener('click', addToExcludeList);
+  }); // Remove Exclude Item(s).
+
+
+  _toConsumableArray(excludeRemove).forEach(function (excludeRemoveButton) {
+    excludeRemoveButton.addEventListener('click', removeFromExcludeList);
+  });
   /**
-   * Add Exclude Item.
+   * Add item to exclude list.
+   *
+   * @param {Event} e Event object.
    */
 
 
-  jQuery(excludeAdd).click(function (event) {
-    event.preventDefault();
+  function addToExcludeList(e) {
     var pattern = '';
-    var excludeType = jQuery(this).data('exclude-type');
+    var excludeType = e.target.dataset.excludeType;
 
     if ('dirs' === excludeType) {
       pattern = /^\s*[a-z-._\d,\s/]+\s*$/i;
@@ -50,25 +70,25 @@ jQuery(document).ready(function () {
       pattern = /^\s*[a-z-._\d,\s]+\s*$/i;
     }
 
-    var excludeList = jQuery("#wpfcm-exclude-".concat(excludeType, "-list"));
-    var excludeNameInput = jQuery(this).parent().find('.name');
-    var excludeName = excludeNameInput.val();
+    var excludeList = $("#wpfcm-exclude-".concat(excludeType, "-list"));
+    var excludeNameInput = e.target.parentNode.querySelector('.name');
+    var excludeName = excludeNameInput.value;
 
     if (excludeName.match(pattern)) {
-      var excludeItem = jQuery('<span></span>');
-      var excludeItemInput = jQuery('<input>');
-      var excludeItemLabel = jQuery('<label></label>');
-      excludeItemInput.prop('type', 'checkbox');
-      excludeItemInput.prop('checked', true);
-      excludeItemInput.prop('name', "wpfcm-settings[scan-exclude-".concat(excludeType, "][]"));
-      excludeItemInput.prop('id', excludeName);
-      excludeItemInput.prop('value', excludeName);
-      excludeItemLabel.prop('for', excludeName);
-      excludeItemLabel.text(excludeName);
-      excludeItem.append(excludeItemInput);
-      excludeItem.append(excludeItemLabel);
-      excludeList.append(excludeItem);
-      excludeNameInput.removeAttr('value');
+      var excludeItem = document.createElement('span');
+      var excludeItemInput = document.createElement('input');
+      var excludeItemLabel = document.createElement('label');
+      excludeItemInput.type = 'checkbox';
+      excludeItemInput.checked = true;
+      excludeItemInput.name = "wpfcm-settings[scan-exclude-".concat(excludeType, "][]");
+      excludeItemInput.id = excludeName;
+      excludeItemInput.value = excludeName;
+      excludeItemLabel.setAttribute('for', excludeName);
+      excludeItemLabel.innerHTML = excludeName;
+      excludeItem.appendChild(excludeItemInput);
+      excludeItem.appendChild(excludeItemLabel);
+      excludeList.appendChild(excludeItem);
+      excludeNameInput.value = '';
     } else {
       if ('dirs' === excludeType) {
         alert(wpfcmData.dirInvalid);
@@ -78,51 +98,58 @@ jQuery(document).ready(function () {
         alert(wpfcmData.extensionInvalid);
       }
     }
-  });
+  }
   /**
-   * Remove Exclude Item(s).
+   * Remove item from exclude list.
+   *
+   * @param {Event} e Event object.
    */
 
-  jQuery(excludeRemove).click(function (event) {
-    event.preventDefault();
-    var excludeItems = jQuery(this).parent().find('.exclude-list input[type=checkbox]');
+
+  function removeFromExcludeList(e) {
+    var excludeItems = _toConsumableArray(e.target.parentNode.querySelectorAll('.exclude-list input[type=checkbox]'));
+
     var removedValues = [];
 
     for (var index = 0; index < excludeItems.length; index++) {
-      if (!jQuery(excludeItems[index]).is(':checked')) {
-        removedValues.push(jQuery(excludeItems[index]).val());
+      if (!excludeItems[index].checked) {
+        removedValues.push(excludeItems[index].value);
       }
     }
 
-    if (removedValues) {
+    if (removedValues.length) {
       for (var _index = 0; _index < removedValues.length; _index++) {
-        var excludeItem = jQuery('input[value="' + removedValues[_index] + '"]');
+        var excludeItem = $('input[value="' + removedValues[_index] + '"]');
 
         if (excludeItem) {
-          excludeItem.parent().remove();
+          excludeItem.parentNode.remove();
         }
       }
     }
-  }); // Update settings state on change.
+  } // Update settings state when keep log options change.
 
-  keepLog.change(function () {
-    toggleSettings(jQuery(this).val());
-  }); // Toggle settings state on page load.
 
-  toggleSettings(keepLog.val());
+  _toConsumableArray(keepLog).forEach(function (toggle) {
+    toggle.addEventListener('change', function () {
+      toggleSettings(this.value);
+    });
+  });
   /**
    * Toggle Plugin Settings State.
    *
    * @param {string} settingValue - Keep log setting value.
    */
 
-  function toggleSettings(settingValue) {
-    var settingFields = jQuery('.wpfcm-table fieldset');
 
-    if ('no' === settingValue) {
-      settingFields.attr('disabled', true);
-    } else {
-      settingFields.removeAttr('disabled');
-    }
+  function toggleSettings(settingValue) {
+    var settingFields = _toConsumableArray(document.querySelectorAll('.wpfcm-table fieldset'));
+
+    settingFields.forEach(function (setting) {
+      if ('no' === settingValue) {
+        setting.disabled = true;
+      } else {
+        setting.disabled = false;
+      }
+    });
   }
 });

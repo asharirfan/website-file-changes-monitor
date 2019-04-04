@@ -1,22 +1,23 @@
 /**
  * Settings JS.
  */
-jQuery( document ).ready( function() {
+window.addEventListener( 'load', function() {
 
-	const keepLog = jQuery( 'input[name="wpfcm-settings[keep-log]"]' );
-	const frequencySelect = jQuery( 'select[name="wpfcm-settings[scan-frequency]"]' );
-	const scanDay = jQuery( 'select[name="wpfcm-settings[scan-day]"]' ).parent();
-	const scanDate = jQuery( 'select[name="wpfcm-settings[scan-date]"]' ).parent();
-	const excludeAdd = jQuery( '.wpfcm-files-container .add' );
-	const excludeRemove = jQuery( '.wpfcm-files-container .remove' );
+	const $ = document.querySelector.bind( document );
+	const keepLog = document.querySelectorAll( 'input[name="wpfcm-settings[keep-log]"]' );
+	const frequencySelect = $( 'select[name="wpfcm-settings[scan-frequency]"]' );
+	const scanDay = $( 'select[name="wpfcm-settings[scan-day]"]' ).parentNode;
+	const scanDate = $( 'select[name="wpfcm-settings[scan-date]"]' ).parentNode;
+	const excludeAdd = document.querySelectorAll( '.wpfcm-files-container .add' );
+	const excludeRemove = document.querySelectorAll( '.wpfcm-files-container .remove' );
 
 	// Frequency handler.
-	jQuery( frequencySelect ).change( function() {
-		showScanFields( jQuery( this ).val() );
+	frequencySelect.addEventListener( 'change', function() {
+		showScanFields( this.value );
 	});
 
 	// Manage appearance on load.
-	showScanFields( frequencySelect.val() );
+	showScanFields( frequencySelect.value );
 
 	/**
 	 * Show Scan Time fields according to selected frequency.
@@ -24,24 +25,34 @@ jQuery( document ).ready( function() {
 	 * @param {string} frequency - Scan frequency.
 	 */
 	function showScanFields( frequency ) {
-		scanDay.addClass( 'hidden' );
-		scanDate.addClass( 'hidden' );
+		scanDay.classList.add( 'hidden' );
+		scanDate.classList.add( 'hidden' );
 
 		if ( 'weekly' === frequency ) {
-			scanDay.removeClass( 'hidden' );
+			scanDay.classList.remove( 'hidden' );
 		} else if ( 'monthly' === frequency ) {
-			scanDate.removeClass( 'hidden' );
+			scanDate.classList.remove( 'hidden' );
 		}
 	}
 
-	/**
-	 * Add Exclude Item.
-	 */
-	jQuery( excludeAdd ).click( function( event ) {
-		event.preventDefault();
+	// Add Exclude Item.
+	[ ...excludeAdd ].forEach( excludeAddButton => {
+		excludeAddButton.addEventListener( 'click', addToExcludeList );
+	});
 
+	// Remove Exclude Item(s).
+	[ ...excludeRemove ].forEach( excludeRemoveButton => {
+		excludeRemoveButton.addEventListener( 'click', removeFromExcludeList );
+	});
+
+	/**
+	 * Add item to exclude list.
+	 *
+	 * @param {Event} e Event object.
+	 */
+	function addToExcludeList( e ) {
 		let pattern = '';
-		const excludeType = jQuery( this ).data( 'exclude-type' );
+		const excludeType = e.target.dataset.excludeType;
 
 		if ( 'dirs' === excludeType ) {
 			pattern = /^\s*[a-z-._\d,\s/]+\s*$/i;
@@ -51,28 +62,28 @@ jQuery( document ).ready( function() {
 			pattern = /^\s*[a-z-._\d,\s]+\s*$/i;
 		}
 
-		const excludeList = jQuery( `#wpfcm-exclude-${excludeType}-list` );
-		const excludeNameInput = jQuery( this ).parent().find( '.name' );
-		const excludeName = excludeNameInput.val();
+		const excludeList = $( `#wpfcm-exclude-${excludeType}-list` );
+		const excludeNameInput = e.target.parentNode.querySelector( '.name' );
+		const excludeName = excludeNameInput.value;
 
 		if ( excludeName.match( pattern ) ) {
-			const excludeItem = jQuery( '<span></span>' );
-			const excludeItemInput = jQuery( '<input>' );
-			const excludeItemLabel = jQuery( '<label></label>' );
+			const excludeItem = document.createElement( 'span' );
+			const excludeItemInput = document.createElement( 'input' );
+			const excludeItemLabel = document.createElement( 'label' );
 
-			excludeItemInput.prop( 'type', 'checkbox' );
-			excludeItemInput.prop( 'checked', true );
-			excludeItemInput.prop( 'name', `wpfcm-settings[scan-exclude-${excludeType}][]` );
-			excludeItemInput.prop( 'id', excludeName );
-			excludeItemInput.prop( 'value', excludeName );
+			excludeItemInput.type = 'checkbox';
+			excludeItemInput.checked = true;
+			excludeItemInput.name = `wpfcm-settings[scan-exclude-${excludeType}][]`;
+			excludeItemInput.id = excludeName;
+			excludeItemInput.value = excludeName;
 
-			excludeItemLabel.prop( 'for', excludeName );
-			excludeItemLabel.text( excludeName );
+			excludeItemLabel.setAttribute( 'for', excludeName );
+			excludeItemLabel.innerHTML = excludeName;
 
-			excludeItem.append( excludeItemInput );
-			excludeItem.append( excludeItemLabel );
-			excludeList.append( excludeItem );
-			excludeNameInput.removeAttr( 'value' );
+			excludeItem.appendChild( excludeItemInput );
+			excludeItem.appendChild( excludeItemLabel );
+			excludeList.appendChild( excludeItem );
+			excludeNameInput.value = '';
 		} else {
 			if ( 'dirs' === excludeType ) {
 				alert( wpfcmData.dirInvalid );
@@ -82,40 +93,39 @@ jQuery( document ).ready( function() {
 				alert( wpfcmData.extensionInvalid );
 			}
 		}
-	});
+	}
 
 	/**
-	 * Remove Exclude Item(s).
+	 * Remove item from exclude list.
+	 *
+	 * @param {Event} e Event object.
 	 */
-	jQuery( excludeRemove ).click( function( event ) {
-		event.preventDefault();
-
-		const excludeItems = jQuery( this ).parent().find( '.exclude-list input[type=checkbox]' );
+	function removeFromExcludeList( e ) {
+		const excludeItems = [ ...e.target.parentNode.querySelectorAll( '.exclude-list input[type=checkbox]' ) ];
 		let removedValues = [];
 
 		for ( let index = 0; index < excludeItems.length; index++ ) {
-			if ( ! jQuery( excludeItems[ index ]).is( ':checked' ) ) {
-				removedValues.push( jQuery( excludeItems[ index ]).val() );
+			if ( ! excludeItems[ index ].checked ) {
+				removedValues.push( excludeItems[ index ].value );
 			}
 		}
 
-		if ( removedValues ) {
+		if ( removedValues.length ) {
 			for ( let index = 0; index < removedValues.length; index++ ) {
-				let excludeItem = jQuery( 'input[value="' + removedValues[ index ] + '"]' );
+				let excludeItem = $( 'input[value="' + removedValues[ index ] + '"]' );
 				if ( excludeItem ) {
-					excludeItem.parent().remove();
+					excludeItem.parentNode.remove();
 				}
 			}
 		}
-	});
+	}
 
-	// Update settings state on change.
-	keepLog.change( function() {
-		toggleSettings( jQuery( this ).val() );
+	// Update settings state when keep log options change.
+	[ ...keepLog ].forEach( toggle => {
+		toggle.addEventListener( 'change', function() {
+			toggleSettings( this.value );
+		});
 	});
-
-	// Toggle settings state on page load.
-	toggleSettings( keepLog.val() );
 
 	/**
 	 * Toggle Plugin Settings State.
@@ -123,12 +133,14 @@ jQuery( document ).ready( function() {
 	 * @param {string} settingValue - Keep log setting value.
 	 */
 	function toggleSettings( settingValue ) {
-		const settingFields = jQuery( '.wpfcm-table fieldset' );
+		const settingFields = [ ...document.querySelectorAll( '.wpfcm-table fieldset' ) ];
 
-		if ( 'no' === settingValue ) {
-			settingFields.attr( 'disabled', true );
-		} else {
-			settingFields.removeAttr( 'disabled' );
-		}
+		settingFields.forEach( setting => {
+			if ( 'no' === settingValue ) {
+				setting.disabled = true;
+			} else {
+				setting.disabled = false;
+			}
+		});
 	}
 });
