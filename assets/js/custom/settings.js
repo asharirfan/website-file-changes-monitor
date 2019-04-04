@@ -10,6 +10,8 @@ window.addEventListener( 'load', function() {
 	const scanDate = $( 'select[name="wpfcm-settings[scan-date]"]' ).parentNode;
 	const excludeAdd = document.querySelectorAll( '.wpfcm-files-container .add' );
 	const excludeRemove = document.querySelectorAll( '.wpfcm-files-container .remove' );
+	const manualScanStart = $( '#wpfcm-scan-start' );
+	const manualScanStop = $( '#wpfcm-scan-stop' );
 
 	// Frequency handler.
 	frequencySelect.addEventListener( 'change', function() {
@@ -86,11 +88,11 @@ window.addEventListener( 'load', function() {
 			excludeNameInput.value = '';
 		} else {
 			if ( 'dirs' === excludeType ) {
-				alert( wpfcmData.dirInvalid );
+				alert( wpfcmData.dirInvalid ); // eslint-disable-line no-undef
 			} else if ( 'files' === excludeType ) {
-				alert( wpfcmData.fileInvalid );
+				alert( wpfcmData.fileInvalid ); // eslint-disable-line no-undef
 			} else if ( 'exts' === excludeType ) {
-				alert( wpfcmData.extensionInvalid );
+				alert( wpfcmData.extensionInvalid ); // eslint-disable-line no-undef
 			}
 		}
 	}
@@ -143,4 +145,67 @@ window.addEventListener( 'load', function() {
 			}
 		});
 	}
+
+	/**
+	 * Send request to start manual scan.
+	 */
+	manualScanStart.addEventListener( 'click', function( e ) {
+		e.target.value = wpfcmData.scanButtons.scanning; // eslint-disable-line no-undef
+		e.target.disabled = true;
+		manualScanStop.disabled = false;
+
+		// Rest request object.
+		const request = new Request( wpfcmData.monitor.start, { // eslint-disable-line no-undef
+			method: 'GET',
+			headers: {
+				'X-WP-Nonce': wpfcmData.restRequestNonce // eslint-disable-line no-undef
+			}
+		});
+
+		// Send the request.
+		fetch( request )
+			.then( response => response.json() )
+			.then( data => {
+				if ( data ) {
+					e.target.value = wpfcmData.scanButtons.scanNow; // eslint-disable-line no-undef
+					e.target.disabled = false;
+					manualScanStop.disabled = true;
+				}
+			})
+			.catch( error => {
+				e.target.value = wpfcmData.scanButtons.scanFailed; // eslint-disable-line no-undef
+				e.target.disabled = false;
+				manualScanStop.disabled = true;
+				console.log( error ); // eslint-disable-line no-console
+			});
+	});
+
+	/**
+	 * Send request to stop manual scan.
+	 */
+	manualScanStop.addEventListener( 'click', function( e ) {
+		e.target.value = wpfcmData.scanButtons.stopping; // eslint-disable-line no-undef
+		e.target.disabled = true;
+
+		// Rest request object.
+		const request = new Request( wpfcmData.monitor.stop, { // eslint-disable-line no-undef
+			method: 'GET',
+			headers: {
+				'X-WP-Nonce': wpfcmData.restRequestNonce // eslint-disable-line no-undef
+			}
+		});
+
+		// Send the request.
+		fetch( request )
+			.then( response => response.json() )
+			.then( data => {
+				if ( data ) {
+					e.target.value = wpfcmData.scanButtons.scanStop; // eslint-disable-line no-undef
+					manualScanStart.disabled = false;
+				}
+			})
+			.catch( error => {
+				console.log( error ); // eslint-disable-line no-console
+			});
+	});
 });
