@@ -43,7 +43,18 @@ function wpfcm_get_setting( $setting, $default = '' ) {
  */
 function wpfcm_save_setting( $setting, $value ) {
 	if ( class_exists( 'WPFCM_Settings' ) ) {
-		return WPFCM_Settings::save_setting( $setting, $value );
+		WPFCM_Settings::save_setting( $setting, $value );
+	}
+}
+
+/**
+ * Delete plugin setting.
+ *
+ * @param string $setting - Setting name.
+ */
+function wpfcm_delete_setting( $setting ) {
+	if ( class_exists( 'WPFCM_Settings' ) ) {
+		WPFCM_Settings::delete_setting( $setting );
 	}
 }
 
@@ -171,5 +182,5 @@ function wpfcm_skip_theme_scan( $theme ) {
  * @return WPFCM_Monitor
  */
 function wpfcm_get_monitor() {
-	WPFCM_Monitor::get_instance();
+	return WPFCM_Monitor::get_instance();
 }
