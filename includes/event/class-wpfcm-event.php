@@ -10,11 +10,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WPFCM Event Class.
+ * WPFCM Event Abstract Class.
  *
  * This is the base class for the file change events.
  */
-class WPFCM_Event {
+abstract class WPFCM_Event {
 
 	/**
 	 * Event ID.
@@ -24,11 +24,18 @@ class WPFCM_Event {
 	protected $id = 0;
 
 	/**
+	 * Event Title.
+	 *
+	 * @var string
+	 */
+	protected $event_title = '';
+
+	/**
 	 * Post Type.
 	 *
 	 * @var string
 	 */
-	protected $post_type = 'wpfcm_event';
+	protected $event_type = 'wpfcm_event';
 
 	/**
 	 * Event Data.
@@ -36,10 +43,9 @@ class WPFCM_Event {
 	 * @var array
 	 */
 	protected $data = array(
-		'event_type'    => '',       // Added, modified, or deleted.
-		'status'        => 'unread', // Event status.
-		'resources'     => '',       // Resources.
-		'resource_type' => '',       // Resource type. It can be file or directory.
+		'event_type' => '',       // Event type: added, modified, or deleted.
+		'status'     => 'unread', // Event status.
+		'content'    => '',       // Content.
 	);
 
 	/**
@@ -50,37 +56,76 @@ class WPFCM_Event {
 	public function __construct( $event_id = 0 ) {
 		if ( $event_id ) {
 			$this->id = (int) $event_id;
+			$this->load_event_data();
 		}
 	}
 
 	/**
-	 * Save a new event.
-	 *
-	 * @param string $title       - Event title.
-	 * @param string $event_type  - Type of event.
+	 * Load event data.
 	 */
-	public function save( $title, $event_type ) {
-		$event_data = array(
-			'post_type'   => $this->post_type,
-			'post_title'  => $title,
-			'post_status' => 'private',
-		);
+	protected function load_event_data() {
+		$this->reset_event_data();
 
-		$this->id = wp_insert_post( $event_data ); // Create a new event.
-
-		$this->set_meta( 'event_type', $event_type );
-		$this->set_meta( 'status', 'unread' );
+		foreach ( $this->data as $key => $value ) {
+			$get_meta = "get_$key";
+			$this->$get_meta();
+		}
 	}
 
 	/**
-	 * Set Event Resources.
-	 *
-	 * @param string $resource_type - Resource type.
-	 * @param array  $resources     - Array of resources.
+	 * Reset event data.
 	 */
-	protected function set_resources( $resource_type, $resources ) {
-		$this->set_meta( 'resource_type', $resource_type );
-		$this->set_meta( 'resource_type', $resources );
+	protected function reset_event_data() {
+		foreach ( $this->data as $key => $value ) {
+			$set_meta = "set_$key";
+			$this->$set_meta( '' );
+		}
+	}
+
+	/**
+	 * Save event.
+	 *
+	 * Event is saved in WordPress post table and
+	 * event meta in the postmeta table.
+	 */
+	public function save() {
+		// Event post data.
+		$event_data = array(
+			'post_type'   => $this->event_type,
+			'post_title'  => $this->event_title,
+			'post_status' => 'private',
+		);
+
+		// Insert new event.
+		$this->id = wp_insert_post( $event_data );
+
+		// Set event meta.
+		foreach ( $this->data as $meta_key => $value ) {
+			$this->save_meta( $meta_key, $value );
+		}
+	}
+
+	/**
+	 * Save Event Meta.
+	 *
+	 * @param string $key   - Meta key.
+	 * @param mixed  $value - Meta value.
+	 */
+	protected function save_meta( $key, $value ) {
+		update_post_meta( $this->id, $key, $value );
+	}
+
+	/*********************************************************
+	 * Event Setters.
+	 *********************************************************/
+
+	/**
+	 * Set event title.
+	 *
+	 * @param string $title - Event title.
+	 */
+	public function set_event_title( $title ) {
+		$this->event_title = $title;
 	}
 
 	/**
@@ -88,10 +133,67 @@ class WPFCM_Event {
 	 *
 	 * @param string $key   - Meta key.
 	 * @param mixed  $value - Meta value.
+	 * @return mixed
 	 */
 	protected function set_meta( $key, $value ) {
-		$this->data[ $key ] = $value;
-		update_post_meta( $this->id, $key, $value );
+		if ( isset( $this->data[ $key ] ) ) {
+			$this->data[ $key ] = $value;
+			return $value;
+		}
+		return new WP_Error( 'wpfcm_invalid_event_data', __( 'Invalid event data.', 'wp-file-changes-monitor' ) );
+	}
+
+	/**
+	 * Set event type; added, modified, or deleted.
+	 *
+	 * @param string $event_type - Event type.
+	 * @return string
+	 */
+	public function set_event_type( $event_type ) {
+		return $this->set_meta( 'event_type', $event_type );
+	}
+
+	/**
+	 * Set event status; unread or read.
+	 *
+	 * @param string $status - Event status.
+	 * @return string
+	 */
+	public function set_status( $status ) {
+		return $this->set_meta( 'status', $status );
+	}
+
+	/**
+	 * Set content of event.
+	 *
+	 * @param stdClass $content - Event content.
+	 * @return stdClass
+	 */
+	public function set_content( $content ) {
+		return $this->set_meta( 'content', $content );
+	}
+
+	/**
+	 * Set content type; file or directory.
+	 *
+	 * @param string $content_type - Content type.
+	 * @return string
+	 */
+	public function set_content_type( $content_type ) {
+		return $this->set_meta( 'content_type', $content_type );
+	}
+
+	/*********************************************************
+	 * Event Getters.
+	 *********************************************************/
+
+	/**
+	 * Get event title.
+	 *
+	 * @return string
+	 */
+	public function get_event_title() {
+		return $this->event_title;
 	}
 
 	/**
@@ -126,20 +228,20 @@ class WPFCM_Event {
 	}
 
 	/**
-	 * Returns resources.
+	 * Returns content of event.
 	 *
 	 * @return string
 	 */
-	public function get_resources() {
-		return $this->get_meta( 'resources' );
+	public function get_content() {
+		return $this->get_meta( 'content' );
 	}
 
 	/**
-	 * Returns resource type.
+	 * Returns content type.
 	 *
 	 * @return string
 	 */
-	public function get_resource_type() {
-		return $this->get_meta( 'resource_type' );
+	public function get_content_type() {
+		return $this->get_meta( 'content_type' );
 	}
 }
