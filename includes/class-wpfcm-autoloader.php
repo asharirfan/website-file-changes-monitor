@@ -70,6 +70,8 @@ class WPFCM_Autoloader {
 
 		if ( 0 === strpos( $class, 'wpfcm_admin_' ) ) {
 			$path = $this->include_path . 'admin/';
+		} elseif ( 0 === strpos( $class, 'wpfcm_event' ) ) {
+			$path = $this->include_path . 'event/';
 		}
 
 		if ( empty( $path ) || ! $this->load_file( $path . $file ) ) {
