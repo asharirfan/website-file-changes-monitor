@@ -59,25 +59,6 @@ function wpfcm_delete_setting( $setting ) {
 }
 
 /**
- * Create a new event.
- *
- * @param string $type      - Type of event: added, modified, deleted.
- * @param string $file      - File.
- * @param string $file_hash - File hash.
- */
-function wpfcm_create_event( $type, $file, $file_hash ) {
-	// Create a resource object.
-	$data = (object) array(
-		'file' => $file,
-		'hash' => $file_hash,
-	);
-
-	$event = new WPFCM_Event();
-	$event->save( $file, $type );
-	$event->set_resources( 'file', $data );
-}
-
-/**
  * Get site plugin directories.
  *
  * @return array
@@ -183,4 +164,26 @@ function wpfcm_skip_theme_scan( $theme ) {
  */
 function wpfcm_get_monitor() {
 	return WPFCM_Monitor::get_instance();
+}
+
+/**
+ * Create a new event.
+ *
+ * @param string $event_type - Event: added, modified, deleted.
+ * @param string $file       - File.
+ * @param string $file_hash  - File hash.
+ */
+function wpfcm_create_event( $event_type, $file, $file_hash ) {
+	// Create the content object.
+	$content = (object) array(
+		'file' => $file,
+		'hash' => $file_hash,
+	);
+
+	// Create a new event object.
+	$event = new WPFCM_Event_Simple();
+	$event->set_event_title( $file );      // Set event title.
+	$event->set_event_type( $event_type ); // Set event type.
+	$event->set_content( $content );       // Set event content.
+	$event->save();                        // Save the event.
 }
