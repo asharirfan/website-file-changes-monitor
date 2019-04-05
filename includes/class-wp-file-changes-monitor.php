@@ -29,13 +29,6 @@ final class WP_File_Changes_Monitor {
 	protected static $instance = null;
 
 	/**
-	 * File Changes Monitoring Sensor.
-	 *
-	 * @var WPFCM_Sensor
-	 */
-	public $sensor = null;
-
-	/**
 	 * Main WP File Changes Monitor Instance.
 	 *
 	 * Ensures only one instance of WP File Changes Monitor is loaded or can be loaded.
