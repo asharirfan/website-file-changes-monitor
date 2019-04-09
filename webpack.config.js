@@ -42,34 +42,37 @@ const externals = [
 	}
 );
 
+module.exports = ( env, options ) => {
+	const mode = options.mode;
+	const suffix = 'production' === mode ? '.min' : '';
 
-module.exports = {
-	watch: true,
-	mode: 'development',
-	entry: {
-		'./file-changes': './assets/js/custom/file-changes.js',
-		'./settings': './assets/js/custom/settings.js'
-	},
-	output: {
-		path: path.resolve( __dirname, 'assets/js/dist' ),
-		filename: '[name].js'
-	},
-	devtool: 'cheap-eval-source-map',
-	module: {
-		rules: [
-			{
-				test: /\.(js|jsx|mjs)$/,
-				exclude: /node_modules/,
-				use: {
-					loader: 'babel-loader',
-					options: {
-						babelrc: false,
-						presets: [ '@babel/preset-env', '@babel/preset-react' ],
-						cacheDirectory: true
+	return {
+		watch: true,
+		entry: {
+			'./file-changes': './assets/js/custom/file-changes.js',
+			'./settings': './assets/js/custom/settings.js'
+		},
+		output: {
+			path: path.resolve( __dirname, 'assets/js/dist' ),
+			filename: `[name]${suffix}.js`
+		},
+		devtool: 'development' === mode ? 'cheap-eval-source-map' : false,
+		module: {
+			rules: [
+				{
+					test: /\.(js|jsx|mjs)$/,
+					exclude: /node_modules/,
+					use: {
+						loader: 'babel-loader',
+						options: {
+							babelrc: false,
+							presets: [ '@babel/preset-env', '@babel/preset-react' ],
+							cacheDirectory: true
+						}
 					}
 				}
-			}
-		]
-	},
-	externals: externals
+			]
+		},
+		externals: externals
+	};
 };
