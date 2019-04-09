@@ -1,0 +1,20 @@
+extends: wordpress
+
+parser: babel-eslint
+
+rules:
+  # Custom rules: only for temporary exceptions that should be removed over time
+  camelcase: 1
+  complexity: [1, 6]
+  brace-style: 1
+  max-statements: 1
+  no-shadow: 1
+  require-jsdoc: 0
+
+  # Disabled rules
+  # In the editor, we're using the pragma `wp.element.createElement`
+  react/react-in-jsx-scope: 0
+
+settings:
+  react:
+    version: "16.3"
