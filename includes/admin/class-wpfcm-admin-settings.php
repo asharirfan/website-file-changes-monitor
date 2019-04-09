@@ -56,9 +56,9 @@ class WPFCM_Admin_Settings {
 
 		wp_register_script(
 			'wpfcm-settings',
-			WPFCM_BASE_URL . 'assets/js/settings' . $suffix . '.js',
+			WPFCM_BASE_URL . 'assets/js/dist/settings' . $suffix . '.js',
 			array(),
-			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WPFCM_BASE_DIR . 'assets/js/settings.js' ) : WPFCM_VERSION,
+			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WPFCM_BASE_DIR . 'assets/js/dist/settings.js' ) : WPFCM_VERSION,
 			true
 		);
 
