@@ -56,7 +56,7 @@ class WPFCM_Admin_Menus {
 	 * File Changes Page.
 	 */
 	public function file_changes_page() {
-		echo 'Hello, World';
+		WPFCM_Admin_File_Changes::output();
 	}
 
 	/**
