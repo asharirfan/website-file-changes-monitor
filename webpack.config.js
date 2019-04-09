@@ -46,11 +46,11 @@ module.exports = ( env, options ) => {
 	const mode = options.mode;
 	const suffix = 'production' === mode ? '.min' : '';
 
-	return {
+	const config = {
 		watch: true,
 		entry: {
-			'./file-changes': './assets/js/custom/file-changes.js',
-			'./settings': './assets/js/custom/settings.js'
+			'./file-changes': './assets/js/src/file-changes.js',
+			'./settings': './assets/js/src/settings.js'
 		},
 		output: {
 			path: path.resolve( __dirname, 'assets/js/dist' ),
@@ -75,4 +75,6 @@ module.exports = ( env, options ) => {
 		},
 		externals: externals
 	};
+
+	return config;
 };
