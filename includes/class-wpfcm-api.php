@@ -20,13 +20,14 @@ class WPFCM_API {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'rest_api_init', array( $this, 'register_monitor_rest_route' ) );
+		add_action( 'rest_api_init', array( $this, 'register_monitor_rest_routes' ) );
+		add_action( 'rest_api_init', array( $this, 'register_events_rest_routes' ) );
 	}
 
 	/**
 	 * Register Rest Route for Scanning.
 	 */
-	public function register_monitor_rest_route() {
+	public function register_monitor_rest_routes() {
 		// Start scan route.
 		register_rest_route(
 			'wp-file-changes-monitor/v1',
@@ -47,6 +48,24 @@ class WPFCM_API {
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'scan_stop' ),
+				'permission_callback' => function() {
+					return current_user_can( 'manage_options' );
+				},
+			)
+		);
+	}
+
+	/**
+	 * Register Rest Route for Scanning.
+	 */
+	public function register_events_rest_routes() {
+		// Start scan route.
+		register_rest_route(
+			'wp-file-changes-monitor/v1',
+			'/monitor-events/created',
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array( $this, 'get_created_events' ),
 				'permission_callback' => function() {
 					return current_user_can( 'manage_options' );
 				},
@@ -92,6 +111,28 @@ class WPFCM_API {
 		global $wpdb;
 		$options_table = $wpdb->prefix . 'options';
 		return $wpdb->get_var( "SELECT option_value FROM $options_table WHERE option_name = 'wpfcm-scan-stop'" ); // phpcs: ignore
+	}
+
+	/**
+	 * REST API callback for fetching created file events.
+	 *
+	 * @return string - JSON string of events.
+	 */
+	public function get_created_events() {
+		$created_events = array(
+			(object) array(
+				'id'       => 1,
+				'path'     => ABSPATH,
+				'filename' => 'hello.php',
+			),
+			(object) array(
+				'id'       => 2,
+				'path'     => ABSPATH,
+				'filename' => 'wp-hello.php',
+			),
+		);
+
+		return wp_json_encode( $created_events );
 	}
 }
 

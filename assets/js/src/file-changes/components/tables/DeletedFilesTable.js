@@ -1,16 +1,16 @@
 /**
- * Modified Files Table
+ * Deleted Files Table
  */
 
 import React, { Component } from 'react';
-import EventsTable from './components/EventsTable';
+import EventsTable from '../events-table';
 
-export default class ModifiedFilesTable extends Component {
+export default class DeletedFilesTable extends Component {
 
 	/**
 	 * Query events from WordPress.
 	 */
-	getModifiedFileEvents() {
+	getDeletedFileEvents() {
 		return {
 			events: [
 
@@ -32,8 +32,8 @@ export default class ModifiedFilesTable extends Component {
 
 	render() {
 		return [
-			<h2>Modified Files</h2>,
-			<EventsTable monitorEvents={this.getModifiedFileEvents()} />
+			<h2>Deleted Files</h2>,
+			<EventsTable monitorEvents={this.getDeletedFileEvents()} />
 		];
 	}
 }
