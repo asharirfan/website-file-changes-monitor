@@ -108,6 +108,7 @@ abstract class WPFCM_Event {
 			'post_type'   => $this->event_type,
 			'post_title'  => $this->event_title,
 			'post_status' => 'private',
+			'guid'        => '',
 		);
 
 		// Insert new event.
@@ -132,6 +133,15 @@ abstract class WPFCM_Event {
 	/*********************************************************
 	 * Event Setters.
 	 *********************************************************/
+
+	/**
+	 * Set event id.
+	 *
+	 * @param string $id - Event id.
+	 */
+	public function set_event_id( $id ) {
+		$this->id = $id;
+	}
 
 	/**
 	 * Set event title.
@@ -200,6 +210,15 @@ abstract class WPFCM_Event {
 	/*********************************************************
 	 * Event Getters.
 	 *********************************************************/
+
+	/**
+	 * Get event id.
+	 *
+	 * @return int
+	 */
+	public function get_event_id() {
+		return $this->id;
+	}
 
 	/**
 	 * Get event title.
