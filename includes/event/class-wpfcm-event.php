@@ -49,13 +49,27 @@ abstract class WPFCM_Event {
 	);
 
 	/**
+	 * Event Post Object.
+	 *
+	 * @var WP_Post
+	 */
+	public $event_post = null;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param integer $event_id - (Optional) Event id.
+	 * @param int|WP_Post $event - (Optional) Event id.
 	 */
-	public function __construct( $event_id = 0 ) {
-		if ( $event_id ) {
-			$this->id = (int) $event_id;
+	public function __construct( $event = 0 ) {
+		if ( is_numeric( $event ) ) {
+			$this->id          = (int) $event;
+			$this->event_post  = get_post( $this->id );
+			$this->event_title = $this->event_post->post_title;
+			$this->load_event_data();
+		} elseif ( $event instanceof WP_Post ) {
+			$this->id          = $event->ID;
+			$this->event_post  = $event;
+			$this->event_title = $this->event_post->post_title;
 			$this->load_event_data();
 		}
 	}
