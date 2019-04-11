@@ -8,12 +8,11 @@ import EventsTable from './EventsTable';
 
 export default () => (
 	<CreatedEventsContext.Consumer>
-		{ ({events, selectAll, getCreatedFileEvents, selectEvent, selectAllEvents}) => (
+		{ ({events, selectAll, getCreatedFileEvents, selectAllEvents}) => (
 			<EventsTable
 				events={events}
 				selectAll={selectAll}
 				getCreatedFileEvents={getCreatedFileEvents}
-				selectEvent={selectEvent}
 				selectAllEvents={selectAllEvents}
 			/>
 		) }

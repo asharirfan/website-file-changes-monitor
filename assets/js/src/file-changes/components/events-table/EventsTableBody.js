@@ -4,16 +4,21 @@
 
 import React, { Component } from 'react';
 import EventsTableRow from './EventsTableRow';
+import { CreatedEventsContext } from '../context/createdEventsContext';
 
 export default class EventsTableBody extends Component {
 	render() {
 		if ( 0 < this.props.monitorEvents.length ) {
 			return (
-				<tbody>
-					{ this.props.monitorEvents.map( singleEvent => (
-						<EventsTableRow event={singleEvent} selectEvent={this.props.selectEvent} />
-					) ) }
-				</tbody>
+				<CreatedEventsContext.Consumer>
+					{ ({ events, selectEvent }) => (
+						<tbody>
+							{ events.map( singleEvent => (
+								<EventsTableRow event={singleEvent} selectEvent={selectEvent} />
+							) ) }
+						</tbody>
+					) }
+				</CreatedEventsContext.Consumer>
 			);
 		} else {
 			return (
