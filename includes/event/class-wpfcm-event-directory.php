@@ -1,6 +1,6 @@
 <?php
 /**
- * WPFCM Grouped Event.
+ * WPFCM Directory Event.
  *
  * @package wpfcm
  */
@@ -10,12 +10,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WPFCM Grouped Event Class.
+ * WPFCM Directory Event Class.
  *
- * Handle the events of grouped files like when a plugin
+ * Handle the events of directories like when a plugin
  * is installed, updated, or removed, etc.
  */
-class WPFCM_Event_Grouped extends WPFCM_Event {
+class WPFCM_Event_Directory extends WPFCM_Event {
 
 	/**
 	 * Constructor.

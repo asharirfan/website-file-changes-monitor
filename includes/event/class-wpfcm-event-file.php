@@ -1,6 +1,6 @@
 <?php
 /**
- * WPFCM Simple Event.
+ * WPFCM File Event.
  *
  * @package wpfcm
  */
@@ -10,11 +10,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WPFCM Simple Event Class.
+ * WPFCM File Event Class.
  *
- * Handle the events of single files.
+ * Handle the event of a single file.
  */
-class WPFCM_Event_Simple extends WPFCM_Event {
+class WPFCM_Event_File extends WPFCM_Event {
 
 	/**
 	 * Constructor.
