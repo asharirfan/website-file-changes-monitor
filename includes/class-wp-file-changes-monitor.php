@@ -86,6 +86,10 @@ final class WP_File_Changes_Monitor {
 		require_once WPFCM_BASE_DIR . 'includes/class-wpfcm-monitor.php';
 		require_once WPFCM_BASE_DIR . 'includes/class-wpfcm-api.php';
 
+		// Data stores.
+		require_once WPFCM_BASE_DIR . 'includes/class-wpfcm-data-store.php';
+		require_once WPFCM_BASE_DIR . 'includes/data-stores/class-wpfcm-event-data-store.php';
+
 		if ( is_admin() ) {
 			require_once WPFCM_BASE_DIR . 'includes/admin/class-wpfcm-admin.php';
 		}
