@@ -181,9 +181,77 @@ function wpfcm_create_event( $event_type, $file, $file_hash ) {
 	);
 
 	// Create a new event object.
-	$event = new WPFCM_Event_Simple();
+	$event = new WPFCM_Event_File();
 	$event->set_event_title( $file );      // Set event title.
 	$event->set_event_type( $event_type ); // Set event type.
 	$event->set_content( $content );       // Set event content.
 	$event->save();                        // Save the event.
+}
+
+/**
+ * Get events.
+ *
+ * @param array $args - Array of query arguments.
+ * @return array|object
+ */
+function wpfcm_get_events( $args ) {
+	$query = new WPFCM_Event_Query( $args );
+	return $query->get_events();
+}
+
+/**
+ * Get event object.
+ *
+ * @param int|WP_Post $the_event - ID or WP_Post object of an event.
+ * @return WPFCM_Event|array
+ */
+function wpfcm_get_event( $the_event ) {
+	// Get event id.
+	if ( is_numeric( $the_event ) ) {
+		$event_id = $the_event;
+	} elseif ( $the_event instanceof WP_Post ) {
+		$event_id = $the_event->ID;
+	}
+
+	// Get event content type.
+	$content_type = WPFCM_Data_Store::load( 'event' )->get_event_content_type( $event_id );
+
+	if ( $content_type ) {
+		$event_class = 'WPFCM_Event_' . ucwords( $content_type );
+		return new $event_class( $the_event );
+	}
+
+	return array();
+}
+
+/**
+ * Get events for JS.
+ *
+ * Returns an array of objects with these properties:
+ *   - id: Event id.
+ *   - path: Event content path.
+ *   - filename: Event content name.
+ *
+ * @param array $events - Array of events.
+ * @return array
+ */
+function wpfcm_get_events_for_js( $events ) {
+	$js_events = array();
+
+	if ( ! empty( $events ) && is_array( $events ) ) {
+		foreach ( $events as $event ) {
+			if ( ! $event instanceof WPFCM_Event ) {
+				continue;
+			}
+
+			$js_events[] = (object) array(
+				'id'       => $event->get_event_id(),
+				'path'     => dirname( $event->get_event_title() ),
+				'filename' => basename( $event->get_event_title() ),
+				'checked'  => false,
+			);
+		}
+	}
+
+	return $js_events;
 }
