@@ -119,20 +119,19 @@ class WPFCM_API {
 	 * @return string - JSON string of events.
 	 */
 	public function get_created_events() {
-		$created_events = array(
-			(object) array(
-				'id'       => 1,
-				'path'     => ABSPATH,
-				'filename' => 'hello.php',
-			),
-			(object) array(
-				'id'       => 2,
-				'path'     => ABSPATH,
-				'filename' => 'wp-hello.php',
-			),
+		// Set events query arguments.
+		$event_args = array(
+			'status'     => 'unread',
+			'event_type' => 'added',
 		);
 
-		return wp_json_encode( $created_events );
+		// Query events.
+		$events = wpfcm_get_events( $event_args );
+
+		// Convert events for JS response.
+		$events = wpfcm_get_events_for_js( $events );
+
+		return wp_json_encode( $events );
 	}
 }
 
