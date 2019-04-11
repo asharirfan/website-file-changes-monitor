@@ -15,8 +15,8 @@ export default class EventsTable extends Component {
 	render() {
 		return (
 			<table className="wp-list-table widefat fixed striped">
-				<EventsTableHead selectAll={this.props.selectAll} />
-				<EventsTableBody monitorEvents={this.props.events} />
+				<EventsTableHead selectAllEvents={this.props.selectAllEvents} selectAll={this.props.selectAll} />
+				<EventsTableBody monitorEvents={this.props.events} selectEvent={this.props.selectEvent} />
 			</table>
 		);
 	}
