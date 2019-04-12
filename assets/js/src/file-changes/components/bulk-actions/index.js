@@ -8,8 +8,8 @@ import BulkActions from './BulkActions';
  export default () => {
 	return (
 		<CreatedEventsContext.Consumer>
-			{ () => (
-				<BulkActions />
+			{ ({handleBulkAction}) => (
+				<BulkActions handleBulkAction={handleBulkAction} />
 			) }
 		</CreatedEventsContext.Consumer>
 	);

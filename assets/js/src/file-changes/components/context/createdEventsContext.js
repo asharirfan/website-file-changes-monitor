@@ -117,6 +117,37 @@ export class CreatedEventsProvider extends Component {
 	}
 
 	/**
+	 * Handles the bulk actions on events.
+	 *
+	 * @param {string} action Name of bulk action.
+	 */
+	async handleBulkAction( action ) {
+		let events = [ ...this.state.events ];
+		let removedEvents = [];
+
+		for ( const [ index, event ] of events.entries() ) {
+			if ( event.checked ) {
+				let response;
+
+				if ( 'mark-as-read' === action ) {
+					response = await createdFiles.markEventAsRead( event.id );
+				} else if ( 'exclude' === action ) {
+					response = await createdFiles.excludeEvent( event.id );
+				}
+
+				if ( response.success ) {
+					removedEvents.push( index );
+				}
+			}
+		}
+
+		if ( 0 < removedEvents.length ) {
+			events = events.filter( ( value, index ) => ! removedEvents.includes( index ) );
+			this.setState({events: events});
+		}
+	}
+
+	/**
 	 * Component render.
 	 */
 	render() {
@@ -128,7 +159,8 @@ export class CreatedEventsProvider extends Component {
 					selectEvent: this.selectEvent.bind( this ),
 					selectAllEvents: this.selectAllEvents.bind( this ),
 					markEventAsRead: this.markEventAsRead.bind( this ),
-					excludeEvent: this.excludeEvent.bind( this )
+					excludeEvent: this.excludeEvent.bind( this ),
+					handleBulkAction: this.handleBulkAction.bind( this )
 				}}
 			>
 				{this.props.children}
