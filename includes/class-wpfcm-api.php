@@ -17,6 +17,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WPFCM_API {
 
 	/**
+	 * Monitor events base.
+	 *
+	 * @var string
+	 */
+	public static $monitor_base = '/monitor';
+
+	/**
+	 * Events base.
+	 *
+	 * @var string
+	 */
+	public static $events_base = '/monitor-events';
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
@@ -30,7 +44,7 @@ class WPFCM_API {
 	public function register_monitor_rest_routes() {
 		// Start scan route.
 		register_rest_route(
-			'wp-file-changes-monitor/v1',
+			WPFCM_REST_NAMESPACE,
 			'/monitor/start',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
@@ -43,7 +57,7 @@ class WPFCM_API {
 
 		// Stop scan route.
 		register_rest_route(
-			'wp-file-changes-monitor/v1',
+			WPFCM_REST_NAMESPACE,
 			'/monitor/stop',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
