@@ -47,7 +47,7 @@ class WPFCM_Event_Query {
 	private function get_default_query_vars() {
 		return array(
 			'post_status'    => array( 'draft', 'pending', 'private', 'publish' ),
-			'post_type'      => 'wpfcm_event',
+			'post_type'      => 'wpfcm_file_event',
 
 			'posts_per_page' => -1,
 			'paginate'       => false,

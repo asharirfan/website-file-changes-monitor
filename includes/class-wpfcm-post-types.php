@@ -74,7 +74,7 @@ class WPFCM_Post_Types {
 		 * Register post type for file change events.
 		 */
 		register_post_type(
-			'wpfcm_event',
+			'wpfcm_file_event',
 			apply_filters(
 				'wpfcm_register_event_post_type_args',
 				array(

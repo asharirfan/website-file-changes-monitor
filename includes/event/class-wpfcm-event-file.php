@@ -19,9 +19,9 @@ class WPFCM_Event_File extends WPFCM_Event {
 	/**
 	 * Constructor.
 	 *
-	 * @param integer $event_id - (Optional) Event id.
+	 * @param int|bool $event_id - (Optional) Event id.
 	 */
-	public function __construct( $event_id = 0 ) {
+	public function __construct( $event_id = false ) {
 		$this->data['content_type'] = 'file'; // Content type.
 		parent::__construct( $event_id );
 	}

@@ -35,7 +35,7 @@ abstract class WPFCM_Event {
 	 *
 	 * @var string
 	 */
-	protected $event_type = 'wpfcm_event';
+	protected $event_type = 'wpfcm_file_event';
 
 	/**
 	 * Event Data.
@@ -58,9 +58,9 @@ abstract class WPFCM_Event {
 	/**
 	 * Constructor.
 	 *
-	 * @param int|WP_Post $event - (Optional) Event id.
+	 * @param int|WP_Post|bool $event - (Optional) Event id.
 	 */
-	public function __construct( $event = 0 ) {
+	public function __construct( $event = false ) {
 		if ( is_numeric( $event ) ) {
 			$this->id          = (int) $event;
 			$this->event_post  = get_post( $this->id );
