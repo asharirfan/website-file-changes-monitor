@@ -73,16 +73,42 @@ class WPFCM_API {
 	 * Register Rest Route for Scanning.
 	 */
 	public function register_events_rest_routes() {
-		// Start scan route.
+		// Register rest route for getting events.
 		register_rest_route(
-			'wp-file-changes-monitor/v1',
-			'/monitor-events/created',
+			WPFCM_REST_NAMESPACE,
+			self::$events_base . '/(?P<event_type>[\S]+)',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_created_events' ),
+				'callback'            => array( $this, 'get_events' ),
 				'permission_callback' => function() {
 					return current_user_can( 'manage_options' );
 				},
+				'validate_callback'   => function( $param ) {
+					return in_array( $param, array( 'added', 'deleted', 'modified' ), true );
+				},
+			)
+		);
+
+		// Register rest route for removing an event.
+		register_rest_route(
+			WPFCM_REST_NAMESPACE,
+			self::$events_base . '/(?P<event_id>[\d]+)',
+			array(
+				'methods'             => WP_REST_Server::DELETABLE,
+				'callback'            => array( $this, 'delete_event' ),
+				'permission_callback' => function() {
+					return current_user_can( 'manage_options' );
+				},
+				'validate_callback'   => function( $param ) {
+					return is_numeric( $param );
+				},
+				'args'                => array(
+					'exclude' => array(
+						'type'        => 'boolean',
+						'default'     => false,
+						'description' => __( 'Whether to exclude the content in future scans or not', 'wp-file-changes-monitor' ),
+					),
+				),
 			)
 		);
 	}
@@ -130,13 +156,21 @@ class WPFCM_API {
 	/**
 	 * REST API callback for fetching created file events.
 	 *
+	 * @param WP_Rest_Request $rest_request - Rest request object.
 	 * @return string - JSON string of events.
 	 */
-	public function get_created_events() {
+	public function get_events( $rest_request ) {
+		// Get event type from request.
+		$event_type = $rest_request->get_param( 'event_type' );
+
+		if ( ! $event_type ) {
+			return new WP_Error( 'empty_event_type', __( 'No event type specified for the request.', 'wp-file-changes-monitor' ), array( 'status' => 404 ) );
+		}
+
 		// Set events query arguments.
 		$event_args = array(
 			'status'     => 'unread',
-			'event_type' => 'added',
+			'event_type' => $event_type,
 		);
 
 		// Query events.
@@ -145,7 +179,58 @@ class WPFCM_API {
 		// Convert events for JS response.
 		$events = wpfcm_get_events_for_js( $events );
 
-		return wp_json_encode( $events );
+		$response = new WP_REST_Response( $events );
+		$response->set_status( 200 );
+
+		return $response;
+	}
+
+	/**
+	 * REST API callback for marking events as read.
+	 *
+	 * @param WP_Rest_Request $rest_request - Rest request object.
+	 * @return WP_Rest_Request
+	 */
+	public function delete_event( $rest_request ) {
+		// Get event id from request.
+		$event_id = $rest_request->get_param( 'event_id' );
+
+		if ( ! $event_id ) {
+			return new WP_Error( 'empty_event_id', __( 'No event id specified for the request.', 'wp-file-changes-monitor' ), array( 'status' => 404 ) );
+		}
+
+		// Get request body to check if event is excluded.
+		$request_body = $rest_request->get_body();
+		$request_body = json_decode( $request_body );
+		$is_excluded  = isset( $request_body->exclude ) ? $request_body->exclude : false;
+
+		if ( $is_excluded ) {
+			// Get event content type.
+			$event        = wpfcm_get_event( $event_id );
+			$content_type = $event->get_content_type();
+
+			if ( 'file' === $content_type ) {
+				$excluded_content   = wpfcm_get_setting( 'scan-exclude-files', array() );
+				$excluded_content[] = basename( $event->get_event_title() );
+				wpfcm_save_setting( 'scan-exclude-files', $excluded_content );
+			} elseif ( 'directory' === $content_type ) {
+				$excluded_content   = wpfcm_get_setting( 'scan-exclude-dirs', array() );
+				$excluded_content[] = $event->get_event_title();
+				wpfcm_save_setting( 'scan-exclude-dirs', $excluded_content );
+			}
+		}
+
+		// Delete the event.
+		if ( wp_delete_post( $event_id, true ) ) {
+			$response = array( 'success' => true );
+		} else {
+			$response = array( 'success' => false );
+		}
+
+		$response = new WP_REST_Response( $response );
+		$response->set_status( 200 );
+
+		return $response;
 	}
 }
 
