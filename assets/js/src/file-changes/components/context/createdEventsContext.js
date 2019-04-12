@@ -8,6 +8,11 @@ export const CreatedEventsContext = React.createContext();
 
 export class CreatedEventsProvider extends Component {
 
+	/**
+	 * Constructor.
+	 *
+	 * @param {array} props Component props.
+	 */
 	constructor( props ) {
 		super( props );
 
@@ -17,10 +22,11 @@ export class CreatedEventsProvider extends Component {
 		};
 	}
 
+	/**
+	 * Select all events.
+	 */
 	selectAllEvents() {
-
-		// Change the state of select all.
-		this.setState({ selectAll: ! this.state.selectAll });
+		this.setState({ selectAll: ! this.state.selectAll }); // Change the state of select all.
 
 		// Change states of every event.
 		this.setState({ events: this.state.events.map( event => {
@@ -29,6 +35,11 @@ export class CreatedEventsProvider extends Component {
 		}) });
 	}
 
+	/**
+	 * Select an event.
+	 *
+	 * @param {string|int} id Event id.
+	 */
 	selectEvent( id ) {
 		let allSelected = true;
 
@@ -45,11 +56,69 @@ export class CreatedEventsProvider extends Component {
 		}
 	}
 
+	/**
+	 * Query events from WP.
+	 */
 	async getCreatedFileEvents() {
-		const fetchedEvents = await createdFiles.getEvents();
+		const fetchedEvents = await createdFiles.getEvents( 'added' );
 		this.setState({events: fetchedEvents });
 	}
 
+	/**
+	 * Mark event as read.
+	 *
+	 * @param {int} eventId Event id.
+	 */
+	async markEventAsRead( eventId ) {
+		const response = await createdFiles.markEventAsRead( eventId );
+
+		if ( response.success ) {
+			let events = [ ...this.state.events ];
+			let eventIndex = false;
+
+			for ( const [ index, event ] of events.entries() ) {
+				if ( event.id === eventId ) {
+					eventIndex = index;
+				}
+			}
+
+			// Remove the found index from state.
+			if ( false !== eventIndex ) {
+				events.splice( eventIndex, 1 );
+				this.setState({events: events});
+			}
+		}
+	}
+
+	/**
+	 * Add event to exclude list.
+	 *
+	 * @param {int} eventId Event id.
+	 */
+	async excludeEvent( eventId ) {
+		const response = await createdFiles.excludeEvent( eventId );
+
+		if ( response.success ) {
+			let events = [ ...this.state.events ];
+			let eventIndex = false;
+
+			for ( const [ index, event ] of events.entries() ) {
+				if ( event.id === eventId ) {
+					eventIndex = index;
+				}
+			}
+
+			// Remove the found index from state.
+			if ( false !== eventIndex ) {
+				events.splice( eventIndex, 1 );
+				this.setState({events: events});
+			}
+		}
+	}
+
+	/**
+	 * Component render.
+	 */
 	render() {
 		return (
 			<CreatedEventsContext.Provider
@@ -57,7 +126,9 @@ export class CreatedEventsProvider extends Component {
 					...this.state,
 					getCreatedFileEvents: this.getCreatedFileEvents.bind( this ),
 					selectEvent: this.selectEvent.bind( this ),
-					selectAllEvents: this.selectAllEvents.bind( this )
+					selectAllEvents: this.selectAllEvents.bind( this ),
+					markEventAsRead: this.markEventAsRead.bind( this ),
+					excludeEvent: this.excludeEvent.bind( this )
 				}}
 			>
 				{this.props.children}

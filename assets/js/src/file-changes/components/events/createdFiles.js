@@ -2,11 +2,30 @@
  * Created File Events.
  */
 
-async function getEvents() {
+function getRestRequestObject( method, url ) {
+	const request = new Request( url, { // eslint-disable-line no-undef
+		method: method,
+		headers: {
+			'X-WP-Nonce': wpfcmFileChanges.security // eslint-disable-line no-undef
+		}
+	});
+	return request;
+}
 
-	// Rest request object.
-	const request = new Request( wpfcmFileChanges.fileEvents.getCreated, { // eslint-disable-line no-undef
-		method: 'GET',
+async function getEvents( eventType ) {
+	const requestUrl = `${wpfcmFileChanges.fileEvents.get}/${eventType}`;
+	const request = getRestRequestObject( 'GET', requestUrl ); // Get REST request object.
+
+	// Send the request.
+	let response = await fetch( request );
+	let events = await response.json();
+	return events;
+}
+
+async function markEventAsRead( id ) {
+	const requestUrl = `${wpfcmFileChanges.fileEvents.delete}/${id}`;
+	const request = new Request( requestUrl, { // eslint-disable-line no-undef
+		method: 'DELETE',
 		headers: {
 			'X-WP-Nonce': wpfcmFileChanges.security // eslint-disable-line no-undef
 		}
@@ -14,11 +33,30 @@ async function getEvents() {
 
 	// Send the request.
 	let response = await fetch( request );
-	let events = await response.json();
-	events = JSON.parse( events );
-	return events;
+	response = await response.json();
+	return response;
+}
+
+async function excludeEvent( id ) {
+	const requestUrl = `${wpfcmFileChanges.fileEvents.delete}/${id}`;
+	const request = new Request( requestUrl, { // eslint-disable-line no-undef
+		method: 'DELETE',
+		headers: {
+			'X-WP-Nonce': wpfcmFileChanges.security // eslint-disable-line no-undef
+		},
+		body: JSON.stringify({
+			exclude: true
+		})
+	});
+
+	// Send the request.
+	let response = await fetch( request );
+	response = await response.json();
+	return response;
 }
 
 export default {
-	getEvents
+	getEvents,
+	markEventAsRead,
+	excludeEvent
 };
