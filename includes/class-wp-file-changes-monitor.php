@@ -60,6 +60,7 @@ final class WP_File_Changes_Monitor {
 		$this->define( 'WPFCM_BASE_NAME', plugin_basename( WPFCM_PLUGIN_FILE ) );
 		$this->define( 'WPFCM_BASE_URL', trailingslashit( plugin_dir_url( WPFCM_PLUGIN_FILE ) ) );
 		$this->define( 'WPFCM_BASE_DIR', trailingslashit( plugin_dir_path( WPFCM_PLUGIN_FILE ) ) );
+		$this->define( 'WPFCM_REST_NAMESPACE', 'wp-file-changes-monitor/v1' );
 		$this->define( 'WPFCM_OPT_PREFIX', 'wpfcm-' );
 		$this->define( 'WPFCM_MIN_PHP_VERSION', '5.5.0' );
 	}
