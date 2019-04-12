@@ -34,9 +34,8 @@ class WPFCM_Admin_File_Changes {
 			array(
 				'security'   => wp_create_nonce( 'wp_rest' ),
 				'fileEvents' => array(
-					'getCreated'  => esc_url_raw( rest_url( 'wp-file-changes-monitor/v1/monitor-events/created' ) ),
-					'getDeleted'  => esc_url_raw( rest_url( 'wp-file-changes-monitor/v1/monitor-events/deleted' ) ),
-					'getModified' => esc_url_raw( rest_url( 'wp-file-changes-monitor/v1/monitor-events/modified' ) ),
+					'get'    => esc_url_raw( rest_url( WPFCM_REST_NAMESPACE . WPFCM_API::$events_base ) ),
+					'delete' => esc_url_raw( rest_url( WPFCM_REST_NAMESPACE . WPFCM_API::$events_base ) ),
 				),
 				'labels'     => array(
 					'createdFiles'  => __( 'Created Files', 'wp-file-changes-monitor' ),
