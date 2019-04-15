@@ -160,8 +160,9 @@ class WPFCM_API {
 	 * @return string - JSON string of events.
 	 */
 	public function get_events( $rest_request ) {
-		// Get event type from request.
+		// Get event params from request object.
 		$event_type = $rest_request->get_param( 'event_type' );
+		$paged      = $rest_request->get_param( 'paged' );
 
 		if ( ! $event_type ) {
 			return new WP_Error( 'empty_event_type', __( 'No event type specified for the request.', 'wp-file-changes-monitor' ), array( 'status' => 404 ) );
@@ -169,17 +170,20 @@ class WPFCM_API {
 
 		// Set events query arguments.
 		$event_args = array(
-			'status'     => 'unread',
-			'event_type' => $event_type,
+			'status'         => 'unread',
+			'event_type'     => $event_type,
+			'posts_per_page' => 5,
+			'paginate'       => true,
+			'paged'          => $paged,
 		);
 
 		// Query events.
-		$events = wpfcm_get_events( $event_args );
+		$events_query = wpfcm_get_events( $event_args );
 
 		// Convert events for JS response.
-		$events = wpfcm_get_events_for_js( $events );
+		$events_query->events = wpfcm_get_events_for_js( $events_query->events );
 
-		$response = new WP_REST_Response( $events );
+		$response = new WP_REST_Response( $events_query );
 		$response->set_status( 200 );
 
 		return $response;
