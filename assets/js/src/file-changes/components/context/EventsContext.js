@@ -4,9 +4,9 @@
 import React, { Component } from 'react';
 import FileEvents from '../helper/FileEvents';
 
-export const AddedEventsContext = React.createContext();
+export const EventsContext = React.createContext();
 
-export class AddedEventsProvider extends Component {
+export class EventsProvider extends Component {
 
 	/**
 	 * Constructor.
@@ -67,7 +67,7 @@ export class AddedEventsProvider extends Component {
 			paged = this.state.paged;
 		}
 
-		const response = await FileEvents.getEvents( 'added', paged );
+		const response = await FileEvents.getEvents( this.props.eventsType, paged );
 
 		this.setState({
 			events: response.events,
@@ -174,7 +174,7 @@ export class AddedEventsProvider extends Component {
 	 */
 	render() {
 		return (
-			<AddedEventsContext.Provider
+			<EventsContext.Provider
 				value={{
 					...this.state,
 					getFileEvents: this.getFileEvents.bind( this ),
@@ -187,7 +187,7 @@ export class AddedEventsProvider extends Component {
 				}}
 			>
 				{this.props.children}
-			</AddedEventsContext.Provider>
+			</EventsContext.Provider>
 		);
 	}
 }

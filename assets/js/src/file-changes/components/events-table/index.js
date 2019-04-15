@@ -3,11 +3,11 @@
  */
 
 import React from 'react';
-import { AddedEventsContext } from '../context/AddedEventsContext';
+import { EventsContext } from '../context/EventsContext';
 import EventsTable from './EventsTable';
 
 export default () => (
-	<AddedEventsContext.Consumer>
+	<EventsContext.Consumer>
 		{ ({events, selectAll, getFileEvents, selectAllEvents}) => (
 			<EventsTable
 				events={events}
@@ -16,5 +16,5 @@ export default () => (
 				selectAllEvents={selectAllEvents}
 			/>
 		) }
-	</AddedEventsContext.Consumer>
+	</EventsContext.Consumer>
 );

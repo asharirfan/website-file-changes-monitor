@@ -12,8 +12,8 @@ export default class FileChanges extends Component {
 			<div>
 				<h1>File Changes Monitor</h1>
 				<AddedFilesTable />
-				{/* <DeletedFilesTable />
-				<ModifiedFilesTable /> */}
+				<DeletedFilesTable />
+				<ModifiedFilesTable />
 			</div>
 		);
 	}
