@@ -6,9 +6,9 @@ import React, { Component } from 'react';
 export default class Pagination extends Component {
 
 	goToPageNumber( e ) {
-		const pageNumber = e.target.value;
+		const pageNumber = Number( e.target.value );
 
-		if ( pageNumber <= this.props.maxPages ) {
+		if ( 0 < pageNumber && pageNumber <= this.props.maxPages ) {
 			this.props.goToPage( pageNumber );
 		}
 	}
@@ -36,7 +36,7 @@ export default class Pagination extends Component {
 		}
 
 		if ( 1 < maxPages && disableFirst ) {
-			pageLinks.push( <span className="tablenav-pages-navspan button disabled" aria-hidden="true" disabled={true}>&laquo;</span> );
+			pageLinks.push( <span className="tablenav-pages-navspan button disabled" aria-hidden="true">&laquo;</span> );
 		} else {
 			pageLinks.push(
 				<button className="first-page button" onClick={this.props.goToPage.bind( this, 1 )}>
@@ -46,7 +46,7 @@ export default class Pagination extends Component {
 		}
 
 		if ( 1 < maxPages && disablePrev ) {
-			pageLinks.push( <span className="tablenav-pages-navspan button disabled" aria-hidden="true" disabled={true}>&lsaquo;</span> );
+			pageLinks.push( <span className="tablenav-pages-navspan button disabled" aria-hidden="true">&lsaquo;</span> );
 		} else {
 			pageLinks.push(
 				<button className="prev-page button" onClick={this.props.goToPage.bind( this, Math.max( 1, paged - 1 ) )}>
@@ -59,14 +59,14 @@ export default class Pagination extends Component {
 			pageLinks.push(
 				<span className="paging-input">
 					<label htmlFor="current-page-selector" className="screen-reader-text">Current page</label>
-					<input type="text" className="current-page" id="current-page-selector" value={paged} onChange={this.goToPageNumber.bind( this )} aria-describedby="table-paging" />
+					<input type="number" className="current-page" id="current-page-selector" value={paged} onChange={this.goToPageNumber.bind( this )} aria-describedby="table-paging" />
 					<span className="tablenav-paging-text"> of <span className="total-pages">{maxPages}</span></span>
 				</span>
 			);
 		}
 
 		if ( 1 < maxPages && disableNext ) {
-			pageLinks.push( <span className="tablenav-pages-navspan button disabled" aria-hidden="true" disabled={true}>&rsaquo;</span> );
+			pageLinks.push( <span className="tablenav-pages-navspan button disabled" aria-hidden="true">&rsaquo;</span> );
 		} else {
 			pageLinks.push(
 				<button className="next-page button" onClick={this.props.goToPage.bind( this, Math.min( maxPages, paged + 1 ) )}>
@@ -76,7 +76,7 @@ export default class Pagination extends Component {
 		}
 
 		if ( 1 < maxPages && disableLast ) {
-			pageLinks.push( <span className="tablenav-pages-navspan button disabled" aria-hidden="true" disabled={true}>&raquo;</span> );
+			pageLinks.push( <span className="tablenav-pages-navspan button disabled" aria-hidden="true">&raquo;</span> );
 		} else {
 			pageLinks.push(
 				<button className="last-page button" onClick={this.props.goToPage.bind( this, maxPages )}>
