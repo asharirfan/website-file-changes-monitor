@@ -9,7 +9,7 @@ import EventsTableBody from './EventsTableBody';
 export default class EventsTable extends Component {
 
 	componentDidMount() {
-		this.props.getCreatedFileEvents();
+		this.props.getFileEvents();
 	}
 
 	render() {

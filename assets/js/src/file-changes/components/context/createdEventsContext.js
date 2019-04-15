@@ -2,7 +2,7 @@
  * Created Events Provider
  */
 import React, { Component } from 'react';
-import createdFiles from '../events/createdFiles';
+import FileEvents from '../helper/FileEvents';
 
 export const CreatedEventsContext = React.createContext();
 
@@ -62,12 +62,12 @@ export class CreatedEventsProvider extends Component {
 	/**
 	 * Query events from WP.
 	 */
-	async getCreatedFileEvents( paged = false ) {
+	async getFileEvents( paged = false ) {
 		if ( false === paged ) {
 			paged = this.state.paged;
 		}
 
-		const response = await createdFiles.getEvents( 'added', paged );
+		const response = await FileEvents.getEvents( 'added', paged );
 
 		this.setState({
 			events: response.events,
@@ -83,7 +83,7 @@ export class CreatedEventsProvider extends Component {
 	 * @param {int} eventId Event id.
 	 */
 	async markEventAsRead( eventId ) {
-		const response = await createdFiles.markEventAsRead( eventId );
+		const response = await FileEvents.markEventAsRead( eventId );
 
 		if ( response.success ) {
 			let events = [ ...this.state.events ];
@@ -109,7 +109,7 @@ export class CreatedEventsProvider extends Component {
 	 * @param {int} eventId Event id.
 	 */
 	async excludeEvent( eventId ) {
-		const response = await createdFiles.excludeEvent( eventId );
+		const response = await FileEvents.excludeEvent( eventId );
 
 		if ( response.success ) {
 			let events = [ ...this.state.events ];
@@ -143,9 +143,9 @@ export class CreatedEventsProvider extends Component {
 				let response;
 
 				if ( 'mark-as-read' === action ) {
-					response = await createdFiles.markEventAsRead( event.id );
+					response = await FileEvents.markEventAsRead( event.id );
 				} else if ( 'exclude' === action ) {
-					response = await createdFiles.excludeEvent( event.id );
+					response = await FileEvents.excludeEvent( event.id );
 				}
 
 				if ( response.success ) {
@@ -166,7 +166,7 @@ export class CreatedEventsProvider extends Component {
 	 * @param {int} pageNum Page number.
 	 */
 	goToPage( pageNum ) {
-		this.getCreatedFileEvents( pageNum );
+		this.getFileEvents( pageNum );
 	}
 
 	/**
@@ -177,7 +177,7 @@ export class CreatedEventsProvider extends Component {
 			<CreatedEventsContext.Provider
 				value={{
 					...this.state,
-					getCreatedFileEvents: this.getCreatedFileEvents.bind( this ),
+					getFileEvents: this.getFileEvents.bind( this ),
 					selectEvent: this.selectEvent.bind( this ),
 					selectAllEvents: this.selectAllEvents.bind( this ),
 					markEventAsRead: this.markEventAsRead.bind( this ),
