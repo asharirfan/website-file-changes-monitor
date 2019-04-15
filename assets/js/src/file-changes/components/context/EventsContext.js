@@ -69,6 +69,11 @@ export class EventsProvider extends Component {
 
 		const response = await FileEvents.getEvents( this.props.eventsType, paged );
 
+		if ( 0 === response.events.length && 0 !== ( paged - 1 ) ) {
+			this.getFileEvents( paged - 1 );
+			return;
+		}
+
 		this.setState({
 			events: response.events,
 			totalItems: response.total,
@@ -86,20 +91,7 @@ export class EventsProvider extends Component {
 		const response = await FileEvents.markEventAsRead( eventId );
 
 		if ( response.success ) {
-			let events = [ ...this.state.events ];
-			let eventIndex = false;
-
-			for ( const [ index, event ] of events.entries() ) {
-				if ( event.id === eventId ) {
-					eventIndex = index;
-				}
-			}
-
-			// Remove the found index from state.
-			if ( false !== eventIndex ) {
-				events.splice( eventIndex, 1 );
-				this.setState({events: events});
-			}
+			this.getFileEvents();
 		}
 	}
 
@@ -112,20 +104,7 @@ export class EventsProvider extends Component {
 		const response = await FileEvents.excludeEvent( eventId );
 
 		if ( response.success ) {
-			let events = [ ...this.state.events ];
-			let eventIndex = false;
-
-			for ( const [ index, event ] of events.entries() ) {
-				if ( event.id === eventId ) {
-					eventIndex = index;
-				}
-			}
-
-			// Remove the found index from state.
-			if ( false !== eventIndex ) {
-				events.splice( eventIndex, 1 );
-				this.setState({events: events});
-			}
+			this.getFileEvents();
 		}
 	}
 
@@ -136,7 +115,6 @@ export class EventsProvider extends Component {
 	 */
 	async handleBulkAction( action ) {
 		let events = [ ...this.state.events ];
-		let removedEvents = [];
 
 		for ( const [ index, event ] of events.entries() ) {
 			if ( event.checked ) {
@@ -149,14 +127,9 @@ export class EventsProvider extends Component {
 				}
 
 				if ( response.success ) {
-					removedEvents.push( index );
+					this.getFileEvents();
 				}
 			}
-		}
-
-		if ( 0 < removedEvents.length ) {
-			events = events.filter( ( value, index ) => ! removedEvents.includes( index ) );
-			this.setState({events: events});
 		}
 	}
 
