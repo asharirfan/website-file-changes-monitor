@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 import EventsTable from '../events-table';
-import BulkAction from '../bulk-actions';
+import Navigation from '../navigation';
 import { CreatedEventsProvider } from '../context/createdEventsContext';
 
 export default class CreatedFilesTable extends Component {
@@ -13,7 +13,7 @@ export default class CreatedFilesTable extends Component {
 			<section>
 				<CreatedEventsProvider>
 					<h2>Created Files</h2>
-					<BulkAction />
+					<Navigation />
 					<EventsTable />
 				</CreatedEventsProvider>
 			</section>
