@@ -12,8 +12,8 @@ function getRestRequestObject( method, url ) {
 	return request;
 }
 
-async function getEvents( eventType ) {
-	const requestUrl = `${wpfcmFileChanges.fileEvents.get}/${eventType}`;
+async function getEvents( eventType, paged ) {
+	const requestUrl = `${wpfcmFileChanges.fileEvents.get}/${eventType}?paged=${paged}`;
 	const request = getRestRequestObject( 'GET', requestUrl ); // Get REST request object.
 
 	// Send the request.

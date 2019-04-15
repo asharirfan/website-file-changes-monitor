@@ -18,7 +18,10 @@ export class CreatedEventsProvider extends Component {
 
 		this.state = {
 			events: [],
-			selectAll: false
+			selectAll: false,
+			totalItems: 0,
+			maxPages: 1,
+			paged: 1
 		};
 	}
 
@@ -59,9 +62,19 @@ export class CreatedEventsProvider extends Component {
 	/**
 	 * Query events from WP.
 	 */
-	async getCreatedFileEvents() {
-		const fetchedEvents = await createdFiles.getEvents( 'added' );
-		this.setState({events: fetchedEvents });
+	async getCreatedFileEvents( paged = false ) {
+		if ( false === paged ) {
+			paged = this.state.paged;
+		}
+
+		const response = await createdFiles.getEvents( 'added', paged );
+
+		this.setState({
+			events: response.events,
+			totalItems: response.total,
+			maxPages: response.max_num_pages,
+			paged: paged
+		});
 	}
 
 	/**
@@ -148,6 +161,15 @@ export class CreatedEventsProvider extends Component {
 	}
 
 	/**
+	 * Events pagination handler.
+	 *
+	 * @param {int} pageNum Page number.
+	 */
+	goToPage( pageNum ) {
+		this.getCreatedFileEvents( pageNum );
+	}
+
+	/**
 	 * Component render.
 	 */
 	render() {
@@ -160,7 +182,8 @@ export class CreatedEventsProvider extends Component {
 					selectAllEvents: this.selectAllEvents.bind( this ),
 					markEventAsRead: this.markEventAsRead.bind( this ),
 					excludeEvent: this.excludeEvent.bind( this ),
-					handleBulkAction: this.handleBulkAction.bind( this )
+					handleBulkAction: this.handleBulkAction.bind( this ),
+					goToPage: this.goToPage.bind( this )
 				}}
 			>
 				{this.props.children}
