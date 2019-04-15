@@ -71,6 +71,14 @@ class WPFCM_Event_Data_Store {
 
 		$events = isset( $query->posts ) ? array_map( 'wpfcm_get_event', $query->posts ) : array();
 
+		if ( isset( $query_args['paginate'] ) && $query_args['paginate'] ) {
+			return (object) array(
+				'events'        => $events,
+				'total'         => $query->found_posts,
+				'max_num_pages' => $query->max_num_pages,
+			);
+		}
+
 		return $events;
 	}
 }
