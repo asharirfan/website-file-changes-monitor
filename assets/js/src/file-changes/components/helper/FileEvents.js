@@ -1,5 +1,5 @@
 /**
- * Created File Events.
+ * File Events Helper Functions.
  */
 
 function getRestRequestObject( method, url ) {
