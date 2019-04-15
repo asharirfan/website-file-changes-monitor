@@ -4,9 +4,9 @@
 import React, { Component } from 'react';
 import FileEvents from '../helper/FileEvents';
 
-export const CreatedEventsContext = React.createContext();
+export const AddedEventsContext = React.createContext();
 
-export class CreatedEventsProvider extends Component {
+export class AddedEventsProvider extends Component {
 
 	/**
 	 * Constructor.
@@ -174,7 +174,7 @@ export class CreatedEventsProvider extends Component {
 	 */
 	render() {
 		return (
-			<CreatedEventsContext.Provider
+			<AddedEventsContext.Provider
 				value={{
 					...this.state,
 					getFileEvents: this.getFileEvents.bind( this ),
@@ -187,7 +187,7 @@ export class CreatedEventsProvider extends Component {
 				}}
 			>
 				{this.props.children}
-			</CreatedEventsContext.Provider>
+			</AddedEventsContext.Provider>
 		);
 	}
 }

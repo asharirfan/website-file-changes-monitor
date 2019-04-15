@@ -5,17 +5,17 @@
 import React, { Component } from 'react';
 import EventsTable from '../events-table';
 import Navigation from '../navigation';
-import { CreatedEventsProvider } from '../context/createdEventsContext';
+import { AddedEventsProvider } from '../context/AddedEventsContext';
 
-export default class CreatedFilesTable extends Component {
+export default class AddedFilesTable extends Component {
 	render() {
 		return (
 			<section>
-				<CreatedEventsProvider>
-					<h2>Created Files</h2>
+				<AddedEventsProvider>
+					<h2>Added Files</h2>
 					<Navigation />
 					<EventsTable />
-				</CreatedEventsProvider>
+				</AddedEventsProvider>
 			</section>
 		);
 	}

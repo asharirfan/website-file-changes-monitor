@@ -4,13 +4,13 @@
 
 import React, { Component } from 'react';
 import EventsTableRow from './EventsTableRow';
-import { CreatedEventsContext } from '../context/createdEventsContext';
+import { AddedEventsContext } from '../context/AddedEventsContext';
 
 export default class EventsTableBody extends Component {
 	render() {
 		if ( 0 < this.props.monitorEvents.length ) {
 			return (
-				<CreatedEventsContext.Consumer>
+				<AddedEventsContext.Consumer>
 					{ ({ events, selectEvent, markEventAsRead, excludeEvent }) => (
 						<tbody>
 							{ events.map( singleEvent => (
@@ -18,7 +18,7 @@ export default class EventsTableBody extends Component {
 							) ) }
 						</tbody>
 					) }
-				</CreatedEventsContext.Consumer>
+				</AddedEventsContext.Consumer>
 			);
 		} else {
 			return (
