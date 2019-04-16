@@ -102,6 +102,14 @@ class WPFCM_Admin_Settings {
 		if ( isset( $_POST['wpfcm-settings'] ) ) {
 			$wpfcm_settings = $_POST['wpfcm-settings']; // @codingStandardsIgnoreLine
 
+			// This is to handle the empty exclude list case.
+			$exclude_settings = array(
+				'scan-exclude-dirs'  => array(),
+				'scan-exclude-files' => array(),
+				'scan-exclude-exts'  => array(),
+			);
+			$wpfcm_settings   = wp_parse_args( $wpfcm_settings, $exclude_settings );
+
 			foreach ( $wpfcm_settings as $key => $value ) {
 				if ( is_array( $value ) ) {
 					$value = array_map( 'sanitize_text_field', wp_unslash( $value ) );
