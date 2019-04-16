@@ -20,6 +20,13 @@ class WPFCM_Admin_File_Changes {
 	public static function output() {
 		$suffix = ( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? '' : '.min'; // Check for debug mode.
 
+		wp_enqueue_style(
+			'wpfcm-file-changes-styles',
+			WPFCM_BASE_URL . 'assets/css/dist/file-changes' . $suffix . '.css',
+			array(),
+			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WPFCM_BASE_DIR . 'assets/css/dist/file-changes.css' ) : WPFCM_VERSION
+		);
+
 		wp_register_script(
 			'wpfcm-file-changes',
 			WPFCM_BASE_URL . 'assets/js/dist/file-changes.js',

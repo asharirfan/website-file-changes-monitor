@@ -93,6 +93,7 @@ module.exports = ( env, options ) => {
 		watch: 'development' === mode ? true : false,
 		entry: {
 			'file-changes': './assets/js/src/file-changes.js',
+			'file-changes': './assets/css/src/file-changes.scss',
 			'settings': './assets/js/src/settings.js',
 			'settings': './assets/css/src/settings.scss'
 		},
@@ -108,14 +109,13 @@ module.exports = ( env, options ) => {
 						test: ( m, c, entry = 'settings' ) => 'CssModule' === m.constructor.name && recursiveIssuer( m ) === entry,
 						chunks: 'all',
 						enforce: true
+					},
+					fileChangesStyles: {
+						name: 'file-changes',
+						test: ( m, c, entry = 'file-changes' ) => 'CssModule' === m.constructor.name && recursiveIssuer( m ) === entry,
+						chunks: 'all',
+						enforce: true
 					}
-
-					// editorStyles: {
-					// 	name: 'editor',
-					// 	test: ( m, c, entry = 'editor' ) => 'CssModule' === m.constructor.name && recursiveIssuer( m ) === entry,
-					// 	chunks: 'all',
-					// 	enforce: true
-					// }
 				}
 			}
 		},

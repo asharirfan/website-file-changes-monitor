@@ -1,0 +1,19 @@
+/**
+ * File Changes Styles
+ */
+.tablenav .actions {
+  padding: 0;
+  margin: 3px 0 9px; }
+
+.tablenav .tablenav-pages .button,
+.tablenav .tablenav-pages .tablenav-pages-navspan,
+.tablenav .tablenav-pages .paging-input {
+  margin-left: 4px; }
+
+.tablenav-pages .current-page {
+  width: 30px; }
+  .tablenav-pages .current-page::-webkit-inner-spin-button, .tablenav-pages .current-page::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+            appearance: none;
+    margin: 0; }
+
