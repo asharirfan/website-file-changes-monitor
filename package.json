@@ -1,11 +1,11 @@
 {
-  "name": "your-project",
-  "description": "A WPGulp based project.",
+  "name": "wp-file-changes-monitor",
+  "description": "Scan, detect, and log file changes on your WordPress website.",
   "version": "1.0.0",
-  "author": "Author Name (https://twitter.com/MrAhmadAwais/)",
+  "author": "WP White Security (https://twitter.com/WPWhiteSecurity/)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ahmadawais/WPGulp"
+    "url": "https://github.com/WPWhiteSecurity/wp-file-changes-monitor"
   },
   "license": "MIT",
   "devDependencies": {
@@ -16,32 +16,10 @@
     "autoprefixer": "^9.5.1",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.5",
-    "beepbeep": "^1.2.2",
-    "browser-sync": "^2.11.1",
     "eslint": "^5.5.0",
     "eslint-config-wordpress": "^2.0.0",
     "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-wordpress": "^0.1.0",
-    "gulp": "^4.0.0",
-    "gulp-autoprefixer": "^6.0.0",
-    "gulp-babel": "^8.0.0",
-    "gulp-cache": "^1.0.2",
-    "gulp-concat": "^2.5.2",
-    "gulp-filter": "^5.1.0",
-    "gulp-imagemin": "^4.1.0",
-    "gulp-line-ending-corrector": "^1.0.1",
-    "gulp-merge-media-queries": "^0.2.1",
-    "gulp-notify": "^3.0.0",
-    "gulp-plumber": "^1.2.0",
-    "gulp-remember": "^1.0.1",
-    "gulp-rename": "^1.2.0",
-    "gulp-rtlcss": "^1.2.0",
-    "gulp-sass": "^4.0.1",
-    "gulp-sort": "^2.0.0",
-    "gulp-sourcemaps": "^2.6.2",
-    "gulp-uglify": "^3.0.0",
-    "gulp-uglifycss": "^1.0.6",
-    "gulp-wp-pot": "^2.0.7",
     "mini-css-extract-plugin": "^0.5.0",
     "node-sass": "^4.11.0",
     "raw-loader": "^2.0.0",
@@ -52,14 +30,6 @@
     "webpack-dev-server": "^3.2.1"
   },
   "scripts": {
-    "start": "gulp",
-    "styles": "gulp styles",
-    "stylesRTL": "gulp stylesRTL",
-    "vendorsJS": "gulp vendorsJS",
-    "customJS": "gulp customJS",
-    "images": "gulp images",
-    "clearCache": "gulp clearCache",
-    "translate": "gulp translate",
     "dev": "webpack --mode development",
     "build": "webpack --mode production"
   }
