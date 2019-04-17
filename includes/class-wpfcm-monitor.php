@@ -129,7 +129,7 @@ class WPFCM_Monitor {
 	 * Register Hooks.
 	 */
 	public function register_hooks() {
-		add_filter( 'cron_schedules', array( $this, 'add_recurring_schedules' ) );
+		add_filter( 'cron_schedules', array( $this, 'add_recurring_schedules' ) ); // phpcs:ignore
 		add_filter( 'wpfcm_file_scan_stored_files', array( $this, 'filter_scan_files' ), 10, 2 );
 		add_filter( 'wpfcm_file_scan_scanned_files', array( $this, 'filter_scan_files' ), 10, 2 );
 		add_action( 'wpfcm_after_file_scan', array( $this, 'empty_skip_file_alerts' ), 10, 1 );
@@ -902,6 +902,9 @@ class WPFCM_Monitor {
 			// Type of content to skip.
 			$skip_type = 'skip_' . $excluded_type; // Possitble values: `plugins` or `themes`.
 
+			// Get current filter.
+			$current_filter = current_filter();
+
 			if (
 				in_array( $excluded_type, array( 'plugins', 'themes' ), true ) // Only two skip types are allowed.
 				&& isset( $excluded_contents->$skip_type )                     // Skip type array exists.
@@ -909,14 +912,36 @@ class WPFCM_Monitor {
 				&& ! empty( $excluded_contents->$skip_type )                   // And is not empty.
 			) {
 				// Go through each plugin to be skipped.
-				foreach ( $excluded_contents->$skip_type as $content ) {
+				foreach ( $excluded_contents->$skip_type as $content => $context ) {
 					// Path of plugin to search in stored files.
-					$search_path = "/$excluded_type/" . $content;
+					$search_path = '/' . $excluded_type . '/' . $content;
+
+					// An array of content to be stored as meta for event.
+					$event_content = array();
 
 					// Get array of files to exclude of plugins from scan files array.
 					foreach ( $files as $file ) {
 						if ( false !== strpos( $file, $search_path ) ) {
-							$files_to_exclude[ $content ] = $file;
+							$files_to_exclude[] = $file;
+
+							$event_content[] = (object) array(
+								'file' => $file,
+								'hash' => isset( $scan_files[ $file ] ) ? $scan_files[ $file ] : false,
+							);
+						}
+					}
+
+					if ( ! empty( $event_content ) ) {
+						$dir_path = untrailingslashit( WP_CONTENT_DIR ) . $search_path;
+
+						if ( 'wpfcm_file_scan_scanned_files' === $current_filter ) {
+							if ( 'install' === $context ) {
+								wpfcm_create_directory_event( 'added', $dir_path, $event_content );
+							} elseif ( 'update' === $context ) {
+								wpfcm_create_directory_event( 'modified', $dir_path, $event_content );
+							}
+						} elseif ( 'wpfcm_file_scan_stored_files' === $current_filter && 'uninstall' === $context ) {
+							wpfcm_create_directory_event( 'deleted', $dir_path, $event_content );
 						}
 					}
 				}
