@@ -189,6 +189,22 @@ function wpfcm_create_event( $event_type, $file, $file_hash ) {
 }
 
 /**
+ * Create a new directory event.
+ *
+ * @param string $event_type - Event: added, modified, deleted.
+ * @param string $directory  - Directory.
+ * @param array  $content    - Array of directory contents.
+ */
+function wpfcm_create_directory_event( $event_type, $directory, $content ) {
+	// Create a new directory event object.
+	$event = new WPFCM_Event_Directory();
+	$event->set_event_title( $directory );
+	$event->set_event_type( $event_type );
+	$event->set_content( $content );
+	$event->save();
+}
+
+/**
  * Get events.
  *
  * @param array $args - Array of query arguments.
