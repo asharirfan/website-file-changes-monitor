@@ -71,7 +71,7 @@ class WPFCM_Admin_Plugins {
 			$deleted_plugin = dirname( $deleted_plugin );
 
 			if ( $deleted_plugin ) {
-				wpfcm_skip_plugin_scan( $deleted_plugin );
+				wpfcm_skip_plugin_scan( $deleted_plugin, 'uninstall' );
 				wpfcm_remove_site_plugin( $deleted_plugin );
 			}
 		}
@@ -82,7 +82,7 @@ class WPFCM_Admin_Plugins {
 			$updated_plugin = dirname( $updated_plugin );
 
 			if ( $updated_plugin ) {
-				wpfcm_skip_plugin_scan( $updated_plugin );
+				wpfcm_skip_plugin_scan( $updated_plugin, 'update' );
 			}
 		}
 	}

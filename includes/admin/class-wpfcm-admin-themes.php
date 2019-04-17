@@ -69,7 +69,7 @@ class WPFCM_Admin_Themes {
 		// Handle theme uninstall event.
 		if ( 'delete-theme' === $action && current_user_can( 'delete_themes' ) ) {
 			foreach ( $this->get_removed_themes() as $theme ) {
-				wpfcm_skip_theme_scan( $theme->stylesheet );
+				wpfcm_skip_theme_scan( $theme->stylesheet, 'uninstall' );
 				wpfcm_remove_site_theme( $theme->stylesheet );
 			}
 		}
@@ -79,7 +79,7 @@ class WPFCM_Admin_Themes {
 			$updated_theme = sanitize_text_field( wp_unslash( $_POST['slug'] ) ); // @codingStandardsIgnoreLine
 
 			if ( $updated_theme ) {
-				wpfcm_skip_theme_scan( $updated_theme );
+				wpfcm_skip_theme_scan( $updated_theme, 'update' );
 			}
 		}
 	}

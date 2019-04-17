@@ -110,14 +110,14 @@ class WPFCM_Settings {
 
 		// Check if the type is not empty.
 		if ( $content ) {
-			if ( isset( $site_content->$type ) && is_array( $site_content->$type ) ) {
-				$site_content->$type[] = strtolower( $content );               // Add content to its corresponding type array.
-				$site_content->$type   = array_unique( $site_content->$type ); // Remove duplicate entries.
+			$content = strtolower( $content );
+
+			if ( isset( $site_content->$type ) && is_array( $site_content->$type ) && ! isset( $site_content->$type[ $content ] ) ) {
+				$site_content->$type[] = $content;
 			}
 
-			if ( isset( $site_content->$skip_type ) && is_array( $site_content->$skip_type ) ) {
-				$site_content->$skip_type[] = strtolower( $content );                    // Add skip content to its corresponding type array.
-				$site_content->$skip_type   = array_unique( $site_content->$skip_type ); // Remove duplicate entries.
+			if ( isset( $site_content->$skip_type ) && is_array( $site_content->$skip_type ) && ! isset( $site_content->$skip_type[ $content ] ) ) {
+				$site_content->$skip_type[ $content ] = 'install';
 			}
 
 			self::save_setting( self::$site_content, $site_content );
@@ -153,14 +153,14 @@ class WPFCM_Settings {
 	 *
 	 * @param string $type    - Skip type.
 	 * @param string $content - Skip content.
+	 * @param string $context - Context of the change, i.e, update or uninstall.
 	 */
-	public static function set_skip_site_content( $type, $content ) {
+	public static function set_skip_site_content( $type, $content, $context ) {
 		$site_content = self::get_setting( self::$site_content, false );
 		$skip_type    = "skip_$type";
 
 		if ( false !== $site_content && $content && isset( $site_content->$skip_type ) ) {
-			$site_content->$skip_type[] = $content;
-			$site_content->$skip_type   = array_unique( $site_content->$skip_type ); // Remove duplicate entries.
+			$site_content->$skip_type[ $content ] = $context;
 			self::save_setting( self::$site_content, $site_content );
 		}
 	}

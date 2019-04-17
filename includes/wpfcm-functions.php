@@ -90,13 +90,19 @@ function wpfcm_set_site_content() {
 		// New stdClass object.
 		$site_content = new stdClass();
 
-		$plugins                    = array_map( 'strtolower', wpfcm_get_site_plugins() );
-		$site_content->plugins      = $plugins;
-		$site_content->skip_plugins = $plugins;
+		$plugins               = array_map( 'strtolower', wpfcm_get_site_plugins() );
+		$site_content->plugins = $plugins;
 
-		$themes                    = array_map( 'strtolower', wpfcm_get_site_themes() );
-		$site_content->themes      = $themes;
-		$site_content->skip_themes = $themes;
+		foreach ( $plugins as $plugin ) {
+			$site_content->skip_plugins[ $plugin ] = 'init';
+		}
+
+		$themes               = array_map( 'strtolower', wpfcm_get_site_themes() );
+		$site_content->themes = $themes;
+
+		foreach ( $themes as $theme ) {
+			$site_content->skip_themes[ $theme ] = 'init';
+		}
 
 		// Save site content.
 		wpfcm_save_setting( WPFCM_Settings::$site_content, $site_content );
@@ -142,19 +148,21 @@ function wpfcm_remove_site_theme( $theme ) {
 /**
  * Skip plugin in the next file changes scan.
  *
- * @param string $plugin - Plugin directory.
+ * @param string $plugin  - Plugin directory.
+ * @param string $context - Context of the change, i.e., update or uninstall.
  */
-function wpfcm_skip_plugin_scan( $plugin ) {
-	WPFCM_Settings::set_skip_site_content( 'plugins', $plugin );
+function wpfcm_skip_plugin_scan( $plugin, $context ) {
+	WPFCM_Settings::set_skip_site_content( 'plugins', $plugin, $context );
 }
 
 /**
  * Skip theme in the next file changes scan.
  *
- * @param string $theme - Theme directory.
+ * @param string $theme   - Theme directory.
+ * @param string $context - Context of the change, i.e., update or uninstall.
  */
-function wpfcm_skip_theme_scan( $theme ) {
-	WPFCM_Settings::set_skip_site_content( 'themes', $theme );
+function wpfcm_skip_theme_scan( $theme, $context ) {
+	WPFCM_Settings::set_skip_site_content( 'themes', $theme, $context );
 }
 
 /**
