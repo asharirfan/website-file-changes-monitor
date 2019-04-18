@@ -28,3 +28,84 @@
 		}
 	}
 }
+
+.wp-list-table {
+	.column-event-name {
+		width: 20%;
+	}
+	.column-content-type {
+		width: 10%;
+	}
+	.column-event-action {
+		width: 12%;
+	}
+	.column-event-content {
+		width: 25px;
+	}
+
+	td {
+		.content-type {
+			display: inline-block;
+			width: 75px;
+			color: #fff;
+			padding: 2px;
+			text-align: center;
+		}
+
+		.directory {
+			background: #35ad68;
+		}
+
+		.file {
+			background: #a81cb9;
+		}
+
+		.btn-event-content {
+			background: none;
+			border: none;
+			cursor: pointer;
+			padding: 0;
+
+			&:focus {
+				outline: 0;
+			}
+
+			span {
+				font-size: 23px;
+				width: 23px;
+				height: 23px;
+			}
+		}
+	}
+}
+
+.wpfcm-modal-header {
+	display: flex;
+	border-bottom: 1px solid #efefef;
+	padding: 0 16px;
+	margin: 0 -16px;
+	margin-bottom: 16px;
+	height: 60px;
+	align-items: center;
+	justify-content: space-between;
+
+	h2 {
+		display: inline-block;
+		margin: 0;
+	}
+
+	.button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 35px;
+		height: 35px;
+		background: #fff;
+		padding: 0;
+	}
+}
+
+.wpfcm-modal-body {
+	max-height: 500px;
+	overflow-y: scroll;
+}
