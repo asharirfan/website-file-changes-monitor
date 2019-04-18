@@ -22,6 +22,7 @@ const camelCaseDash = string => string.replace( /-([a-z])/g, ( match, letter ) =
  */
 const externals = [
 	'components',
+	'compose',
 	'edit-post',
 	'element',
 	'plugins',
@@ -93,9 +94,9 @@ module.exports = ( env, options ) => {
 		watch: 'development' === mode ? true : false,
 		entry: {
 			'file-changes': './assets/js/src/file-changes.js',
-			'file-changes': './assets/css/src/file-changes.scss',
+			'build.file-changes': './assets/css/src/file-changes.scss',
 			'settings': './assets/js/src/settings.js',
-			'settings': './assets/css/src/settings.scss'
+			'build.settings': './assets/css/src/settings.scss'
 		},
 		output: {
 			path: path.resolve( __dirname, 'assets/js/dist' ),
@@ -105,13 +106,13 @@ module.exports = ( env, options ) => {
 			splitChunks: {
 				cacheGroups: {
 					settingsStyles: {
-						name: 'settings',
+						name: 'build.settings',
 						test: ( m, c, entry = 'settings' ) => 'CssModule' === m.constructor.name && recursiveIssuer( m ) === entry,
 						chunks: 'all',
 						enforce: true
 					},
 					fileChangesStyles: {
-						name: 'file-changes',
+						name: 'build.file-changes',
 						test: ( m, c, entry = 'file-changes' ) => 'CssModule' === m.constructor.name && recursiveIssuer( m ) === entry,
 						chunks: 'all',
 						enforce: true
