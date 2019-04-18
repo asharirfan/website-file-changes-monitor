@@ -22,9 +22,9 @@ class WPFCM_Admin_File_Changes {
 
 		wp_enqueue_style(
 			'wpfcm-file-changes-styles',
-			WPFCM_BASE_URL . 'assets/css/dist/file-changes' . $suffix . '.css',
+			WPFCM_BASE_URL . 'assets/css/dist/build.file-changes' . $suffix . '.css',
 			array(),
-			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WPFCM_BASE_DIR . 'assets/css/dist/file-changes.css' ) : WPFCM_VERSION
+			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WPFCM_BASE_DIR . 'assets/css/dist/build.file-changes.css' ) : WPFCM_VERSION
 		);
 
 		wp_register_script(

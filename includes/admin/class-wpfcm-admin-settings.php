@@ -49,9 +49,9 @@ class WPFCM_Admin_Settings {
 
 		wp_enqueue_style(
 			'wpfcm-settings-styles',
-			WPFCM_BASE_URL . 'assets/css/dist/settings' . $suffix . '.css',
+			WPFCM_BASE_URL . 'assets/css/dist/build.settings' . $suffix . '.css',
 			array(),
-			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WPFCM_BASE_DIR . 'assets/css/dist/settings.css' ) : WPFCM_VERSION
+			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WPFCM_BASE_DIR . 'assets/css/dist/build.settings.css' ) : WPFCM_VERSION
 		);
 
 		wp_register_script(
