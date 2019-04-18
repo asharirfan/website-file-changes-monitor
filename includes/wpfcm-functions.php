@@ -269,10 +269,12 @@ function wpfcm_get_events_for_js( $events ) {
 			}
 
 			$js_events[] = (object) array(
-				'id'       => $event->get_event_id(),
-				'path'     => dirname( $event->get_event_title() ),
-				'filename' => basename( $event->get_event_title() ),
-				'checked'  => false,
+				'id'          => $event->get_event_id(),
+				'path'        => dirname( $event->get_event_title() ),
+				'filename'    => basename( $event->get_event_title() ),
+				'content'     => $event->get_content(),
+				'contentType' => ucwords( $event->get_content_type() ),
+				'checked'     => false,
 			);
 		}
 	}
