@@ -21,6 +21,7 @@ class WPFCM_Admin_Menus {
 		add_action( 'admin_menu', array( $this, 'add_admin_menu' ), 10 );
 		add_action( 'admin_menu', array( $this, 'settings_menu' ), 20 );
 		add_action( 'admin_menu', array( $this, 'about_menu' ), 30 );
+		add_action( 'admin_menu', array( $this, 'add_events_count' ), 40 );
 	}
 
 	/**
@@ -80,6 +81,26 @@ class WPFCM_Admin_Menus {
 	 */
 	public function about_page() {
 		echo 'Hello, World';
+	}
+
+	/**
+	 * Add events count to menu.
+	 */
+	public function add_events_count() {
+		global $menu;
+
+		$events_count = wp_count_posts( 'wpfcm_file_event' );
+
+		if ( isset( $events_count->private ) && $events_count->private ) {
+			$count_html = '<span class="update-plugins"><span class="events-count">' . $events_count->private . '</span></span>';
+
+			foreach ( $menu as $key => $value ) {
+				if ( 'wpfcm-file-changes' === $menu[ $key ][2] ) {
+					$menu[ $key ][0] .= ' ' . $count_html; // phpcs:ignore
+					break;
+				}
+			}
+		}
 	}
 }
 
