@@ -94,6 +94,13 @@ class WFM_Monitor {
 	private $scan_limit_file = false;
 
 	/**
+	 * Stored files to exclude.
+	 *
+	 * @var array
+	 */
+	private $files_to_exclude = array();
+
+	/**
 	 * Class constants.
 	 */
 	const SCAN_DAILY      = 'daily';
@@ -475,19 +482,11 @@ class WFM_Monitor {
 			if ( 0 === $next_to_scan ) {
 				wfm_save_setting( 'last-scanned', 'root' );
 
-				// Scan started alert.
-				// $this->plugin->alerts->Trigger( 6033, array(
-				// 'CurrentUserID' => '0',
-				// 'ScanStatus'    => 'started',
-				// ) );
+				do_action( 'wfm_files_monitoring_started' );
 			} elseif ( 6 === $next_to_scan ) {
 				wfm_save_setting( 'last-scanned', $next_to_scan );
 
-				// Scan stopped.
-				// $this->plugin->alerts->Trigger( 6033, array(
-				// 'CurrentUserID' => '0',
-				// 'ScanStatus'    => 'stopped',
-				// ) );
+				do_action( 'wfm_files_monitoring_ended' );
 			} else {
 				wfm_save_setting( 'last-scanned', $next_to_scan );
 			}
@@ -526,7 +525,7 @@ class WFM_Monitor {
 		 */
 		if ( ! $this->dir_left_to_scan( $this->scan_settings['directories'] ) ) {
 			// Get last scan time.
-			$last_scan_start = WFM_Settings::get_setting( 'last-scan-start', false );
+			$last_scan_start = wfm_get_setting( 'last-scan-start', false );
 
 			if ( ! empty( $last_scan_start ) ) {
 				// Check for minimum 24 hours.
@@ -534,8 +533,8 @@ class WFM_Monitor {
 
 				// If scan hours difference has passed 24 hrs limit then remove the options.
 				if ( $scan_hrs > 23 ) {
-					WFM_Settings::delete_setting( 'scanned-dirs' ); // Delete already scanned directories option.
-					WFM_Settings::delete_setting( 'last-scan-start' ); // Delete last scan complete timestamp option.
+					wfm_delete_setting( 'scanned-dirs' ); // Delete already scanned directories option.
+					wfm_delete_setting( 'last-scan-start' ); // Delete last scan complete timestamp option.
 				} else {
 					// Else if they have not passed their limit, then return false.
 					return false;
@@ -589,7 +588,7 @@ class WFM_Monitor {
 		}
 
 		// Get array of already directories scanned from DB.
-		$already_scanned_dirs = WFM_Settings::get_setting( 'scanned-dirs', array() );
+		$already_scanned_dirs = wfm_get_setting( 'scanned-dirs', array() );
 
 		// Check if already scanned directories has `root` directory.
 		if ( in_array( '', $already_scanned_dirs, true ) ) {
@@ -924,24 +923,42 @@ class WFM_Monitor {
 						if ( false !== strpos( $file, $search_path ) ) {
 							$files_to_exclude[] = $file;
 
-							$event_content[] = (object) array(
+							$event_content[ $file ] = (object) array(
 								'file' => $file,
 								'hash' => isset( $scan_files[ $file ] ) ? $scan_files[ $file ] : false,
 							);
 						}
 					}
 
+					if ( 'update' === $context ) {
+						if ( 'wfm_file_scan_stored_files' === $current_filter ) {
+							$this->files_to_exclude[ $search_path ] = $event_content;
+						} elseif ( 'wfm_file_scan_scanned_files' === $current_filter ) {
+							$this->check_directory_for_updates( $event_content, $search_path );
+						}
+					}
+
 					if ( ! empty( $event_content ) ) {
 						$dir_path = untrailingslashit( WP_CONTENT_DIR ) . $search_path;
 
-						if ( 'wfm_file_scan_scanned_files' === $current_filter ) {
-							if ( 'install' === $context ) {
-								wfm_create_directory_event( 'added', $dir_path, $event_content );
-							} elseif ( 'update' === $context ) {
-								wfm_create_directory_event( 'modified', $dir_path, $event_content );
+						if ( 'wfm_file_scan_scanned_files' === $current_filter && 'install' === $context ) {
+							$event_context = '';
+							if ( 'plugins' === $excluded_type ) {
+								$event_context = __( 'Plugin Install', 'website-files-monitor' );
+							} elseif ( 'themes' === $excluded_type ) {
+								$event_context = __( 'Theme Install', 'website-files-monitor' );
 							}
+
+							wfm_create_directory_event( 'added', $dir_path, array_values( $event_content ), $event_context );
 						} elseif ( 'wfm_file_scan_stored_files' === $current_filter && 'uninstall' === $context ) {
-							wfm_create_directory_event( 'deleted', $dir_path, $event_content );
+							$event_context = '';
+							if ( 'plugins' === $excluded_type ) {
+								$event_context = __( 'Plugin Uninstall', 'website-files-monitor' );
+							} elseif ( 'themes' === $excluded_type ) {
+								$event_context = __( 'Theme Uninstall', 'website-files-monitor' );
+							}
+
+							wfm_create_directory_event( 'deleted', $dir_path, array_values( $event_content ), $event_context );
 						}
 					}
 				}
@@ -1016,6 +1033,75 @@ class WFM_Monitor {
 				$site_content->skip_dirs  = array(); // Empty the skip directories at the end of the scan.
 				wfm_save_setting( WFM_Settings::$site_content, $site_content ); // Save the option.
 			}
+		}
+	}
+
+	/**
+	 * Check directory for file change events after updates.
+	 *
+	 * @param array  $scanned_files - Array of excluded scanned files.
+	 * @param string $directory     - Name of the directory.
+	 */
+	public function check_directory_for_updates( $scanned_files, $directory ) {
+		// Get the files previously stored in the directory.
+		$stored_files = $this->files_to_exclude[ $directory ];
+
+		// Compare the results to find out about file added and removed.
+		$files_added   = array_diff_key( $scanned_files, $stored_files );
+		$files_removed = array_diff_key( $stored_files, $scanned_files );
+
+		/**
+		 * File changes.
+		 *
+		 * To scan the files with changes, we need to
+		 *
+		 *  1. Remove the newly added files from scanned files – no need to add them to changed files array.
+		 *  2. Remove the deleted files from already logged files – no need to compare them since they are removed.
+		 *  3. Then start scanning for differences – check the difference in hash.
+		 */
+		$scanned_files_minus_added  = array_diff_key( $scanned_files, $files_added );
+		$stored_files_minus_deleted = array_diff_key( $stored_files, $files_removed );
+
+		// Changed files array.
+		$files_changed = array();
+
+		// Go through each newly scanned file.
+		foreach ( $scanned_files_minus_added as $file => $file_obj ) {
+			// Check if it exists in already stored array of files, ignore if the key does not exists.
+			if ( array_key_exists( $file, $stored_files_minus_deleted ) ) {
+				// If key exists, then check if the file hash is set and compare it to already stored hash.
+				if (
+					! empty( $file_obj->hash ) && ! empty( $stored_files_minus_deleted[ $file ] )
+					&& 0 !== strcmp( $file_obj->hash, $stored_files_minus_deleted[ $file ]->hash )
+				) {
+					// If the file hashes don't match then store the file in changed files array.
+					$files_changed[ $file ] = $file_obj;
+				}
+			}
+		}
+
+		$dirname       = dirname( $directory );
+		$dir_path      = '';
+		$event_context = '';
+
+		if ( '/plugins' === $dirname ) {
+			$dir_path      = untrailingslashit( WP_CONTENT_DIR ) . $directory;
+			$event_context = __( 'Plugin Update', 'website-files-monitor' );
+		} elseif ( '/themes' === $dirname ) {
+			$dir_path      = untrailingslashit( WP_CONTENT_DIR ) . $directory;
+			$event_context = __( 'Theme Update', 'website-files-monitor' );
+		}
+
+		if ( count( $files_added ) > 0 ) {
+			wfm_create_directory_event( 'added', $dir_path, array_values( $files_added ), $event_context );
+		}
+
+		if ( count( $files_removed ) > 0 ) {
+			wfm_create_directory_event( 'deleted', $dir_path, array_values( $files_removed ), $event_context );
+		}
+
+		if ( count( $files_changed ) > 0 ) {
+			wfm_create_directory_event( 'modified', $dir_path, array_values( $files_changed ), $event_context );
 		}
 	}
 }
