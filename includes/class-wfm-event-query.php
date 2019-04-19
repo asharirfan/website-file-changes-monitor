@@ -1,8 +1,8 @@
 <?php
 /**
- * WPFCM Events Query.
+ * WFM Events Query.
  *
- * @package wpfcm
+ * @package wfm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Events Query Class.
  */
-class WPFCM_Event_Query {
+class WFM_Event_Query {
 
 	/**
 	 * Query variables.
@@ -47,7 +47,7 @@ class WPFCM_Event_Query {
 	private function get_default_query_vars() {
 		return array(
 			'post_status'    => array( 'draft', 'pending', 'private', 'publish' ),
-			'post_type'      => 'wpfcm_file_event',
+			'post_type'      => 'wfm_file_event',
 
 			'posts_per_page' => -1,
 			'paginate'       => false,
@@ -69,7 +69,7 @@ class WPFCM_Event_Query {
 	 */
 	public function get_events() {
 		$args   = $this->get_args();
-		$events = WPFCM_Data_Store::load( 'event' )->query( $args );
+		$events = WFM_Data_Store::load( 'event' )->query( $args );
 		return $events;
 	}
 }

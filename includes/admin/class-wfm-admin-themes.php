@@ -1,8 +1,8 @@
 <?php
 /**
- * WPFCM Admin Themes.
+ * WFM Admin Themes.
  *
- * @package wpfcm
+ * @package wfm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * This class monitors the theme install, uninstall, and
  * update events for file changes monitoring.
  */
-class WPFCM_Admin_Themes {
+class WFM_Admin_Themes {
 
 	/**
 	 * List of themes already installed.
@@ -61,7 +61,7 @@ class WPFCM_Admin_Themes {
 
 			if ( ! empty( $themes ) ) {
 				foreach ( $themes as $directory => $theme ) {
-					wpfcm_add_site_theme( $directory );
+					wfm_add_site_theme( $directory );
 				}
 			}
 		}
@@ -69,8 +69,8 @@ class WPFCM_Admin_Themes {
 		// Handle theme uninstall event.
 		if ( 'delete-theme' === $action && current_user_can( 'delete_themes' ) ) {
 			foreach ( $this->get_removed_themes() as $theme ) {
-				wpfcm_skip_theme_scan( $theme->stylesheet, 'uninstall' );
-				wpfcm_remove_site_theme( $theme->stylesheet );
+				wfm_skip_theme_scan( $theme->stylesheet, 'uninstall' );
+				wfm_remove_site_theme( $theme->stylesheet );
 			}
 		}
 
@@ -79,7 +79,7 @@ class WPFCM_Admin_Themes {
 			$updated_theme = sanitize_text_field( wp_unslash( $_POST['slug'] ) ); // @codingStandardsIgnoreLine
 
 			if ( $updated_theme ) {
-				wpfcm_skip_theme_scan( $updated_theme, 'update' );
+				wfm_skip_theme_scan( $updated_theme, 'update' );
 			}
 		}
 	}
@@ -100,4 +100,4 @@ class WPFCM_Admin_Themes {
 	}
 }
 
-new WPFCM_Admin_Themes();
+new WFM_Admin_Themes();

@@ -1,8 +1,8 @@
 <?php
 /**
- * WPFCM Settings.
+ * WFM Settings.
  *
- * @package wpfcm
+ * @package wfm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,9 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WPFCM Settings Class.
+ * WFM Settings Class.
  */
-class WPFCM_Settings {
+class WFM_Settings {
 
 	/**
 	 * Array of settings.
@@ -30,7 +30,7 @@ class WPFCM_Settings {
 	 *
 	 * @var string
 	 */
-	public static $site_content = 'site_content';
+	public static $site_content = 'site-content';
 
 	/**
 	 * Return plugin setting.
@@ -41,7 +41,7 @@ class WPFCM_Settings {
 	 */
 	public static function get_setting( $setting, $default = false ) {
 		if ( ! isset( self::$settings[ $setting ] ) ) {
-			self::$settings[ $setting ] = get_option( WPFCM_OPT_PREFIX . $setting, $default );
+			self::$settings[ $setting ] = get_option( WFM_OPT_PREFIX . $setting, $default );
 		}
 
 		return self::$settings[ $setting ];
@@ -54,7 +54,7 @@ class WPFCM_Settings {
 	 * @param mixed  $value   - Setting value.
 	 */
 	public static function save_setting( $setting, $value ) {
-		update_option( WPFCM_OPT_PREFIX . $setting, $value );
+		update_option( WFM_OPT_PREFIX . $setting, $value );
 		self::$settings[ $setting ] = $value;
 	}
 
@@ -64,7 +64,7 @@ class WPFCM_Settings {
 	 * @param string $setting - Setting name.
 	 */
 	public static function delete_setting( $setting ) {
-		delete_option( $setting );
+		delete_option( WFM_OPT_PREFIX . $setting );
 		unset( self::$settings[ $setting ] );
 	}
 

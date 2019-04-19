@@ -1,8 +1,8 @@
 <?php
 /**
- * WPFCM Admin Plugins.
+ * WFM Admin Plugins.
  *
- * @package wpfcm
+ * @package wfm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * This class monitors the plugin install, uninstall, and
  * update events for file changes monitoring.
  */
-class WPFCM_Admin_Plugins {
+class WFM_Admin_Plugins {
 
 	/**
 	 * List of plugins already installed.
@@ -61,7 +61,7 @@ class WPFCM_Admin_Plugins {
 			$added_plugin = reset( $plugin );
 
 			if ( false !== $added_plugin ) {
-				wpfcm_add_site_plugin( dirname( $added_plugin ) );
+				wfm_add_site_plugin( dirname( $added_plugin ) );
 			}
 		}
 
@@ -71,8 +71,8 @@ class WPFCM_Admin_Plugins {
 			$deleted_plugin = dirname( $deleted_plugin );
 
 			if ( $deleted_plugin ) {
-				wpfcm_skip_plugin_scan( $deleted_plugin, 'uninstall' );
-				wpfcm_remove_site_plugin( $deleted_plugin );
+				wfm_skip_plugin_scan( $deleted_plugin, 'uninstall' );
+				wfm_remove_site_plugin( $deleted_plugin );
 			}
 		}
 
@@ -82,10 +82,10 @@ class WPFCM_Admin_Plugins {
 			$updated_plugin = dirname( $updated_plugin );
 
 			if ( $updated_plugin ) {
-				wpfcm_skip_plugin_scan( $updated_plugin, 'update' );
+				wfm_skip_plugin_scan( $updated_plugin, 'update' );
 			}
 		}
 	}
 }
 
-new WPFCM_Admin_Plugins();
+new WFM_Admin_Plugins();

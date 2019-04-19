@@ -2,7 +2,7 @@
 /**
  * File Changes Monitor.
  *
- * @package wpfcm
+ * @package wfm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,12 +15,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * This class is responsible for monitoring
  * the file changes on the server.
  */
-class WPFCM_Monitor {
+class WFM_Monitor {
 
 	/**
 	 * Sensor Instance.
 	 *
-	 * @var WPFCM_Monitor
+	 * @var WFM_Monitor
 	 */
 	protected static $instance = null;
 
@@ -77,7 +77,7 @@ class WPFCM_Monitor {
 	 *
 	 * @var string
 	 */
-	public static $schedule_hook = 'wpfcm_monitor_file_changes';
+	public static $schedule_hook = 'wfm_monitor_file_changes';
 
 	/**
 	 * Scan files counter during a scan.
@@ -102,11 +102,11 @@ class WPFCM_Monitor {
 	const SCAN_FILE_LIMIT = 1000000;
 
 	/**
-	 * Return WPFCM_Monitor Instance.
+	 * Return WFM_Monitor Instance.
 	 *
 	 * Ensures only one instance of monitor is loaded or can be loaded.
 	 *
-	 * @return WPFCM_Monitor
+	 * @return WFM_Monitor
 	 */
 	public static function get_instance() {
 		if ( is_null( self::$instance ) ) {
@@ -130,17 +130,17 @@ class WPFCM_Monitor {
 	 */
 	public function register_hooks() {
 		add_filter( 'cron_schedules', array( $this, 'add_recurring_schedules' ) ); // phpcs:ignore
-		add_filter( 'wpfcm_file_scan_stored_files', array( $this, 'filter_scan_files' ), 10, 2 );
-		add_filter( 'wpfcm_file_scan_scanned_files', array( $this, 'filter_scan_files' ), 10, 2 );
-		add_action( 'wpfcm_after_file_scan', array( $this, 'empty_skip_file_alerts' ), 10, 1 );
-		add_action( 'wpfcm_last_scanned_directory', array( $this, 'reset_core_updates_flag' ), 10, 1 );
+		add_filter( 'wfm_file_scan_stored_files', array( $this, 'filter_scan_files' ), 10, 2 );
+		add_filter( 'wfm_file_scan_scanned_files', array( $this, 'filter_scan_files' ), 10, 2 );
+		add_action( 'wfm_after_file_scan', array( $this, 'empty_skip_file_alerts' ), 10, 1 );
+		add_action( 'wfm_last_scanned_directory', array( $this, 'reset_core_updates_flag' ), 10, 1 );
 	}
 
 	/**
 	 * Load File Change Monitor Settings.
 	 */
 	public function load_settings() {
-		$this->scan_settings = wpfcm_get_monitor_settings();
+		$this->scan_settings = wfm_get_monitor_settings();
 
 		// Set the scan hours.
 		if ( ! empty( $this->scan_settings['hour'] ) ) {
@@ -199,7 +199,7 @@ class WPFCM_Monitor {
 	public function add_recurring_schedules( $schedules ) {
 		$schedules['tenminutes'] = array(
 			'interval' => 600,
-			'display'  => __( 'Every 10 minutes', 'wp-file-changes-monitor' ),
+			'display'  => __( 'Every 10 minutes', 'website-files-monitor' ),
 		);
 		return $schedules;
 	}
@@ -218,18 +218,18 @@ class WPFCM_Monitor {
 		}
 
 		// Check if a scan is already in progress.
-		if ( wpfcm_get_setting( 'scan-in-progress', false ) ) {
+		if ( wfm_get_setting( 'scan-in-progress', false ) ) {
 			return;
 		}
 
 		// Set the scan in progress to true because the scan has started.
-		wpfcm_save_setting( 'scan-in-progress', true );
+		wfm_save_setting( 'scan-in-progress', true );
 
 		// Check last scanned for manual scan.
 		if ( ! $manual && is_null( $last_scanned ) ) {
 			// Replace the last scanned value with the setting value
 			// if the scan is not manual and last scan value is null.
-			$last_scanned = wpfcm_get_setting( 'last-scanned' );
+			$last_scanned = wfm_get_setting( 'last-scanned' );
 		}
 
 		// Get directories to be scanned.
@@ -249,7 +249,7 @@ class WPFCM_Monitor {
 		}
 
 		// Set the options name for file list.
-		$file_list = "local_files_$next_to_scan";
+		$file_list = "local-files-$next_to_scan";
 
 		// Prepare directories array.
 		// @todo Store this in transient to cache the value. We don't need to load it every time.
@@ -281,7 +281,7 @@ class WPFCM_Monitor {
 			$this->excludes = $server_dirs;
 
 			// Get list of files to scan from DB.
-			$stored_files = wpfcm_get_setting( $file_list, array() );
+			$stored_files = wfm_get_setting( $file_list, array() );
 
 			/**
 			 * `Filter`: Stored files filter.
@@ -289,14 +289,14 @@ class WPFCM_Monitor {
 			 * @param array  $stored_files – Files array already saved in DB from last scan.
 			 * @param string $path_to_scan – Path currently being scanned.
 			 */
-			$filtered_stored_files = apply_filters( 'wpfcm_file_scan_stored_files', $stored_files, $path_to_scan );
+			$filtered_stored_files = apply_filters( 'wfm_file_scan_stored_files', $stored_files, $path_to_scan );
 
 			// Get array of already directories scanned from DB.
-			$scanned_dirs = wpfcm_get_setting( 'scanned-dirs', array() );
+			$scanned_dirs = wfm_get_setting( 'scanned-dirs', array() );
 
 			// If already scanned directories don't exist then it marks the start of a scan.
 			if ( ! $manual && empty( $scanned_dirs ) ) {
-				wpfcm_save_setting( 'last-scan-start', time() );
+				wfm_save_setting( 'last-scan-start', time() );
 			}
 
 			/**
@@ -304,7 +304,7 @@ class WPFCM_Monitor {
 			 *
 			 * @param string $path_to_scan - Directory path to scan.
 			 */
-			do_action( 'wpfcm_before_file_scan', $path_to_scan );
+			do_action( 'wfm_before_file_scan', $path_to_scan );
 
 			// Reset scan counter.
 			$this->reset_scan_counter();
@@ -318,7 +318,7 @@ class WPFCM_Monitor {
 			 * @param array  $scanned_files – Files array already saved in DB from last scan.
 			 * @param string $path_to_scan  – Path currently being scanned.
 			 */
-			$filtered_scanned_files = apply_filters( 'wpfcm_file_scan_scanned_files', $scanned_files, $path_to_scan );
+			$filtered_scanned_files = apply_filters( 'wfm_file_scan_scanned_files', $scanned_files, $path_to_scan );
 
 			// Add the currently scanned path to scanned directories.
 			$scanned_dirs[] = $path_to_scan;
@@ -328,10 +328,10 @@ class WPFCM_Monitor {
 			 *
 			 * @param string $path_to_scan - Directory path to scan.
 			 */
-			do_action( 'wpfcm_after_file_scan', $path_to_scan );
+			do_action( 'wfm_after_file_scan', $path_to_scan );
 
 			// Get initial scan setting.
-			$initial_scan = wpfcm_get_setting( "is_initial_scan_$next_to_scan", 'yes' );
+			$initial_scan = wfm_get_setting( "is-initial-scan-$next_to_scan", 'yes' );
 
 			// If the scan is not initial then.
 			if ( 'yes' !== $initial_scan ) {
@@ -372,7 +372,7 @@ class WPFCM_Monitor {
 				// Files added alert.
 				if ( count( $files_added ) > 0 ) {
 					// Get excluded site content.
-					$site_content = wpfcm_get_setting( WPFCM_Settings::$site_content );
+					$site_content = wfm_get_setting( WFM_Settings::$site_content );
 
 					// Log the alert.
 					foreach ( $files_added as $file => $file_hash ) {
@@ -398,7 +398,7 @@ class WPFCM_Monitor {
 						}
 
 						// Created file event.
-						wpfcm_create_event( 'added', $file, $file_hash );
+						wfm_create_event( 'added', $file, $file_hash );
 					}
 				}
 
@@ -428,7 +428,7 @@ class WPFCM_Monitor {
 						}
 
 						// Removed file event.
-						wpfcm_create_event( 'deleted', $file, $file_hash );
+						wfm_create_event( 'deleted', $file, $file_hash );
 					}
 				}
 
@@ -436,7 +436,7 @@ class WPFCM_Monitor {
 				if ( count( $files_changed ) > 0 ) {
 					foreach ( $files_changed as $file => $file_hash ) {
 						// Create event for each changed file.
-						wpfcm_create_event( 'modified', $file, $file_hash );
+						wfm_create_event( 'modified', $file, $file_hash );
 					}
 				}
 
@@ -451,16 +451,16 @@ class WPFCM_Monitor {
 				 *
 				 * @param int $next_to_scan – Last scanned directory.
 				 */
-				do_action( 'wpfcm_last_scanned_directory', $next_to_scan );
+				do_action( 'wfm_last_scanned_directory', $next_to_scan );
 			} else {
-				wpfcm_save_setting( "is_initial_scan_$next_to_scan", 'no' ); // Initial scan check set to false.
+				wfm_save_setting( "is-initial-scan-$next_to_scan", 'no' ); // Initial scan check set to false.
 			}
 
 			// Store scanned files list.
-			wpfcm_save_setting( $file_list, $scanned_files );
+			wfm_save_setting( $file_list, $scanned_files );
 
 			if ( ! $manual ) {
-				wpfcm_save_setting( 'scanned-dirs', $scanned_dirs );
+				wfm_save_setting( 'scanned-dirs', $scanned_dirs );
 			}
 		}
 
@@ -473,7 +473,7 @@ class WPFCM_Monitor {
 		 */
 		if ( ! $manual ) {
 			if ( 0 === $next_to_scan ) {
-				wpfcm_save_setting( 'last-scanned', 'root' );
+				wfm_save_setting( 'last-scanned', 'root' );
 
 				// Scan started alert.
 				// $this->plugin->alerts->Trigger( 6033, array(
@@ -481,7 +481,7 @@ class WPFCM_Monitor {
 				// 'ScanStatus'    => 'started',
 				// ) );
 			} elseif ( 6 === $next_to_scan ) {
-				wpfcm_save_setting( 'last-scanned', $next_to_scan );
+				wfm_save_setting( 'last-scanned', $next_to_scan );
 
 				// Scan stopped.
 				// $this->plugin->alerts->Trigger( 6033, array(
@@ -489,12 +489,12 @@ class WPFCM_Monitor {
 				// 'ScanStatus'    => 'stopped',
 				// ) );
 			} else {
-				wpfcm_save_setting( 'last-scanned', $next_to_scan );
+				wfm_save_setting( 'last-scanned', $next_to_scan );
 			}
 		}
 
 		// Set the scan in progress to false because scan is complete.
-		wpfcm_save_setting( 'scan-in-progress', false );
+		wfm_save_setting( 'scan-in-progress', false );
 	}
 
 	/**
@@ -526,7 +526,7 @@ class WPFCM_Monitor {
 		 */
 		if ( ! $this->dir_left_to_scan( $this->scan_settings['directories'] ) ) {
 			// Get last scan time.
-			$last_scan_start = WPFCM_Settings::get_setting( 'last-scan-start', false );
+			$last_scan_start = WFM_Settings::get_setting( 'last-scan-start', false );
 
 			if ( ! empty( $last_scan_start ) ) {
 				// Check for minimum 24 hours.
@@ -534,8 +534,8 @@ class WPFCM_Monitor {
 
 				// If scan hours difference has passed 24 hrs limit then remove the options.
 				if ( $scan_hrs > 23 ) {
-					WPFCM_Settings::delete_setting( 'scanned-dirs' ); // Delete already scanned directories option.
-					WPFCM_Settings::delete_setting( 'last-scan-start' ); // Delete last scan complete timestamp option.
+					WFM_Settings::delete_setting( 'scanned-dirs' ); // Delete already scanned directories option.
+					WFM_Settings::delete_setting( 'last-scan-start' ); // Delete last scan complete timestamp option.
 				} else {
 					// Else if they have not passed their limit, then return false.
 					return false;
@@ -574,7 +574,7 @@ class WPFCM_Monitor {
 	 * @return bool
 	 */
 	public function dir_left_to_scan( $scan_directories ) {
-		// Return false if $scan_directories is empty.
+		// False if $scan_directories is empty.
 		if ( empty( $scan_directories ) ) {
 			return false;
 		}
@@ -589,7 +589,7 @@ class WPFCM_Monitor {
 		}
 
 		// Get array of already directories scanned from DB.
-		$already_scanned_dirs = WPFCM_Settings::get_setting( 'scanned-dirs', array() );
+		$already_scanned_dirs = WFM_Settings::get_setting( 'scanned-dirs', array() );
 
 		// Check if already scanned directories has `root` directory.
 		if ( in_array( '', $already_scanned_dirs, true ) ) {
@@ -749,7 +749,7 @@ class WPFCM_Monitor {
 				 *
 				 * @param string $item - Directory name.
 				 */
-				$item = apply_filters( 'wpfcm_directory_before_file_scan', $item );
+				$item = apply_filters( 'wfm_directory_before_file_scan', $item );
 				if ( ! $item ) {
 					continue;
 				}
@@ -782,7 +782,7 @@ class WPFCM_Monitor {
 				 *
 				 * @param string $item – File name.
 				 */
-				$item = apply_filters( 'wpfcm_filename_before_file_scan', $item );
+				$item = apply_filters( 'wfm_filename_before_file_scan', $item );
 				if ( ! $item ) {
 					continue;
 				}
@@ -838,8 +838,8 @@ class WPFCM_Monitor {
 	 *     4. wp-includes (WP Core).
 	 *
 	 * Hooks using this function:
-	 *     1. wpfcm_file_scan_stored_files.
-	 *     2. wpfcm_file_scan_scanned_files.
+	 *     1. wfm_file_scan_stored_files.
+	 *     2. wfm_file_scan_scanned_files.
 	 *
 	 * @param array  $scan_files   - Scan files array.
 	 * @param string $path_to_scan - Path currently being scanned.
@@ -858,7 +858,7 @@ class WPFCM_Monitor {
 			|| false !== strpos( $path_to_scan, 'wp-includes' ) // wp-includes then check it for core updates skip.
 		) {
 			// Get `site_content` option.
-			$site_content = wpfcm_get_setting( WPFCM_Settings::$site_content );
+			$site_content = wfm_get_setting( WFM_Settings::$site_content );
 
 			// If the `skip_core` is set and its value is equal to true then.
 			if ( isset( $site_content->skip_core ) && true === $site_content->skip_core ) {
@@ -889,7 +889,7 @@ class WPFCM_Monitor {
 		}
 
 		// Get list of excluded plugins/themes.
-		$excluded_contents = wpfcm_get_setting( WPFCM_Settings::$site_content );
+		$excluded_contents = wfm_get_setting( WFM_Settings::$site_content );
 
 		// If excluded files exists then.
 		if ( ! empty( $excluded_contents ) ) {
@@ -934,14 +934,14 @@ class WPFCM_Monitor {
 					if ( ! empty( $event_content ) ) {
 						$dir_path = untrailingslashit( WP_CONTENT_DIR ) . $search_path;
 
-						if ( 'wpfcm_file_scan_scanned_files' === $current_filter ) {
+						if ( 'wfm_file_scan_scanned_files' === $current_filter ) {
 							if ( 'install' === $context ) {
-								wpfcm_create_directory_event( 'added', $dir_path, $event_content );
+								wfm_create_directory_event( 'added', $dir_path, $event_content );
 							} elseif ( 'update' === $context ) {
-								wpfcm_create_directory_event( 'modified', $dir_path, $event_content );
+								wfm_create_directory_event( 'modified', $dir_path, $event_content );
 							}
-						} elseif ( 'wpfcm_file_scan_stored_files' === $current_filter && 'uninstall' === $context ) {
-							wpfcm_create_directory_event( 'deleted', $dir_path, $event_content );
+						} elseif ( 'wfm_file_scan_stored_files' === $current_filter && 'uninstall' === $context ) {
+							wfm_create_directory_event( 'deleted', $dir_path, $event_content );
 						}
 					}
 				}
@@ -976,24 +976,24 @@ class WPFCM_Monitor {
 		// If path to scan is of plugins then empty the skip plugins array.
 		if ( false !== strpos( $path_to_scan, 'wp-content/plugins' ) ) {
 			// Get contents list.
-			$site_content = wpfcm_get_setting( WPFCM_Settings::$site_content, false );
+			$site_content = wfm_get_setting( WFM_Settings::$site_content, false );
 
 			// Empty skip plugins array.
 			$site_content->skip_plugins = array();
 
 			// Save it.
-			wpfcm_save_setting( WPFCM_Settings::$site_content, $site_content );
+			wfm_save_setting( WFM_Settings::$site_content, $site_content );
 
 			// If path to scan is of themes then empty the skip themes array.
 		} elseif ( false !== strpos( $path_to_scan, 'wp-content/themes' ) ) {
 			// Get contents list.
-			$site_content = wpfcm_get_setting( WPFCM_Settings::$site_content, false );
+			$site_content = wfm_get_setting( WFM_Settings::$site_content, false );
 
 			// Empty skip themes array.
 			$site_content->skip_themes = array();
 
 			// Save it.
-			wpfcm_save_setting( WPFCM_Settings::$site_content, $site_content );
+			wfm_save_setting( WFM_Settings::$site_content, $site_content );
 		}
 	}
 
@@ -1006,7 +1006,7 @@ class WPFCM_Monitor {
 		// Check if last scanned directory exists and it is at last directory.
 		if ( ! empty( $last_scanned_dir ) && 6 === $last_scanned_dir ) {
 			// Get `site_content` option.
-			$site_content = wpfcm_get_setting( WPFCM_Settings::$site_content, false );
+			$site_content = wfm_get_setting( WFM_Settings::$site_content, false );
 
 			// Check if the option is instance of stdClass.
 			if ( false !== $site_content && $site_content instanceof stdClass ) {
@@ -1014,10 +1014,10 @@ class WPFCM_Monitor {
 				$site_content->skip_files = array(); // Empty the skip files at the end of the scan.
 				$site_content->skip_exts  = array(); // Empty the skip extensions at the end of the scan.
 				$site_content->skip_dirs  = array(); // Empty the skip directories at the end of the scan.
-				wpfcm_save_setting( WPFCM_Settings::$site_content, $site_content ); // Save the option.
+				wfm_save_setting( WFM_Settings::$site_content, $site_content ); // Save the option.
 			}
 		}
 	}
 }
 
-wpfcm_get_monitor();
+wfm_get_monitor();

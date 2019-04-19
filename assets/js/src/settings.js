@@ -4,14 +4,14 @@
 window.addEventListener( 'load', function() {
 
 	const $ = document.querySelector.bind( document );
-	const keepLog = document.querySelectorAll( 'input[name="wpfcm-settings[keep-log]"]' );
-	const frequencySelect = $( 'select[name="wpfcm-settings[scan-frequency]"]' );
-	const scanDay = $( 'select[name="wpfcm-settings[scan-day]"]' ).parentNode;
-	const scanDate = $( 'select[name="wpfcm-settings[scan-date]"]' ).parentNode;
-	const excludeAdd = document.querySelectorAll( '.wpfcm-files-container .add' );
-	const excludeRemove = document.querySelectorAll( '.wpfcm-files-container .remove' );
-	const manualScanStart = $( '#wpfcm-scan-start' );
-	const manualScanStop = $( '#wpfcm-scan-stop' );
+	const keepLog = document.querySelectorAll( 'input[name="wfm-settings[keep-log]"]' );
+	const frequencySelect = $( 'select[name="wfm-settings[scan-frequency]"]' );
+	const scanDay = $( 'select[name="wfm-settings[scan-day]"]' ).parentNode;
+	const scanDate = $( 'select[name="wfm-settings[scan-date]"]' ).parentNode;
+	const excludeAdd = document.querySelectorAll( '.wfm-files-container .add' );
+	const excludeRemove = document.querySelectorAll( '.wfm-files-container .remove' );
+	const manualScanStart = $( '#wfm-scan-start' );
+	const manualScanStop = $( '#wfm-scan-stop' );
 
 	// Frequency handler.
 	frequencySelect.addEventListener( 'change', function() {
@@ -64,7 +64,7 @@ window.addEventListener( 'load', function() {
 			pattern = /^\s*[a-z-._\d,\s]+\s*$/i;
 		}
 
-		const excludeList = $( `#wpfcm-exclude-${excludeType}-list` );
+		const excludeList = $( `#wfm-exclude-${excludeType}-list` );
 		const excludeNameInput = e.target.parentNode.querySelector( '.name' );
 		const excludeName = excludeNameInput.value;
 
@@ -75,7 +75,7 @@ window.addEventListener( 'load', function() {
 
 			excludeItemInput.type = 'checkbox';
 			excludeItemInput.checked = true;
-			excludeItemInput.name = `wpfcm-settings[scan-exclude-${excludeType}][]`;
+			excludeItemInput.name = `wfm-settings[scan-exclude-${excludeType}][]`;
 			excludeItemInput.id = excludeName;
 			excludeItemInput.value = excludeName;
 
@@ -88,11 +88,11 @@ window.addEventListener( 'load', function() {
 			excludeNameInput.value = '';
 		} else {
 			if ( 'dirs' === excludeType ) {
-				alert( wpfcmData.dirInvalid ); // eslint-disable-line no-undef
+				alert( wfmData.dirInvalid ); // eslint-disable-line no-undef
 			} else if ( 'files' === excludeType ) {
-				alert( wpfcmData.fileInvalid ); // eslint-disable-line no-undef
+				alert( wfmData.fileInvalid ); // eslint-disable-line no-undef
 			} else if ( 'exts' === excludeType ) {
-				alert( wpfcmData.extensionInvalid ); // eslint-disable-line no-undef
+				alert( wfmData.extensionInvalid ); // eslint-disable-line no-undef
 			}
 		}
 	}
@@ -135,7 +135,7 @@ window.addEventListener( 'load', function() {
 	 * @param {string} settingValue - Keep log setting value.
 	 */
 	function toggleSettings( settingValue ) {
-		const settingFields = [ ...document.querySelectorAll( '.wpfcm-table fieldset' ) ];
+		const settingFields = [ ...document.querySelectorAll( '.wfm-table fieldset' ) ];
 
 		settingFields.forEach( setting => {
 			if ( 'no' === settingValue ) {
@@ -150,15 +150,15 @@ window.addEventListener( 'load', function() {
 	 * Send request to start manual scan.
 	 */
 	manualScanStart.addEventListener( 'click', function( e ) {
-		e.target.value = wpfcmData.scanButtons.scanning; // eslint-disable-line no-undef
+		e.target.value = wfmData.scanButtons.scanning; // eslint-disable-line no-undef
 		e.target.disabled = true;
 		manualScanStop.disabled = false;
 
 		// Rest request object.
-		const request = new Request( wpfcmData.monitor.start, { // eslint-disable-line no-undef
+		const request = new Request( wfmData.monitor.start, { // eslint-disable-line no-undef
 			method: 'GET',
 			headers: {
-				'X-WP-Nonce': wpfcmData.restRequestNonce // eslint-disable-line no-undef
+				'X-WP-Nonce': wfmData.restRequestNonce // eslint-disable-line no-undef
 			}
 		});
 
@@ -167,13 +167,13 @@ window.addEventListener( 'load', function() {
 			.then( response => response.json() )
 			.then( data => {
 				if ( data ) {
-					e.target.value = wpfcmData.scanButtons.scanNow; // eslint-disable-line no-undef
+					e.target.value = wfmData.scanButtons.scanNow; // eslint-disable-line no-undef
 					e.target.disabled = false;
 					manualScanStop.disabled = true;
 				}
 			})
 			.catch( error => {
-				e.target.value = wpfcmData.scanButtons.scanFailed; // eslint-disable-line no-undef
+				e.target.value = wfmData.scanButtons.scanFailed; // eslint-disable-line no-undef
 				e.target.disabled = false;
 				manualScanStop.disabled = true;
 				console.log( error ); // eslint-disable-line no-console
@@ -184,14 +184,14 @@ window.addEventListener( 'load', function() {
 	 * Send request to stop manual scan.
 	 */
 	manualScanStop.addEventListener( 'click', function( e ) {
-		e.target.value = wpfcmData.scanButtons.stopping; // eslint-disable-line no-undef
+		e.target.value = wfmData.scanButtons.stopping; // eslint-disable-line no-undef
 		e.target.disabled = true;
 
 		// Rest request object.
-		const request = new Request( wpfcmData.monitor.stop, { // eslint-disable-line no-undef
+		const request = new Request( wfmData.monitor.stop, { // eslint-disable-line no-undef
 			method: 'GET',
 			headers: {
-				'X-WP-Nonce': wpfcmData.restRequestNonce // eslint-disable-line no-undef
+				'X-WP-Nonce': wfmData.restRequestNonce // eslint-disable-line no-undef
 			}
 		});
 
@@ -200,7 +200,7 @@ window.addEventListener( 'load', function() {
 			.then( response => response.json() )
 			.then( data => {
 				if ( data ) {
-					e.target.value = wpfcmData.scanButtons.scanStop; // eslint-disable-line no-undef
+					e.target.value = wfmData.scanButtons.scanStop; // eslint-disable-line no-undef
 					manualScanStart.disabled = false;
 				}
 			})

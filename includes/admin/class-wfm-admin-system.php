@@ -1,8 +1,8 @@
 <?php
 /**
- * WPFCM Admin System.
+ * WFM Admin System.
  *
- * @package wpfcm
+ * @package wfm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * This class is responsible for handling system events
  * like wp core updates.
  */
-class WPFCM_Admin_System {
+class WFM_Admin_System {
 
 	/**
 	 * Constructor.
@@ -46,12 +46,12 @@ class WPFCM_Admin_System {
 
 			if ( $old_version !== $new_version ) {
 				// Get `site_content` option.
-				$site_content = wpfcm_get_setting( WPFCM_Settings::$site_content, false );
+				$site_content = wfm_get_setting( WFM_Settings::$site_content, false );
 
 				// Check if the option is instance of stdClass.
 				if ( false !== $site_content ) {
 					$site_content->skip_core = true; // Set skip core to true to skip file alerts after a core update.
-					wpfcm_save_setting( WPFCM_Settings::$site_content, $site_content ); // Save the option.
+					wfm_save_setting( WFM_Settings::$site_content, $site_content ); // Save the option.
 				}
 			}
 		}
@@ -69,16 +69,16 @@ class WPFCM_Admin_System {
 
 			if ( $old_version !== $obj->item->version ) {
 				// Get `site_content` option.
-				$site_content = wpfcm_get_setting( WPFCM_Settings::$site_content, false );
+				$site_content = wfm_get_setting( WFM_Settings::$site_content, false );
 
 				// Check if the option is instance of stdClass.
 				if ( false !== $site_content ) {
 					$site_content->skip_core = true; // Set skip core to true to skip file alerts after a core update.
-					wpfcm_save_setting( WPFCM_Settings::$site_content, $site_content ); // Save the option.
+					wfm_save_setting( WFM_Settings::$site_content, $site_content ); // Save the option.
 				}
 			}
 		}
 	}
 }
 
-new WPFCM_Admin_System();
+new WFM_Admin_System();

@@ -1,20 +1,20 @@
 <?php
 /**
- * Plugin Name: WP File Changes Monitor
+ * Plugin Name: Website Files Monitor
  * Plugin URI: http://www.wpwhitesecurity.com/
  * Description: Scan, detect, and log file changes on your WordPress website.
  * Author: WP White Security
  * Contributors: WP White Security, mrasharirfan
  * Version: 1.0
- * Text Domain: wp-file-changes-monitor
+ * Text Domain: website-files-monitor
  * Author URI: http://www.wpwhitesecurity.com/
  * License: GPL3
  *
- * @package wpfcm
+ * @package wfm
  */
 
 /*
-	WP File Changes Monitor
+	Website Files Monitor
 	Copyright(c) 2019  Robert Abela  (email : robert@wpwhitesecurity.com)
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License, version 3, as
@@ -33,23 +33,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin file.
-if ( ! defined( 'WPFCM_PLUGIN_FILE' ) ) {
-	define( 'WPFCM_PLUGIN_FILE', __FILE__ );
+if ( ! defined( 'WFM_PLUGIN_FILE' ) ) {
+	define( 'WFM_PLUGIN_FILE', __FILE__ );
 }
 
 // Include main plugin class.
-if ( ! class_exists( 'WP_File_Changes_Monitor' ) ) {
-	include_once dirname( __FILE__ ) . '/includes/class-wp-file-changes-monitor.php';
+if ( ! class_exists( 'Website_Files_Monitor' ) ) {
+	include_once dirname( __FILE__ ) . '/includes/class-website-files-monitor.php';
 }
 
 /**
- * Main instance of WP File Changes Monitor.
+ * Main instance of Website Files Monitor.
  *
  * Returns the main instance of the plugin.
  *
- * @return WP_File_Changes_Monitor
+ * @return Website_Files_Monitor
  */
-function wpfcm() {
-	return WP_File_Changes_Monitor::instance();
+function wfm_initiate() {
+	return Website_Files_Monitor::instance();
 }
-wpfcm();
+wfm_initiate();

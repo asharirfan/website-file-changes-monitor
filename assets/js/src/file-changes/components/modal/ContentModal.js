@@ -36,12 +36,12 @@ export default class ContentModal extends Component {
 		return (
 			<React.Fragment>
 				<button className="btn-event-content" onClick={this.openModal}><span className="dashicons dashicons-info"></span></button>
-				<Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} style={modalStyles} contentLabel="WPFCM Event File Changes">
-					<div className="wpfcm-modal-header">
+				<Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} style={modalStyles} contentLabel="WFM Event File Changes">
+					<div className="wfm-modal-header">
 						<h2>List of Event Files</h2>
 						<button className="button" onClick={this.closeModal}><span class="dashicons dashicons-no-alt"></span></button>
 					</div>
-					<div className="wpfcm-modal-body">
+					<div className="wfm-modal-body">
 						<p>Number of files: {eventFiles.length}</p>
 						<table className="wp-list-table widefat fixed striped">
 							<thead><td>Filename</td></thead>
@@ -70,4 +70,4 @@ const modalStyles = {
 };
 
 Modal.defaultStyles.overlay.backgroundColor = 'rgba(0,0,0,0.5)';
-Modal.setAppElement( '#wpfcm-file-changes-views' );
+Modal.setAppElement( '#wfm-file-changes-views' );

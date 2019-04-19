@@ -2,7 +2,7 @@
 /**
  * Settings Class File.
  *
- * @package wpfcm
+ * @package wfm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Plugin Settings Class.
  */
-class WPFCM_Admin_Settings {
+class WFM_Admin_Settings {
 
 	/**
 	 * Admin Messages.
@@ -48,46 +48,46 @@ class WPFCM_Admin_Settings {
 		$suffix = ( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? '' : '.min'; // Check for debug mode.
 
 		wp_enqueue_style(
-			'wpfcm-settings-styles',
-			WPFCM_BASE_URL . 'assets/css/dist/build.settings' . $suffix . '.css',
+			'wfm-settings-styles',
+			WFM_BASE_URL . 'assets/css/dist/build.settings' . $suffix . '.css',
 			array(),
-			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WPFCM_BASE_DIR . 'assets/css/dist/build.settings.css' ) : WPFCM_VERSION
+			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WFM_BASE_DIR . 'assets/css/dist/build.settings.css' ) : WFM_VERSION
 		);
 
 		wp_register_script(
-			'wpfcm-settings',
-			WPFCM_BASE_URL . 'assets/js/dist/settings' . $suffix . '.js',
+			'wfm-settings',
+			WFM_BASE_URL . 'assets/js/dist/settings' . $suffix . '.js',
 			array(),
-			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WPFCM_BASE_DIR . 'assets/js/dist/settings.js' ) : WPFCM_VERSION,
+			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WFM_BASE_DIR . 'assets/js/dist/settings.js' ) : WFM_VERSION,
 			true
 		);
 
 		wp_localize_script(
-			'wpfcm-settings',
-			'wpfcmData',
+			'wfm-settings',
+			'wfmData',
 			array(
 				'monitor'          => array(
-					'start' => esc_url_raw( rest_url( 'wp-file-changes-monitor/v1/monitor/start' ) ),
-					'stop'  => esc_url_raw( rest_url( 'wp-file-changes-monitor/v1/monitor/stop' ) ),
+					'start' => esc_url_raw( rest_url( 'website-files-monitor/v1/monitor/start' ) ),
+					'stop'  => esc_url_raw( rest_url( 'website-files-monitor/v1/monitor/stop' ) ),
 				),
 				'restRequestNonce' => wp_create_nonce( 'wp_rest' ),
 				'scanButtons'      => array(
-					'scanNow'    => esc_html__( 'Scan Now', 'wp-file-changes-monitor' ),
-					'scanStop'   => esc_html__( 'Stop Scan', 'wp-file-changes-monitor' ),
-					'scanning'   => esc_html__( 'Scanning...', 'wp-file-changes-monitor' ),
-					'stopping'   => esc_html__( 'Stopping scan...', 'wp-file-changes-monitor' ),
-					'scanFailed' => esc_html__( 'Scan Failed!', 'wp-file-changes-monitor' ),
+					'scanNow'    => esc_html__( 'Scan Now', 'website-files-monitor' ),
+					'scanStop'   => esc_html__( 'Stop Scan', 'website-files-monitor' ),
+					'scanning'   => esc_html__( 'Scanning...', 'website-files-monitor' ),
+					'stopping'   => esc_html__( 'Stopping scan...', 'website-files-monitor' ),
+					'scanFailed' => esc_html__( 'Scan Failed!', 'website-files-monitor' ),
 				),
-				'fileInvalid'      => esc_html__( 'Filename cannot be added because it contains invalid characters.', 'wp-file-changes-monitor' ),
-				'extensionInvalid' => esc_html__( 'File extension cannot be added because it contains invalid characters.', 'wp-file-changes-monitor' ),
-				'dirInvalid'       => esc_html__( 'Directory cannot be added because it contains invalid characters.', 'wp-file-changes-monitor' ),
+				'fileInvalid'      => esc_html__( 'Filename cannot be added because it contains invalid characters.', 'website-files-monitor' ),
+				'extensionInvalid' => esc_html__( 'File extension cannot be added because it contains invalid characters.', 'website-files-monitor' ),
+				'dirInvalid'       => esc_html__( 'Directory cannot be added because it contains invalid characters.', 'website-files-monitor' ),
 			)
 		);
 
-		wp_enqueue_script( 'wpfcm-settings' );
+		wp_enqueue_script( 'wfm-settings' );
 
 		// Get plugin settings.
-		$settings = wpfcm_get_monitor_settings();
+		$settings = wfm_get_monitor_settings();
 
 		// Include the view file.
 		require_once trailingslashit( dirname( __FILE__ ) ) . 'views/html-admin-settings.php';
@@ -97,10 +97,10 @@ class WPFCM_Admin_Settings {
 	 * Save Settings.
 	 */
 	public static function save() {
-		check_admin_referer( 'wpfcm-save-admin-settings' );
+		check_admin_referer( 'wfm-save-admin-settings' );
 
-		if ( isset( $_POST['wpfcm-settings'] ) ) {
-			$wpfcm_settings = $_POST['wpfcm-settings']; // @codingStandardsIgnoreLine
+		if ( isset( $_POST['wfm-settings'] ) ) {
+			$wfm_settings = $_POST['wfm-settings']; // @codingStandardsIgnoreLine
 
 			// This is to handle the empty exclude list case.
 			$exclude_settings = array(
@@ -108,9 +108,9 @@ class WPFCM_Admin_Settings {
 				'scan-exclude-files' => array(),
 				'scan-exclude-exts'  => array(),
 			);
-			$wpfcm_settings   = wp_parse_args( $wpfcm_settings, $exclude_settings );
+			$wfm_settings     = wp_parse_args( $wfm_settings, $exclude_settings );
 
-			foreach ( $wpfcm_settings as $key => $value ) {
+			foreach ( $wfm_settings as $key => $value ) {
 				if ( is_array( $value ) ) {
 					$value = array_map( 'sanitize_text_field', wp_unslash( $value ) );
 				} else {
@@ -127,10 +127,10 @@ class WPFCM_Admin_Settings {
 					self::set_skip_monitor_content( $key, $value );
 				}
 
-				wpfcm_save_setting( $key, $value );
+				wfm_save_setting( $key, $value );
 			}
 
-			self::add_message( __( 'Your settings have been saved.', 'wp-file-changes-monitor' ) );
+			self::add_message( __( 'Your settings have been saved.', 'website-files-monitor' ) );
 		}
 	}
 
@@ -174,9 +174,9 @@ class WPFCM_Admin_Settings {
 	 */
 	private static function set_skip_monitor_content( $setting, $value ) {
 		$site_content = new stdClass();
-		$site_content = wpfcm_get_setting( WPFCM_Settings::$site_content, $site_content );
+		$site_content = wfm_get_setting( WFM_Settings::$site_content, $site_content );
 
-		$stored_setting  = wpfcm_get_setting( $setting, array() );
+		$stored_setting  = wfm_get_setting( $setting, array() );
 		$removed_content = array_diff( $stored_setting, $value );
 
 		if ( ! empty( $removed_content ) ) {
@@ -189,7 +189,7 @@ class WPFCM_Admin_Settings {
 				$site_content->$content_type = $removed_content;
 			}
 
-			wpfcm_save_setting( WPFCM_Settings::$site_content, $site_content );
+			wfm_save_setting( WFM_Settings::$site_content, $site_content );
 		}
 	}
 }

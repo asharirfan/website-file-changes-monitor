@@ -1,8 +1,8 @@
 <?php
 /**
- * WPFCM API.
+ * WFM API.
  *
- * @package wpfcm
+ * @package wfm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,11 +10,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WPFCM API Class.
+ * WFM API Class.
  *
  * This class registers and handles the REST API requests of the plugin.
  */
-class WPFCM_API {
+class WFM_REST_API {
 
 	/**
 	 * Monitor events base.
@@ -44,7 +44,7 @@ class WPFCM_API {
 	public function register_monitor_rest_routes() {
 		// Start scan route.
 		register_rest_route(
-			WPFCM_REST_NAMESPACE,
+			WFM_REST_NAMESPACE,
 			'/monitor/start',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
@@ -57,7 +57,7 @@ class WPFCM_API {
 
 		// Stop scan route.
 		register_rest_route(
-			WPFCM_REST_NAMESPACE,
+			WFM_REST_NAMESPACE,
 			'/monitor/stop',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
@@ -75,7 +75,7 @@ class WPFCM_API {
 	public function register_events_rest_routes() {
 		// Register rest route for getting events.
 		register_rest_route(
-			WPFCM_REST_NAMESPACE,
+			WFM_REST_NAMESPACE,
 			self::$events_base . '/(?P<event_type>[\S]+)',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
@@ -91,7 +91,7 @@ class WPFCM_API {
 
 		// Register rest route for removing an event.
 		register_rest_route(
-			WPFCM_REST_NAMESPACE,
+			WFM_REST_NAMESPACE,
 			self::$events_base . '/(?P<event_id>[\d]+)',
 			array(
 				'methods'             => WP_REST_Server::DELETABLE,
@@ -106,7 +106,7 @@ class WPFCM_API {
 					'exclude' => array(
 						'type'        => 'boolean',
 						'default'     => false,
-						'description' => __( 'Whether to exclude the content in future scans or not', 'wp-file-changes-monitor' ),
+						'description' => __( 'Whether to exclude the content in future scans or not', 'website-files-monitor' ),
 					),
 				),
 			)
@@ -122,13 +122,13 @@ class WPFCM_API {
 		// Run a manual scan of all directories.
 		for ( $dir = 0; $dir < 7; $dir++ ) {
 			if ( ! $this->check_scan_stop() ) {
-				wpfcm_get_monitor()->scan_file_changes( true, $dir );
+				wfm_get_monitor()->scan_file_changes( true, $dir );
 			} else {
 				break;
 			}
 		}
 
-		wpfcm_delete_setting( 'scan-stop' );
+		wfm_delete_setting( 'scan-stop' );
 		return true;
 	}
 
@@ -138,7 +138,7 @@ class WPFCM_API {
 	 * @return boolean
 	 */
 	public function scan_stop() {
-		wpfcm_save_setting( 'scan-stop', true );
+		wfm_save_setting( 'scan-stop', true );
 		return true;
 	}
 
@@ -150,7 +150,7 @@ class WPFCM_API {
 	private function check_scan_stop() {
 		global $wpdb;
 		$options_table = $wpdb->prefix . 'options';
-		return $wpdb->get_var( "SELECT option_value FROM $options_table WHERE option_name = 'wpfcm-scan-stop'" ); // phpcs: ignore
+		return $wpdb->get_var( "SELECT option_value FROM $options_table WHERE option_name = 'wfm-scan-stop'" ); // phpcs:ignore
 	}
 
 	/**
@@ -165,7 +165,7 @@ class WPFCM_API {
 		$paged      = $rest_request->get_param( 'paged' );
 
 		if ( ! $event_type ) {
-			return new WP_Error( 'empty_event_type', __( 'No event type specified for the request.', 'wp-file-changes-monitor' ), array( 'status' => 404 ) );
+			return new WP_Error( 'empty_event_type', __( 'No event type specified for the request.', 'website-files-monitor' ), array( 'status' => 404 ) );
 		}
 
 		// Set events query arguments.
@@ -178,10 +178,10 @@ class WPFCM_API {
 		);
 
 		// Query events.
-		$events_query = wpfcm_get_events( $event_args );
+		$events_query = wfm_get_events( $event_args );
 
 		// Convert events for JS response.
-		$events_query->events = wpfcm_get_events_for_js( $events_query->events );
+		$events_query->events = wfm_get_events_for_js( $events_query->events );
 
 		$response = new WP_REST_Response( $events_query );
 		$response->set_status( 200 );
@@ -200,7 +200,7 @@ class WPFCM_API {
 		$event_id = $rest_request->get_param( 'event_id' );
 
 		if ( ! $event_id ) {
-			return new WP_Error( 'empty_event_id', __( 'No event id specified for the request.', 'wp-file-changes-monitor' ), array( 'status' => 404 ) );
+			return new WP_Error( 'empty_event_id', __( 'No event id specified for the request.', 'website-files-monitor' ), array( 'status' => 404 ) );
 		}
 
 		// Get request body to check if event is excluded.
@@ -210,17 +210,17 @@ class WPFCM_API {
 
 		if ( $is_excluded ) {
 			// Get event content type.
-			$event        = wpfcm_get_event( $event_id );
+			$event        = wfm_get_event( $event_id );
 			$content_type = $event->get_content_type();
 
 			if ( 'file' === $content_type ) {
-				$excluded_content   = wpfcm_get_setting( 'scan-exclude-files', array() );
+				$excluded_content   = wfm_get_setting( 'scan-exclude-files', array() );
 				$excluded_content[] = basename( $event->get_event_title() );
-				wpfcm_save_setting( 'scan-exclude-files', $excluded_content );
+				wfm_save_setting( 'scan-exclude-files', $excluded_content );
 			} elseif ( 'directory' === $content_type ) {
-				$excluded_content   = wpfcm_get_setting( 'scan-exclude-dirs', array() );
+				$excluded_content   = wfm_get_setting( 'scan-exclude-dirs', array() );
 				$excluded_content[] = $event->get_event_title();
-				wpfcm_save_setting( 'scan-exclude-dirs', $excluded_content );
+				wfm_save_setting( 'scan-exclude-dirs', $excluded_content );
 			}
 		}
 
@@ -238,4 +238,4 @@ class WPFCM_API {
 	}
 }
 
-new WPFCM_API();
+new WFM_REST_API();

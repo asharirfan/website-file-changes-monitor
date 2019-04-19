@@ -1,8 +1,8 @@
 <?php
 /**
- * WPFCM Data Store.
+ * WFM Data Store.
  *
- * @package wpfcm
+ * @package wfm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Data Store Class.
  */
-class WPFCM_Data_Store {
+class WFM_Data_Store {
 
 	/**
 	 * Data Store Instance.
@@ -27,7 +27,7 @@ class WPFCM_Data_Store {
 	 * @var array
 	 */
 	private $stores = array(
-		'event' => 'WPFCM_Event_Data_Store',
+		'event' => 'WFM_Event_Data_Store',
 	);
 
 	/**
@@ -50,12 +50,12 @@ class WPFCM_Data_Store {
 			$store = $this->stores[ $queried_object ];
 
 			if ( ! class_exists( $store ) ) {
-				throw new Exception( __( 'Data store does not exist.', 'wp-file-changes-monitor' ) );
+				throw new Exception( __( 'Data store does not exist.', 'website-files-monitor' ) );
 			} else {
 				$this->instance = new $store();
 			}
 		} else {
-			throw new Exception( __( 'Invalid data store.', 'wp-file-changes-monitor' ) );
+			throw new Exception( __( 'Invalid data store.', 'website-files-monitor' ) );
 		}
 	}
 
@@ -64,10 +64,10 @@ class WPFCM_Data_Store {
 	 *
 	 * @param string $queried_object - Queries object.
 	 * @throws Exception - When validation fails.
-	 * @return WPFCM_Data_Store
+	 * @return WFM_Data_Store
 	 */
 	public static function load( $queried_object ) {
-		return new WPFCM_Data_Store( $queried_object );
+		return new WFM_Data_Store( $queried_object );
 	}
 
 	/**

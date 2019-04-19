@@ -1,8 +1,8 @@
 <?php
 /**
- * WPFCM Settings File.
+ * WFM Settings File.
  *
- * @package wpfcm
+ * @package wfm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return array
  */
-function wpfcm_get_monitor_settings() {
-	if ( class_exists( 'WPFCM_Settings' ) ) {
-		return WPFCM_Settings::get_monitor_settings();
+function wfm_get_monitor_settings() {
+	if ( class_exists( 'WFM_Settings' ) ) {
+		return WFM_Settings::get_monitor_settings();
 	}
 	return array();
 }
@@ -28,9 +28,9 @@ function wpfcm_get_monitor_settings() {
  * @param mixed  $default - Default value.
  * @return mixed
  */
-function wpfcm_get_setting( $setting, $default = '' ) {
-	if ( class_exists( 'WPFCM_Settings' ) ) {
-		return WPFCM_Settings::get_setting( $setting, $default );
+function wfm_get_setting( $setting, $default = '' ) {
+	if ( class_exists( 'WFM_Settings' ) ) {
+		return WFM_Settings::get_setting( $setting, $default );
 	}
 	return false;
 }
@@ -41,9 +41,9 @@ function wpfcm_get_setting( $setting, $default = '' ) {
  * @param string $setting - Setting name.
  * @param mixed  $value   - Setting value.
  */
-function wpfcm_save_setting( $setting, $value ) {
-	if ( class_exists( 'WPFCM_Settings' ) ) {
-		WPFCM_Settings::save_setting( $setting, $value );
+function wfm_save_setting( $setting, $value ) {
+	if ( class_exists( 'WFM_Settings' ) ) {
+		WFM_Settings::save_setting( $setting, $value );
 	}
 }
 
@@ -52,9 +52,9 @@ function wpfcm_save_setting( $setting, $value ) {
  *
  * @param string $setting - Setting name.
  */
-function wpfcm_delete_setting( $setting ) {
-	if ( class_exists( 'WPFCM_Settings' ) ) {
-		WPFCM_Settings::delete_setting( $setting );
+function wfm_delete_setting( $setting ) {
+	if ( class_exists( 'WFM_Settings' ) ) {
+		WFM_Settings::delete_setting( $setting );
 	}
 }
 
@@ -63,7 +63,7 @@ function wpfcm_delete_setting( $setting ) {
  *
  * @return array
  */
-function wpfcm_get_site_plugins() {
+function wfm_get_site_plugins() {
 	return array_map( 'dirname', array_keys( get_plugins() ) ); // Get plugin directories.
 }
 
@@ -72,7 +72,7 @@ function wpfcm_get_site_plugins() {
  *
  * @return array
  */
-function wpfcm_get_site_themes() {
+function wfm_get_site_themes() {
 	return array_keys( wp_get_themes() ); // Get themes.
 }
 
@@ -81,23 +81,23 @@ function wpfcm_get_site_themes() {
  *
  * Add plugins and themes to site content setting of the plugin.
  */
-function wpfcm_set_site_content() {
+function wfm_set_site_content() {
 	// Get site plugins options.
-	$site_content = wpfcm_get_setting( WPFCM_Settings::$site_content, false );
+	$site_content = wfm_get_setting( WFM_Settings::$site_content, false );
 
 	// Initiate the site content option.
 	if ( false === $site_content ) {
 		// New stdClass object.
 		$site_content = new stdClass();
 
-		$plugins               = array_map( 'strtolower', wpfcm_get_site_plugins() );
+		$plugins               = array_map( 'strtolower', wfm_get_site_plugins() );
 		$site_content->plugins = $plugins;
 
 		foreach ( $plugins as $plugin ) {
 			$site_content->skip_plugins[ $plugin ] = 'init';
 		}
 
-		$themes               = array_map( 'strtolower', wpfcm_get_site_themes() );
+		$themes               = array_map( 'strtolower', wfm_get_site_themes() );
 		$site_content->themes = $themes;
 
 		foreach ( $themes as $theme ) {
@@ -105,7 +105,7 @@ function wpfcm_set_site_content() {
 		}
 
 		// Save site content.
-		wpfcm_save_setting( WPFCM_Settings::$site_content, $site_content );
+		wfm_save_setting( WFM_Settings::$site_content, $site_content );
 	}
 }
 
@@ -114,8 +114,8 @@ function wpfcm_set_site_content() {
  *
  * @param string $plugin - (Optional) Plugin directory name.
  */
-function wpfcm_add_site_plugin( $plugin = '' ) {
-	WPFCM_Settings::set_site_content( 'plugins', $plugin );
+function wfm_add_site_plugin( $plugin = '' ) {
+	WFM_Settings::set_site_content( 'plugins', $plugin );
 }
 
 /**
@@ -123,8 +123,8 @@ function wpfcm_add_site_plugin( $plugin = '' ) {
  *
  * @param string $theme - (Optional) Theme name.
  */
-function wpfcm_add_site_theme( $theme = '' ) {
-	WPFCM_Settings::set_site_content( 'themes', $theme );
+function wfm_add_site_theme( $theme = '' ) {
+	WFM_Settings::set_site_content( 'themes', $theme );
 }
 
 /**
@@ -132,8 +132,8 @@ function wpfcm_add_site_theme( $theme = '' ) {
  *
  * @param string $plugin - Plugin directory.
  */
-function wpfcm_remove_site_plugin( $plugin ) {
-	WPFCM_Settings::remove_site_content( 'plugins', $plugin );
+function wfm_remove_site_plugin( $plugin ) {
+	WFM_Settings::remove_site_content( 'plugins', $plugin );
 }
 
 /**
@@ -141,8 +141,8 @@ function wpfcm_remove_site_plugin( $plugin ) {
  *
  * @param string $theme - Theme directory.
  */
-function wpfcm_remove_site_theme( $theme ) {
-	WPFCM_Settings::remove_site_content( 'themes', $theme );
+function wfm_remove_site_theme( $theme ) {
+	WFM_Settings::remove_site_content( 'themes', $theme );
 }
 
 /**
@@ -151,8 +151,8 @@ function wpfcm_remove_site_theme( $theme ) {
  * @param string $plugin  - Plugin directory.
  * @param string $context - Context of the change, i.e., update or uninstall.
  */
-function wpfcm_skip_plugin_scan( $plugin, $context ) {
-	WPFCM_Settings::set_skip_site_content( 'plugins', $plugin, $context );
+function wfm_skip_plugin_scan( $plugin, $context ) {
+	WFM_Settings::set_skip_site_content( 'plugins', $plugin, $context );
 }
 
 /**
@@ -161,17 +161,17 @@ function wpfcm_skip_plugin_scan( $plugin, $context ) {
  * @param string $theme   - Theme directory.
  * @param string $context - Context of the change, i.e., update or uninstall.
  */
-function wpfcm_skip_theme_scan( $theme, $context ) {
-	WPFCM_Settings::set_skip_site_content( 'themes', $theme, $context );
+function wfm_skip_theme_scan( $theme, $context ) {
+	WFM_Settings::set_skip_site_content( 'themes', $theme, $context );
 }
 
 /**
  * Returns the instance of file changes montior.
  *
- * @return WPFCM_Monitor
+ * @return WFM_Monitor
  */
-function wpfcm_get_monitor() {
-	return WPFCM_Monitor::get_instance();
+function wfm_get_monitor() {
+	return WFM_Monitor::get_instance();
 }
 
 /**
@@ -181,7 +181,7 @@ function wpfcm_get_monitor() {
  * @param string $file       - File.
  * @param string $file_hash  - File hash.
  */
-function wpfcm_create_event( $event_type, $file, $file_hash ) {
+function wfm_create_event( $event_type, $file, $file_hash ) {
 	// Create the content object.
 	$content = (object) array(
 		'file' => $file,
@@ -189,7 +189,7 @@ function wpfcm_create_event( $event_type, $file, $file_hash ) {
 	);
 
 	// Create a new event object.
-	$event = new WPFCM_Event_File();
+	$event = new WFM_Event_File();
 	$event->set_event_title( $file );      // Set event title.
 	$event->set_event_type( $event_type ); // Set event type.
 	$event->set_content( $content );       // Set event content.
@@ -203,9 +203,9 @@ function wpfcm_create_event( $event_type, $file, $file_hash ) {
  * @param string $directory  - Directory.
  * @param array  $content    - Array of directory contents.
  */
-function wpfcm_create_directory_event( $event_type, $directory, $content ) {
+function wfm_create_directory_event( $event_type, $directory, $content ) {
 	// Create a new directory event object.
-	$event = new WPFCM_Event_Directory();
+	$event = new WFM_Event_Directory();
 	$event->set_event_title( $directory );
 	$event->set_event_type( $event_type );
 	$event->set_content( $content );
@@ -218,8 +218,8 @@ function wpfcm_create_directory_event( $event_type, $directory, $content ) {
  * @param array $args - Array of query arguments.
  * @return array|object
  */
-function wpfcm_get_events( $args ) {
-	$query = new WPFCM_Event_Query( $args );
+function wfm_get_events( $args ) {
+	$query = new WFM_Event_Query( $args );
 	return $query->get_events();
 }
 
@@ -227,9 +227,9 @@ function wpfcm_get_events( $args ) {
  * Get event object.
  *
  * @param int|WP_Post $the_event - ID or WP_Post object of an event.
- * @return WPFCM_Event|array
+ * @return WFM_Event|array
  */
-function wpfcm_get_event( $the_event ) {
+function wfm_get_event( $the_event ) {
 	// Get event id.
 	if ( is_numeric( $the_event ) ) {
 		$event_id = $the_event;
@@ -238,10 +238,10 @@ function wpfcm_get_event( $the_event ) {
 	}
 
 	// Get event content type.
-	$content_type = WPFCM_Data_Store::load( 'event' )->get_event_content_type( $event_id );
+	$content_type = WFM_Data_Store::load( 'event' )->get_event_content_type( $event_id );
 
 	if ( $content_type ) {
-		$event_class = 'WPFCM_Event_' . ucwords( $content_type );
+		$event_class = 'WFM_Event_' . ucwords( $content_type );
 		return new $event_class( $the_event );
 	}
 
@@ -259,12 +259,12 @@ function wpfcm_get_event( $the_event ) {
  * @param array $events - Array of events.
  * @return array
  */
-function wpfcm_get_events_for_js( $events ) {
+function wfm_get_events_for_js( $events ) {
 	$js_events = array();
 
 	if ( ! empty( $events ) && is_array( $events ) ) {
 		foreach ( $events as $event ) {
-			if ( ! $event instanceof WPFCM_Event ) {
+			if ( ! $event instanceof WFM_Event ) {
 				continue;
 			}
 

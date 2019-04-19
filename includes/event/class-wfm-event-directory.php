@@ -1,8 +1,8 @@
 <?php
 /**
- * WPFCM File Event.
+ * WFM Directory Event.
  *
- * @package wpfcm
+ * @package wfm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,11 +10,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WPFCM File Event Class.
+ * WFM Directory Event Class.
  *
- * Handle the event of a single file.
+ * Handle the events of directories like when a plugin
+ * is installed, updated, or removed, etc.
  */
-class WPFCM_Event_File extends WPFCM_Event {
+class WFM_Event_Directory extends WFM_Event {
 
 	/**
 	 * Constructor.
@@ -22,7 +23,7 @@ class WPFCM_Event_File extends WPFCM_Event {
 	 * @param int|bool $event_id - (Optional) Event id.
 	 */
 	public function __construct( $event_id = false ) {
-		$this->data['content_type'] = 'file'; // Content type.
+		$this->data['content_type'] = 'directory'; // Content type.
 		parent::__construct( $event_id );
 	}
 

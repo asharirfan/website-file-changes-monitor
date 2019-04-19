@@ -1,8 +1,8 @@
 <?php
 /**
- * WPFCM Post Types.
+ * WFM Post Types.
  *
- * @package wpfcm
+ * @package wfm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,12 +10,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WPFCM Post Type Class.
+ * WFM Post Type Class.
  *
  * This class handles registeration of post type and taxonomy
  * used by the plugin to store file notifications.
  */
-class WPFCM_Post_Types {
+class WFM_Post_Types {
 
 	/**
 	 * Initialize registration.
@@ -30,7 +30,7 @@ class WPFCM_Post_Types {
 	 */
 	public static function register_taxonomy() {
 		// Do action before registering taxonomy.
-		do_action( 'wpfcm_register_event_taxonomy' );
+		do_action( 'wfm_register_event_taxonomy' );
 
 		/**
 		 * Event Type Taxonomy.
@@ -42,10 +42,10 @@ class WPFCM_Post_Types {
 		 *   2. Grouped
 		 */
 		register_taxonomy(
-			'wpfcm_event_type',
-			apply_filters( 'wpfcm_taxonomy_event_type_object', array( 'wpfcm_event' ) ),
+			'wfm_event_type',
+			apply_filters( 'wfm_taxonomy_event_type_object', array( 'wfm_file_event' ) ),
 			apply_filters(
-				'wpfcm_taxonomy_event_type_args',
+				'wfm_taxonomy_event_type_args',
 				array(
 					'hierarchical'      => false,
 					'show_ui'           => false,
@@ -58,7 +58,7 @@ class WPFCM_Post_Types {
 		);
 
 		// Do action after registering taxonomy.
-		do_action( 'wpfcm_registered_event_taxonomy' );
+		do_action( 'wfm_registered_event_taxonomy' );
 	}
 
 	/**
@@ -66,7 +66,7 @@ class WPFCM_Post_Types {
 	 */
 	public static function register_post_type() {
 		// Do action before registering post type.
-		do_action( 'wpfcm_register_event_post_type' );
+		do_action( 'wfm_register_event_post_type' );
 
 		/**
 		 * Event Post Type.
@@ -74,11 +74,11 @@ class WPFCM_Post_Types {
 		 * Register post type for file change events.
 		 */
 		register_post_type(
-			'wpfcm_file_event',
+			'wfm_file_event',
 			apply_filters(
-				'wpfcm_register_event_post_type_args',
+				'wfm_register_event_post_type_args',
 				array(
-					'label'        => __( 'File Change Events', 'wp-file-changes-monitor' ),
+					'label'        => __( 'File Change Events', 'website-files-monitor' ),
 					'public'       => false,
 					'hierarchical' => false,
 					'supports'     => false,
@@ -88,9 +88,9 @@ class WPFCM_Post_Types {
 		);
 
 		// Do action after registering post type.
-		do_action( 'wpfcm_registered_event_post_type' );
+		do_action( 'wfm_registered_event_post_type' );
 	}
 }
 
 // Initialize post types.
-WPFCM_Post_Types::init();
+WFM_Post_Types::init();
