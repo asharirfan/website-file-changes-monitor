@@ -1,6 +1,6 @@
 <?php
 /**
- * WFM API.
+ * WFM REST API.
  *
  * @package wfm
  */
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WFM API Class.
+ * WFM REST API Class.
  *
  * This class registers and handles the REST API requests of the plugin.
  */
@@ -45,7 +45,7 @@ class WFM_REST_API {
 		// Start scan route.
 		register_rest_route(
 			WFM_REST_NAMESPACE,
-			'/monitor/start',
+			self::$monitor_base . '/start',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'scan_start' ),
@@ -58,7 +58,7 @@ class WFM_REST_API {
 		// Stop scan route.
 		register_rest_route(
 			WFM_REST_NAMESPACE,
-			'/monitor/stop',
+			self::$monitor_base . '/stop',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'scan_stop' ),

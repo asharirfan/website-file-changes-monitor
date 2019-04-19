@@ -67,8 +67,8 @@ class WFM_Admin_Settings {
 			'wfmData',
 			array(
 				'monitor'          => array(
-					'start' => esc_url_raw( rest_url( 'website-files-monitor/v1/monitor/start' ) ),
-					'stop'  => esc_url_raw( rest_url( 'website-files-monitor/v1/monitor/stop' ) ),
+					'start' => esc_url_raw( rest_url( WFM_REST_NAMESPACE . WFM_REST_API::$monitor_base . '/start' ) ),
+					'stop'  => esc_url_raw( rest_url( WFM_REST_NAMESPACE . WFM_REST_API::$monitor_base . '/stop' ) ),
 				),
 				'restRequestNonce' => wp_create_nonce( 'wp_rest' ),
 				'scanButtons'      => array(
