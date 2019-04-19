@@ -199,16 +199,25 @@ function wfm_create_event( $event_type, $file, $file_hash ) {
 /**
  * Create a new directory event.
  *
- * @param string $event_type - Event: added, modified, deleted.
- * @param string $directory  - Directory.
- * @param array  $content    - Array of directory contents.
+ * @param string $event_type    - Event: added, modified, deleted.
+ * @param string $directory     - Directory.
+ * @param array  $content       - Array of directory contents.
+ * @param string $event_context - (Optional) Event context.
  */
-function wfm_create_directory_event( $event_type, $directory, $content ) {
+function wfm_create_directory_event( $event_type, $directory, $content, $event_context = '' ) {
 	// Create a new directory event object.
 	$event = new WFM_Event_Directory();
+
+	// Set event data.
 	$event->set_event_title( $directory );
 	$event->set_event_type( $event_type );
 	$event->set_content( $content );
+
+	// Check for content type.
+	if ( $event_context ) {
+		$event->set_event_context( $event_context );
+	}
+
 	$event->save();
 }
 
@@ -268,13 +277,17 @@ function wfm_get_events_for_js( $events ) {
 				continue;
 			}
 
+			$content_type  = $event->get_content_type();
+			$event_context = 'directory' === $content_type ? $event->get_event_context() : '';
+
 			$js_events[] = (object) array(
-				'id'          => $event->get_event_id(),
-				'path'        => dirname( $event->get_event_title() ),
-				'filename'    => basename( $event->get_event_title() ),
-				'content'     => $event->get_content(),
-				'contentType' => ucwords( $event->get_content_type() ),
-				'checked'     => false,
+				'id'           => $event->get_event_id(),
+				'path'         => dirname( $event->get_event_title() ),
+				'filename'     => basename( $event->get_event_title() ),
+				'content'      => $event->get_content(),
+				'contentType'  => ucwords( $content_type ),
+				'eventContext' => $event_context,
+				'checked'      => false,
 			);
 		}
 	}
