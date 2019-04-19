@@ -30,8 +30,7 @@ class WFM_Admin_Plugins {
 	public function __construct() {
 		$has_permission = ( current_user_can( 'install_plugins' ) || current_user_can( 'delete_plugins' ) || current_user_can( 'update_plugins' ) );
 
-		// Only hook when handling AJAX request.
-		if ( $has_permission && defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		if ( $has_permission ) {
 			add_action( 'admin_init', array( $this, 'set_old_plugins' ) );
 			add_action( 'shutdown', array( $this, 'monitor_plugin_events' ) );
 		}
@@ -48,8 +47,14 @@ class WFM_Admin_Plugins {
 	 * Monitor Plugin Events.
 	 */
 	public function monitor_plugin_events() {
+		global $pagenow;
+
 		// Get $_POST action data.
 		$action = isset( $_POST['action'] ) ? sanitize_text_field( wp_unslash( $_POST['action'] ) ) : false; // @codingStandardsIgnoreLine
+
+		if ( 'update.php' === $pagenow ) {
+			$action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : false; // @codingStandardsIgnoreLine
+		}
 
 		$install_actions = array( 'install-plugin', 'upload-plugin' );
 		$update_actions  = array( 'upgrade-plugin', 'update-plugin', 'update-selected' );
