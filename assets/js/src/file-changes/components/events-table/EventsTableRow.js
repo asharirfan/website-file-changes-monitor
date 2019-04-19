@@ -14,7 +14,15 @@ export default class EventsTableRow extends Component {
 				<td><input type="checkbox" value={event.id} checked={event.checked} onChange={this.props.selectEvent.bind( this, event.id )} /></td>
 				<td>{event.path}</td>
 				<td>{event.filename}</td>
-				<td><span className={`content-type ${contentType}`}>{event.contentType}</span></td>
+				<td>
+					<span className={`content-type ${contentType}`}>
+					{
+						'directory' === contentType && event.eventContext ?
+						event.eventContext :
+						event.contentType
+					}
+					</span>
+				</td>
 				<td><input className="button-primary" type="button" value="Mark as Read" onClick={this.props.markEventAsRead.bind( this, event.id )} /></td>
 				<td><input className="button-secondary" type="button" value="Exclude" onClick={this.props.excludeEvent.bind( this, event.id )} /></td>
 				<td>
