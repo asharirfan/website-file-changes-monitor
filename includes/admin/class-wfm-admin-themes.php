@@ -30,8 +30,7 @@ class WFM_Admin_Themes {
 	public function __construct() {
 		$has_permission = ( current_user_can( 'install_themes' ) || current_user_can( 'delete_themes' ) || current_user_can( 'update_themes' ) );
 
-		// Only hook when handling AJAX request.
-		if ( $has_permission && defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		if ( $has_permission ) {
 			add_action( 'admin_init', array( $this, 'set_old_themes' ) );
 			add_action( 'shutdown', array( $this, 'monitor_theme_events' ) );
 		}
@@ -48,8 +47,14 @@ class WFM_Admin_Themes {
 	 * Monitor Theme Events.
 	 */
 	public function monitor_theme_events() {
+		global $pagenow;
+
 		// Get $_POST action data.
 		$action = isset( $_POST['action'] ) ? sanitize_text_field( wp_unslash( $_POST['action'] ) ) : false; // @codingStandardsIgnoreLine
+
+		if ( 'update.php' === $pagenow ) {
+			$action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : false; // @codingStandardsIgnoreLine
+		}
 
 		$install_actions = array( 'install-theme', 'upload-theme' );
 		$update_actions  = array( 'upgrade-theme', 'update-theme', 'update-selected-themes' );
