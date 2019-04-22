@@ -96,7 +96,8 @@ module.exports = ( env, options ) => {
 			'file-changes': './assets/js/src/file-changes.js',
 			'build.file-changes': './assets/css/src/file-changes.scss',
 			'settings': './assets/js/src/settings.js',
-			'build.settings': './assets/css/src/settings.scss'
+			'build.settings': './assets/css/src/settings.scss',
+			'common': './assets/js/src/common.js'
 		},
 		output: {
 			path: path.resolve( __dirname, 'assets/js/dist' ),

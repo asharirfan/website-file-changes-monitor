@@ -49,7 +49,7 @@ if ( ! class_exists( 'Website_Files_Monitor' ) ) {
  *
  * @return Website_Files_Monitor
  */
-function wfm_initiate() {
+function wfm_instance() {
 	return Website_Files_Monitor::instance();
 }
-wfm_initiate();
+wfm_instance();
