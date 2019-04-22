@@ -853,14 +853,18 @@ class WFM_Monitor {
 			// Filter theme files.
 			$scan_files = $this->filter_excluded_scan_files( $scan_files, 'themes' );
 		} elseif (
-			false !== strpos( $path_to_scan, 'wp-admin' ) // If the path is wp-admin or
-			|| false !== strpos( $path_to_scan, 'wp-includes' ) // wp-includes then check it for core updates skip.
+			empty( $path_to_scan )                              // Root path.
+			|| false !== strpos( $path_to_scan, 'wp-admin' )    // WP Admin.
+			|| false !== strpos( $path_to_scan, 'wp-includes' ) // WP Includes.
 		) {
 			// Get `site_content` option.
 			$site_content = wfm_get_setting( WFM_Settings::$site_content );
 
 			// If the `skip_core` is set and its value is equal to true then.
 			if ( isset( $site_content->skip_core ) && true === $site_content->skip_core ) {
+				// Check the create events for wp-core file updates.
+				$this->filter_excluded_scan_files( $scan_files, $path_to_scan );
+
 				// Empty the scan files.
 				$scan_files = array();
 			}
@@ -882,8 +886,7 @@ class WFM_Monitor {
 	 * @return array
 	 */
 	private function filter_excluded_scan_files( $scan_files, $excluded_type ) {
-		// Check if any one of the two parameters are empty.
-		if ( empty( $scan_files ) || empty( $excluded_type ) ) {
+		if ( empty( $scan_files ) ) {
 			return $scan_files;
 		}
 
@@ -960,6 +963,26 @@ class WFM_Monitor {
 
 							wfm_create_directory_event( 'deleted', $dir_path, array_values( $event_content ), $event_context );
 						}
+					}
+				}
+			} elseif ( ! $excluded_type || in_array( $excluded_type, array( 'wp-admin', 'wp-includes' ), true ) ) {
+				// An array of content to be stored as meta for event.
+				$event_content = array();
+
+				$directory = trailingslashit( ABSPATH ) . $excluded_type;
+
+				foreach ( $scan_files as $file => $file_hash ) {
+					$event_content[ $file ] = (object) array(
+						'file' => $file,
+						'hash' => $file_hash,
+					);
+				}
+
+				if ( ! empty( $event_content ) ) {
+					if ( 'wfm_file_scan_stored_files' === $current_filter ) {
+						$this->files_to_exclude[ $directory ] = $event_content;
+					} elseif ( 'wfm_file_scan_scanned_files' === $current_filter ) {
+						$this->check_directory_for_updates( $event_content, $directory );
 					}
 				}
 			}
@@ -1080,7 +1103,7 @@ class WFM_Monitor {
 			}
 		}
 
-		$dirname       = dirname( $directory );
+		$dirname       = ABSPATH !== $directory ? dirname( $directory ) : $directory;
 		$dir_path      = '';
 		$event_context = '';
 
@@ -1090,6 +1113,9 @@ class WFM_Monitor {
 		} elseif ( '/themes' === $dirname ) {
 			$dir_path      = untrailingslashit( WP_CONTENT_DIR ) . $directory;
 			$event_context = __( 'Theme Update', 'website-files-monitor' );
+		} elseif ( ABSPATH === $directory || false !== strpos( $directory, 'wp-admin' ) || false !== strpos( $directory, 'wp-includes' ) ) {
+			$dir_path      = $directory;
+			$event_context = __( 'Core Update', 'website-files-monitor' );
 		}
 
 		if ( count( $files_added ) > 0 ) {
