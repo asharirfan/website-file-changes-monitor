@@ -294,3 +294,25 @@ function wfm_get_events_for_js( $events ) {
 
 	return $js_events;
 }
+
+/**
+ * Install WFM.
+ *
+ * Install routine that executes on every plugin update.
+ */
+function wfm_install() {
+	// WSAL plugins.
+	$wsal_plugins = array( 'wp-security-audit-log/wp-security-audit-log.php', 'wp-security-audit-log-premium/wp-security-audit-log.php' );
+
+	// Only run this when installing for the first time.
+	if ( ! get_option( 'wfm-version', false ) ) {
+		foreach ( $wsal_plugins as $plugin ) {
+			if ( is_plugin_active( $plugin ) ) {
+				wfm_save_setting( 'admin-notices', array( 'wsal' => true ) );
+			}
+		}
+	}
+
+	update_option( 'wfm-version', wfm_instance()->version );
+	wfm_set_site_content();
+}

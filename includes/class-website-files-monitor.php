@@ -100,7 +100,7 @@ final class Website_Files_Monitor {
 	 * Register Hooks.
 	 */
 	public function register_hooks() {
-		register_activation_hook( WFM_PLUGIN_FILE, 'wfm_set_site_content' );
+		register_activation_hook( WFM_PLUGIN_FILE, 'wfm_install' );
 	}
 
 	/**
