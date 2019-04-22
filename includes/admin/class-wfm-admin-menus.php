@@ -34,7 +34,7 @@ class WFM_Admin_Menus {
 	 * 3. Help & About.
 	 */
 	public function add_admin_menu() {
-		add_menu_page( __( 'Files Monitor', 'website-files-monitor' ), __( 'Files Monitor', 'website-files-monitor' ), 'manage_options', 'wfm-file-changes', null, null, '20' );
+		add_menu_page( __( 'Files Monitor', 'website-files-monitor' ), __( 'Files Monitor', 'website-files-monitor' ), 'manage_options', 'wfm-file-changes', null, null, '75' );
 		add_submenu_page( 'wfm-file-changes', __( 'Files Monitor', 'website-files-monitor' ), __( 'Files Monitor', 'website-files-monitor' ), 'manage_options', 'wfm-file-changes', array( $this, 'file_changes_page' ) );
 	}
 
