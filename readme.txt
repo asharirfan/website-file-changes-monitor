@@ -7,7 +7,7 @@ Tags: file monitor, file integrity scanner, file checker, file scanner, file sec
 Requires at least: XXXXXXXX
 Tested up to: 5.1.1
 Stable tag: 1.0.0
-Requires PHP: XXXXXXXX
+Requires PHP: 5.6.20
 
 A hassle-free way to get alerted of file changes on your WordPress site & boost security.
 
