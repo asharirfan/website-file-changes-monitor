@@ -236,7 +236,7 @@ class WFM_Monitor {
 		if ( ! $manual && is_null( $last_scanned ) ) {
 			// Replace the last scanned value with the setting value
 			// if the scan is not manual and last scan value is null.
-			$last_scanned = wfm_get_setting( 'last-scanned' );
+			$last_scanned = wfm_get_setting( 'last-scanned', false );
 		}
 
 		// Get directories to be scanned.
