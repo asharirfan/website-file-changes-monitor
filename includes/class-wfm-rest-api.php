@@ -281,8 +281,6 @@ class WFM_REST_API {
 		}
 
 		$admin_notice = wfm_get_setting( 'admin-notices', array() );
-		wfm_instance()->error_log( $notice_id );
-		wfm_instance()->error_log( $admin_notice );
 
 		if ( isset( $admin_notice[ $notice_id ] ) ) {
 			// Unset the notice.

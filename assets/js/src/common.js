@@ -32,7 +32,6 @@ function wfmDismissAdminNotice( e ) {
 	fetch( request )
 		.then( response => response.json() )
 		.then( data => {
-			console.log( data );
 			if ( data.success ) {
 				document.getElementById( `wfm-admin-notice-${noticeId}` ).style.display = 'none';
 			}
