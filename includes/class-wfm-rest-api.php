@@ -31,11 +31,19 @@ class WFM_REST_API {
 	public static $events_base = '/monitor-events';
 
 	/**
+	 * Admin notices base.
+	 *
+	 * @var string
+	 */
+	public static $admin_notices = '/admin-notices';
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
 		add_action( 'rest_api_init', array( $this, 'register_monitor_rest_routes' ) );
 		add_action( 'rest_api_init', array( $this, 'register_events_rest_routes' ) );
+		add_action( 'rest_api_init', array( $this, 'register_admin_notices_rest_routes' ) );
 	}
 
 	/**
@@ -114,6 +122,27 @@ class WFM_REST_API {
 	}
 
 	/**
+	 * Register rest route for admin notices.
+	 */
+	public function register_admin_notices_rest_routes() {
+		// Register rest route dismissing admin notice.
+		register_rest_route(
+			WFM_REST_NAMESPACE,
+			self::$admin_notices . '/(?P<admin_notice>[\S]+)',
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array( $this, 'dismiss_admin_notice' ),
+				'permission_callback' => function() {
+					return current_user_can( 'manage_options' );
+				},
+				'validate_callback'   => function( $param ) {
+					return filter_var( $param, FILTER_SANITIZE_STRING );
+				},
+			)
+		);
+	}
+
+	/**
 	 * REST API callback for start scan request.
 	 *
 	 * @return boolean
@@ -156,8 +185,8 @@ class WFM_REST_API {
 	/**
 	 * REST API callback for fetching created file events.
 	 *
-	 * @param WP_Rest_Request $rest_request - Rest request object.
-	 * @return string - JSON string of events.
+	 * @param WP_REST_Request $rest_request - REST request object.
+	 * @return WP_Error|string - JSON string of events.
 	 */
 	public function get_events( $rest_request ) {
 		// Get event params from request object.
@@ -192,8 +221,8 @@ class WFM_REST_API {
 	/**
 	 * REST API callback for marking events as read.
 	 *
-	 * @param WP_Rest_Request $rest_request - Rest request object.
-	 * @return WP_Rest_Request
+	 * @param WP_REST_Request $rest_request - REST request object.
+	 * @return WP_Error|WP_REST_Response
 	 */
 	public function delete_event( $rest_request ) {
 		// Get event id from request.
@@ -235,6 +264,40 @@ class WFM_REST_API {
 		$response->set_status( 200 );
 
 		return $response;
+	}
+
+	/**
+	 * REST API callback for dismissing admin notice.
+	 *
+	 * @param WP_REST_Request $rest_request - REST request object.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function dismiss_admin_notice( $rest_request ) {
+		// Get admin notice id.
+		$notice_id = $rest_request->get_param( 'admin_notice' );
+
+		if ( ! $notice_id ) {
+			return new WP_Error( 'empty_admin_notice_id', __( 'No admin notice id specified for the request.', 'website-files-monitor' ), array( 'status' => 404 ) );
+		}
+
+		$admin_notice = wfm_get_setting( 'admin-notices', array() );
+		wfm_instance()->error_log( $notice_id );
+		wfm_instance()->error_log( $admin_notice );
+
+		if ( isset( $admin_notice[ $notice_id ] ) ) {
+			// Unset the notice.
+			unset( $admin_notice[ $notice_id ] );
+
+			// Save notice option.
+			wfm_save_setting( 'admin-notices', $admin_notice );
+
+			// Prepare response.
+			$response = array( 'success' => true );
+		} else {
+			$response = array( 'success' => false );
+		}
+
+		return new WP_REST_Response( $response, 200 );
 	}
 }
 
