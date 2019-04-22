@@ -4,10 +4,10 @@ Plugin URI: https://www.wpwhitesecurity.com/wordpress-plugins/website-files-moni
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Tags: file monitor, file integrity scanner, file checker, file scanner, file security, security, file changes, file changes scanner
-Requires at least: XXXXXXXX
+Requires at least: 4.7
 Tested up to: 5.1.1
 Stable tag: 1.0.0
-Requires PHP: XXXXXXXX
+Requires PHP: 5.6.20
 
 A hassle-free way to get alerted of file changes on your WordPress site & boost security.
 
@@ -101,6 +101,12 @@ We have more than a decade of experience in the security and WordPress plugin de
 1. Download the plugin from the [WordPress plugins repository](https://wordpress.org/plugins/website-files-monitor/)
 1. Unzip the zip file and upload the `website-files-monitor` folder to the `/wp-content/plugins/` directory
 1. Activate the Website Files Monitor plugin through the 'Plugins' menu in WordPress
+
+== Frequently Asked Questions ==
+
+= Can I install the Website Files Monitor plugin on WordPress version 4.6 or earlier? =
+
+Yes you can, but before installing it please install and activate the [REST API plugin](https://wordpress.org/plugins/rest-api/).
 
 == Screenshots ==
 
