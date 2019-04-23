@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Website Files Monitor
  * Plugin URI: http://www.wpwhitesecurity.com/
- * Description: Scan, detect, and log file changes on your WordPress website.
+ * Description: A hassle-free way to get alerted of file changes on your WordPress site & boost security.
  * Author: WP White Security
  * Contributors: WP White Security, mrasharirfan
  * Version: 1.0
