@@ -132,7 +132,8 @@ module.exports = ( env, options ) => {
 						options: {
 							babelrc: false,
 							presets: [ '@babel/preset-env', '@babel/preset-react' ],
-							cacheDirectory: true
+							cacheDirectory: true,
+							'plugins': [ '@babel/plugin-transform-runtime' ]
 						}
 					}
 				},
