@@ -50,10 +50,14 @@ class WFM_Admin_Themes {
 		global $pagenow;
 
 		// Get $_POST action data.
-		$action = isset( $_POST['action'] ) ? sanitize_text_field( wp_unslash( $_POST['action'] ) ) : false; // @codingStandardsIgnoreLine
+		$action         = isset( $_POST['action'] ) ? sanitize_text_field( wp_unslash( $_POST['action'] ) ) : false; // phpcs:ignore
+		$is_themes_page = false;
 
 		if ( 'update.php' === $pagenow ) {
-			$action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : false; // @codingStandardsIgnoreLine
+			$action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : false; // phpcs:ignore
+		} elseif ( 'themes.php' === $pagenow ) {
+			$action         = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : false; // phpcs:ignore
+			$is_themes_page = true;
 		}
 
 		$install_actions = array( 'install-theme', 'upload-theme' );
@@ -72,7 +76,7 @@ class WFM_Admin_Themes {
 		}
 
 		// Handle theme uninstall event.
-		if ( 'delete-theme' === $action && current_user_can( 'delete_themes' ) ) {
+		if ( ( 'delete-theme' === $action && current_user_can( 'delete_themes' ) ) || ( $is_themes_page && 'delete' === $action && current_user_can( 'delete_themes' ) ) ) {
 			foreach ( $this->get_removed_themes() as $theme ) {
 				wfm_skip_theme_scan( $theme->stylesheet, 'uninstall' );
 				wfm_remove_site_theme( $theme->stylesheet );
@@ -80,11 +84,21 @@ class WFM_Admin_Themes {
 		}
 
 		// Handle theme update event.
-		if ( in_array( $action, $update_actions, true ) && current_user_can( 'update_themes' ) && isset( $_POST['slug'] ) ) { // @codingStandardsIgnoreLine
-			$updated_theme = sanitize_text_field( wp_unslash( $_POST['slug'] ) ); // @codingStandardsIgnoreLine
+		if ( in_array( $action, $update_actions, true ) && current_user_can( 'update_themes' ) ) {
+			$updated_themes = array();
 
-			if ( $updated_theme ) {
-				wfm_skip_theme_scan( $updated_theme, 'update' );
+			if ( isset( $_POST['slug'] ) ) { // phpcs:ignore
+				$updated_themes[] = sanitize_text_field( wp_unslash( $_POST['slug'] ) ); // phpcs:ignore
+			} elseif ( isset( $_GET['theme'] ) ) { // phpcs:ignore
+				$updated_themes[] = sanitize_text_field( wp_unslash( $_GET['theme'] ) ); // phpcs:ignore
+			} elseif ( isset( $_GET['themes'] ) ) { // phpcs:ignore
+				$updated_themes = explode( ',', sanitize_text_field( wp_unslash( $_GET['themes'] ) ) ); // phpcs:ignore
+			}
+
+			if ( ! empty( $updated_themes ) ) {
+				foreach ( $updated_themes as $updated_theme ) {
+					wfm_skip_theme_scan( $updated_theme, 'update' );
+				}
 			}
 		}
 	}
