@@ -18,7 +18,9 @@ class WFM_Admin_File_Changes {
 	 * Page View.
 	 */
 	public static function output() {
-		$suffix = ( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? '' : '.min'; // Check for debug mode.
+		$wp_version       = get_bloginfo( 'version' );
+		$suffix           = ( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? '' : '.min'; // Check for debug mode.
+		$wfm_dependencies = array();
 
 		wp_enqueue_style(
 			'wfm-file-changes-styles',
@@ -27,10 +29,34 @@ class WFM_Admin_File_Changes {
 			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WFM_BASE_DIR . 'assets/css/dist/build.file-changes.css' ) : WFM_VERSION
 		);
 
+		// For WordPress versions earlier than 5.0, enqueue react and react-dom from the vendors directory.
+		if ( version_compare( $wp_version, '5.0', '<' ) ) {
+			wp_enqueue_script(
+				'wfm-react',
+				WFM_BASE_URL . 'assets/js/dist/vendors/react.min.js',
+				array(),
+				'16.6.3',
+				true
+			);
+
+			wp_enqueue_script(
+				'wfm-react-dom',
+				WFM_BASE_URL . 'assets/js/dist/vendors/react-dom.min.js',
+				array(),
+				'16.6.3',
+				true
+			);
+
+			$wfm_dependencies = array( 'wfm-react', 'wfm-react-dom' );
+		} else {
+			// Otherwise enqueue WordPress' react library.
+			$wfm_dependencies = array( 'wp-element' );
+		}
+
 		wp_register_script(
 			'wfm-file-changes',
 			WFM_BASE_URL . 'assets/js/dist/file-changes' . $suffix . '.js',
-			array( 'wp-element' ),
+			$wfm_dependencies,
 			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WFM_BASE_DIR . 'assets/js/dist/file-changes.js' ) : WFM_VERSION,
 			true
 		);
