@@ -49,11 +49,16 @@ class WFM_Admin_Plugins {
 	public function monitor_plugin_events() {
 		global $pagenow;
 
-		// Get $_POST action data.
+		// Set initial variables.
 		$action = isset( $_POST['action'] ) ? sanitize_text_field( wp_unslash( $_POST['action'] ) ) : false; // @codingStandardsIgnoreLine
+		$is_plugins_page = false;
+		$is_update_page  = false;
 
 		if ( 'update.php' === $pagenow ) {
-			$action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : false; // @codingStandardsIgnoreLine
+			$action         = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : false; // @codingStandardsIgnoreLine
+			$is_update_page = true;
+		} elseif ( 'plugins.php' === $pagenow ) {
+			$is_plugins_page = true;
 		}
 
 		$install_actions = array( 'install-plugin', 'upload-plugin' );
@@ -79,6 +84,18 @@ class WFM_Admin_Plugins {
 				wfm_skip_plugin_scan( $deleted_plugin, 'uninstall' );
 				wfm_remove_site_plugin( $deleted_plugin );
 			}
+		} elseif ( $is_plugins_page && isset( $_POST['verify-delete'] ) && 'delete-selected' === $action && isset( $_POST['checked'] ) ) { // phpcs:ignore
+			// Get plugins.
+			$plugins = array_map( 'sanitize_text_field', wp_unslash( $_POST['checked'] ) ); // phpcs:ignore
+
+			foreach ( $plugins as $plugin ) {
+				$deleted_plugin = dirname( $plugin );
+
+				if ( $deleted_plugin ) {
+					wfm_skip_plugin_scan( $deleted_plugin, 'uninstall' );
+					wfm_remove_site_plugin( $deleted_plugin );
+				}
+			}
 		}
 
 		// Handle plugin update event.
@@ -88,6 +105,17 @@ class WFM_Admin_Plugins {
 
 			if ( $updated_plugin ) {
 				wfm_skip_plugin_scan( $updated_plugin, 'update' );
+			}
+		} elseif ( $is_update_page && in_array( $action, $update_actions, true ) && current_user_can( 'update_plugins' ) && isset( $_GET['plugins'] ) ) { // phpcs:ignore
+			$plugins = sanitize_text_field( wp_unslash( $_GET['plugins'] ) ); // phpcs:ignore
+			$plugins = explode( ',', $plugins );
+
+			foreach ( $plugins as $plugin ) {
+				$updated_plugin = dirname( $plugin );
+
+				if ( $updated_plugin ) {
+					wfm_skip_plugin_scan( $updated_plugin, 'update' );
+				}
 			}
 		}
 	}
