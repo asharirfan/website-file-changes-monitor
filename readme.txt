@@ -13,11 +13,13 @@ A hassle-free way to get alerted of file changes on your WordPress site & boost 
 
 == Description ==
 
-### A hassle-free way to get alerted of file changes on your WordPress site & boost security.
+### A hassle-free way to get alerted of file changes on your WordPress & boost site security.
 
-Everyone who had a WordPress website hacked knows how difficult it is to detect the infiltration and identify all the file changes!
+Identify leftover files that could lead to sensitive data breaches, and malware injections during the early stages of an attack. 
 
-Identify possible malicious hack attacks during the early stages. Easily spot the injected malware and code changes, thus recuperating the site back and clean the infection at the earliest possible.
+Everyone who owns a WordPress website knows how difficult it is to manage the site's files. Leftover backup and source code files are very common, and they are the number one source of sensitive data breaches. Also, in case of a successful hack attack it is almost impossible to detect the infiltration and identify all the source code changes!
+
+Easily spot leftover files, injected malware and code changes! Remove files that could leave you expose and clean malware infections at the earliest possible.
 
 ### Why Do You Need a Website File Changes Monitor?
 
@@ -38,7 +40,7 @@ The Website File Changes Monitor plugin helps you:
 However, the scope of detecting file changes goes beyond detecting malicious attacks and malware infections. It is a WordPress website security and management best practice that can also help you:
 
 * Ensure and check  the integrity of your WordPress core, plugins and theme files
-* Find files developers leave by mistake that could potentially disclose sensitive information, such as backup files, sql files etc
+* Find leftover files developers leave by mistake that could lead to sensitive information disclosure, such as backup files, database files etc
 * Keep track of code changes developers are doing on your WordPress site
 * Troubleshoot and avoid unnecessary technical problems on your WordPress site
 
