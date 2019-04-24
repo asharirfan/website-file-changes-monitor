@@ -6,11 +6,13 @@
 
 ## 📖 Description
 
-### 🛡️ A hassle-free way to get alerted of file changes on your WordPress site & boost security.
+### 🛡️ A hassle-free way to get alerted of file changes on your WordPress & boost site security.
 
-Everyone who had a WordPress website hacked knows how difficult it is to detect the infiltration and identify all the file changes!
+Identify leftover files that could lead to sensitive data breaches, and malware injections during the early stages of an attack.
 
-Identify possible malicious hack attacks during the early stages. Easily spot the injected malware and code changes, thus recuperating the site back and clean the infection at the earliest possible.
+Everyone who owns a WordPress website knows how difficult it is to manage the site's files. Leftover backup and source code files are very common, and they are the number one source of sensitive data breaches. Also, in case of a successful hack attack it is almost impossible to detect the infiltration and identify all the source code changes!
+
+Easily spot leftover files, injected malware and code changes! Remove files that could leave you expose and clean malware infections at the earliest possible.
 
 ### ❓ Why Do You Need a Website File Changes Monitor?
 
@@ -20,20 +22,20 @@ The Website File Changes Monitor plugin provides you with much needed visibility
 
 The Website File Changes Monitor plugin helps you:
 
-- Identify a possible hack attack during the early stages so you can limit the damage
-- Find where exactly backdoors, trojans and other malware is injected on your site
-- Identify the infections and code changes during the post-hack forensics & cleanup
-- Catch red-handed the exploitation of 0-day vulnerabilities on your site
-- Ease the process of cleaning & recovering an infected hacked website
+- Identify a possible hack attack during the early stages so you can limit the damage.
+- Find where exactly backdoors, trojans and other malware is injected on your site.
+- Identify the infections and code changes during the post-hack forensics & cleanup.
+- Catch red-handed the exploitation of 0-day vulnerabilities on your site.
+- Ease the process of cleaning & recovering an infected hacked website.
 
 #### 🚀 A Role Beyond WordPress Security
 
 However, the scope of detecting file changes goes beyond detecting malicious attacks and malware infections. It is a WordPress website security and management best practice that can also help you:
 
-- Ensure and check  the integrity of your WordPress core, plugins and theme files
-- Find files developers leave by mistake that could potentially disclose sensitive information, such as backup files, sql files etc
-- Keep track of code changes developers are doing on your WordPress site
-- Troubleshoot and avoid unnecessary technical problems on your WordPress site
+- Ensure and check  the integrity of your WordPress core, plugins and theme files.
+- Find leftover files developers leave by mistake that could lead to sensitive information disclosure, such as backup files, database files etc.
+- Keep track of code changes developers are doing on your WordPress site.
+- Troubleshoot and avoid unnecessary technical problems on your WordPress site.
 
 ### 🔰 Website File Changes Monitor Plugin Features
 
@@ -61,12 +63,12 @@ The Website File Changes Monitor plugin can also detect file changes on WordPres
 
 #### 🎯 Other Notable Plugin Features
 
-- Optimized scanning technology that does not affect the performance of your site
-- Website scan is split in stages, allowing for easy scanning of bigger sites
-- Fully configurable file scan frequency (daily, weekly, monthly, time of the day)
-- Instant file integrity scans with just a click of a button
-- Ability to exclude directories, files and file types from the scan
-- Configurable maximum file size to scan setting
+- Optimized scanning technology that does not affect the performance of your site.
+- Website scan is split in stages, allowing for easy scanning of bigger sites.
+- Fully configurable file scan frequency (daily, weekly, monthly, time of the day).
+- Instant file integrity scans with just a click of a button.
+- Ability to exclude directories, files and file types from the scan.
+- Configurable maximum file size to scan setting.
 
 ### 🤝 FREE Plugin Support
 Support for the WordPress Files Monitor plugin is available for free via:
@@ -85,15 +87,15 @@ We have more than a decade of experience in the security and WordPress plugin de
 
 ### → From within WordPress
 
-1. Visit 'Plugins > Add New'
-2. Search for 'Website File Changes Monitor'
+1. Visit _Plugins > Add New_.
+2. Search for **Website File Changes Monitor**.
 3. Install & activate the Website File Changes Monitor from your Plugins page.
 
 ### → Manually
 
-1. Download the plugin from the [WordPress plugins repository](https://wordpress.org/plugins/website-file-changes-monitor/)
-1. Unzip the zip file and upload the `website-file-changes-monitor` folder to the `/wp-content/plugins/` directory
-1. Activate the Website File Changes Monitor plugin through the 'Plugins' menu in WordPress
+1. Download the plugin from the [WordPress plugins repository](https://wordpress.org/plugins/website-file-changes-monitor/).
+1. Unzip the zip file and upload the `website-file-changes-monitor` folder to the `/wp-content/plugins/` directory.
+1. Activate the Website File Changes Monitor plugin through the 'Plugins' menu in WordPress.
 
 ## ⁉️ Frequently Asked Questions
 
