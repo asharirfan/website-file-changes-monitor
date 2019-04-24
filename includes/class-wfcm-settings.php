@@ -1,8 +1,8 @@
 <?php
 /**
- * WFM Settings.
+ * WFCM Settings.
  *
- * @package wfm
+ * @package wfcm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,9 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WFM Settings Class.
+ * WFCM Settings Class.
  */
-class WFM_Settings {
+class WFCM_Settings {
 
 	/**
 	 * Array of settings.
@@ -41,7 +41,7 @@ class WFM_Settings {
 	 */
 	public static function get_setting( $setting, $default = false ) {
 		if ( ! isset( self::$settings[ $setting ] ) ) {
-			self::$settings[ $setting ] = get_option( WFM_OPT_PREFIX . $setting, $default );
+			self::$settings[ $setting ] = get_option( WFCM_OPT_PREFIX . $setting, $default );
 		}
 
 		return self::$settings[ $setting ];
@@ -54,7 +54,7 @@ class WFM_Settings {
 	 * @param mixed  $value   - Setting value.
 	 */
 	public static function save_setting( $setting, $value ) {
-		update_option( WFM_OPT_PREFIX . $setting, $value );
+		update_option( WFCM_OPT_PREFIX . $setting, $value );
 		self::$settings[ $setting ] = $value;
 	}
 
@@ -64,7 +64,7 @@ class WFM_Settings {
 	 * @param string $setting - Setting name.
 	 */
 	public static function delete_setting( $setting ) {
-		delete_option( WFM_OPT_PREFIX . $setting );
+		delete_option( WFCM_OPT_PREFIX . $setting );
 		unset( self::$settings[ $setting ] );
 	}
 
@@ -112,8 +112,8 @@ class WFM_Settings {
 		if ( $content ) {
 			$content = strtolower( $content );
 
-			if ( isset( $site_content->$type ) && is_array( $site_content->$type ) && ! isset( $site_content->$type[ $content ] ) ) {
-				$site_content->$type[] = $content;
+			if ( isset( $site_content->$type ) && is_array( $site_content->$type ) && ! in_array( $content, $site_content->$type, true ) ) {
+				array_push( $site_content->$type, $content );
 			}
 
 			if ( isset( $site_content->$skip_type ) && is_array( $site_content->$skip_type ) && ! isset( $site_content->$skip_type[ $content ] ) ) {

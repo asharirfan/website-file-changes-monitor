@@ -2,7 +2,7 @@
 /**
  * File Changes Monitor.
  *
- * @package wfm
+ * @package wfcm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,12 +15,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * This class is responsible for monitoring
  * the file changes on the server.
  */
-class WFM_Monitor {
+class WFCM_Monitor {
 
 	/**
 	 * Sensor Instance.
 	 *
-	 * @var WFM_Monitor
+	 * @var WFCM_Monitor
 	 */
 	protected static $instance = null;
 
@@ -77,7 +77,7 @@ class WFM_Monitor {
 	 *
 	 * @var string
 	 */
-	public static $schedule_hook = 'wfm_monitor_file_changes';
+	public static $schedule_hook = 'wfcm_monitor_file_changes';
 
 	/**
 	 * Scan files counter during a scan.
@@ -109,11 +109,11 @@ class WFM_Monitor {
 	const SCAN_FILE_LIMIT = 1000000;
 
 	/**
-	 * Return WFM_Monitor Instance.
+	 * Return WFCM_Monitor Instance.
 	 *
 	 * Ensures only one instance of monitor is loaded or can be loaded.
 	 *
-	 * @return WFM_Monitor
+	 * @return WFCM_Monitor
 	 */
 	public static function get_instance() {
 		if ( is_null( self::$instance ) ) {
@@ -137,17 +137,17 @@ class WFM_Monitor {
 	 */
 	public function register_hooks() {
 		add_filter( 'cron_schedules', array( $this, 'add_recurring_schedules' ) ); // phpcs:ignore
-		add_filter( 'wfm_file_scan_stored_files', array( $this, 'filter_scan_files' ), 10, 2 );
-		add_filter( 'wfm_file_scan_scanned_files', array( $this, 'filter_scan_files' ), 10, 2 );
-		add_action( 'wfm_after_file_scan', array( $this, 'empty_skip_file_alerts' ), 10, 1 );
-		add_action( 'wfm_last_scanned_directory', array( $this, 'reset_core_updates_flag' ), 10, 1 );
+		add_filter( 'wfcm_file_scan_stored_files', array( $this, 'filter_scan_files' ), 10, 2 );
+		add_filter( 'wfcm_file_scan_scanned_files', array( $this, 'filter_scan_files' ), 10, 2 );
+		add_action( 'wfcm_after_file_scan', array( $this, 'empty_skip_file_alerts' ), 10, 1 );
+		add_action( 'wfcm_last_scanned_directory', array( $this, 'reset_core_updates_flag' ), 10, 1 );
 	}
 
 	/**
 	 * Load File Change Monitor Settings.
 	 */
 	public function load_settings() {
-		$this->scan_settings = wfm_get_monitor_settings();
+		$this->scan_settings = wfcm_get_monitor_settings();
 
 		// Set the scan hours.
 		if ( ! empty( $this->scan_settings['hour'] ) ) {
@@ -206,7 +206,7 @@ class WFM_Monitor {
 	public function add_recurring_schedules( $schedules ) {
 		$schedules['tenminutes'] = array(
 			'interval' => 600,
-			'display'  => __( 'Every 10 minutes', 'website-files-monitor' ),
+			'display'  => __( 'Every 10 minutes', 'website-file-changes-monitor' ),
 		);
 		return $schedules;
 	}
@@ -225,18 +225,18 @@ class WFM_Monitor {
 		}
 
 		// Check if a scan is already in progress.
-		if ( wfm_get_setting( 'scan-in-progress', false ) ) {
+		if ( wfcm_get_setting( 'scan-in-progress', false ) ) {
 			return;
 		}
 
 		// Set the scan in progress to true because the scan has started.
-		wfm_save_setting( 'scan-in-progress', true );
+		wfcm_save_setting( 'scan-in-progress', true );
 
 		// Check last scanned for manual scan.
 		if ( ! $manual && is_null( $last_scanned ) ) {
 			// Replace the last scanned value with the setting value
 			// if the scan is not manual and last scan value is null.
-			$last_scanned = wfm_get_setting( 'last-scanned', false );
+			$last_scanned = wfcm_get_setting( 'last-scanned', false );
 		}
 
 		// Get directories to be scanned.
@@ -288,7 +288,7 @@ class WFM_Monitor {
 			$this->excludes = $server_dirs;
 
 			// Get list of files to scan from DB.
-			$stored_files = wfm_get_setting( $file_list, array() );
+			$stored_files = wfcm_get_setting( $file_list, array() );
 
 			/**
 			 * `Filter`: Stored files filter.
@@ -296,14 +296,14 @@ class WFM_Monitor {
 			 * @param array  $stored_files – Files array already saved in DB from last scan.
 			 * @param string $path_to_scan – Path currently being scanned.
 			 */
-			$filtered_stored_files = apply_filters( 'wfm_file_scan_stored_files', $stored_files, $path_to_scan );
+			$filtered_stored_files = apply_filters( 'wfcm_file_scan_stored_files', $stored_files, $path_to_scan );
 
 			// Get array of already directories scanned from DB.
-			$scanned_dirs = wfm_get_setting( 'scanned-dirs', array() );
+			$scanned_dirs = wfcm_get_setting( 'scanned-dirs', array() );
 
 			// If already scanned directories don't exist then it marks the start of a scan.
 			if ( ! $manual && empty( $scanned_dirs ) ) {
-				wfm_save_setting( 'last-scan-start', time() );
+				wfcm_save_setting( 'last-scan-start', time() );
 			}
 
 			/**
@@ -311,7 +311,7 @@ class WFM_Monitor {
 			 *
 			 * @param string $path_to_scan - Directory path to scan.
 			 */
-			do_action( 'wfm_before_file_scan', $path_to_scan );
+			do_action( 'wfcm_before_file_scan', $path_to_scan );
 
 			// Reset scan counter.
 			$this->reset_scan_counter();
@@ -325,7 +325,7 @@ class WFM_Monitor {
 			 * @param array  $scanned_files – Files array already saved in DB from last scan.
 			 * @param string $path_to_scan  – Path currently being scanned.
 			 */
-			$filtered_scanned_files = apply_filters( 'wfm_file_scan_scanned_files', $scanned_files, $path_to_scan );
+			$filtered_scanned_files = apply_filters( 'wfcm_file_scan_scanned_files', $scanned_files, $path_to_scan );
 
 			// Add the currently scanned path to scanned directories.
 			$scanned_dirs[] = $path_to_scan;
@@ -335,10 +335,10 @@ class WFM_Monitor {
 			 *
 			 * @param string $path_to_scan - Directory path to scan.
 			 */
-			do_action( 'wfm_after_file_scan', $path_to_scan );
+			do_action( 'wfcm_after_file_scan', $path_to_scan );
 
 			// Get initial scan setting.
-			$initial_scan = wfm_get_setting( "is-initial-scan-$next_to_scan", 'yes' );
+			$initial_scan = wfcm_get_setting( "is-initial-scan-$next_to_scan", 'yes' );
 
 			// If the scan is not initial then.
 			if ( 'yes' !== $initial_scan ) {
@@ -379,7 +379,7 @@ class WFM_Monitor {
 				// Files added alert.
 				if ( count( $files_added ) > 0 ) {
 					// Get excluded site content.
-					$site_content = wfm_get_setting( WFM_Settings::$site_content );
+					$site_content = wfcm_get_setting( WFCM_Settings::$site_content );
 
 					// Log the alert.
 					foreach ( $files_added as $file => $file_hash ) {
@@ -405,7 +405,7 @@ class WFM_Monitor {
 						}
 
 						// Created file event.
-						wfm_create_event( 'added', $file, $file_hash );
+						wfcm_create_event( 'added', $file, $file_hash );
 					}
 				}
 
@@ -435,7 +435,7 @@ class WFM_Monitor {
 						}
 
 						// Removed file event.
-						wfm_create_event( 'deleted', $file, $file_hash );
+						wfcm_create_event( 'deleted', $file, $file_hash );
 					}
 				}
 
@@ -443,7 +443,7 @@ class WFM_Monitor {
 				if ( count( $files_changed ) > 0 ) {
 					foreach ( $files_changed as $file => $file_hash ) {
 						// Create event for each changed file.
-						wfm_create_event( 'modified', $file, $file_hash );
+						wfcm_create_event( 'modified', $file, $file_hash );
 					}
 				}
 
@@ -458,16 +458,16 @@ class WFM_Monitor {
 				 *
 				 * @param int $next_to_scan – Last scanned directory.
 				 */
-				do_action( 'wfm_last_scanned_directory', $next_to_scan );
+				do_action( 'wfcm_last_scanned_directory', $next_to_scan );
 			} else {
-				wfm_save_setting( "is-initial-scan-$next_to_scan", 'no' ); // Initial scan check set to false.
+				wfcm_save_setting( "is-initial-scan-$next_to_scan", 'no' ); // Initial scan check set to false.
 			}
 
 			// Store scanned files list.
-			wfm_save_setting( $file_list, $scanned_files );
+			wfcm_save_setting( $file_list, $scanned_files );
 
 			if ( ! $manual ) {
-				wfm_save_setting( 'scanned-dirs', $scanned_dirs );
+				wfcm_save_setting( 'scanned-dirs', $scanned_dirs );
 			}
 		}
 
@@ -480,20 +480,20 @@ class WFM_Monitor {
 		 */
 		if ( ! $manual ) {
 			if ( 0 === $next_to_scan ) {
-				wfm_save_setting( 'last-scanned', 'root' );
+				wfcm_save_setting( 'last-scanned', 'root' );
 
-				do_action( 'wfm_files_monitoring_started' );
+				do_action( 'wfcm_files_monitoring_started' );
 			} elseif ( 6 === $next_to_scan ) {
-				wfm_save_setting( 'last-scanned', $next_to_scan );
+				wfcm_save_setting( 'last-scanned', $next_to_scan );
 
-				do_action( 'wfm_files_monitoring_ended' );
+				do_action( 'wfcm_files_monitoring_ended' );
 			} else {
-				wfm_save_setting( 'last-scanned', $next_to_scan );
+				wfcm_save_setting( 'last-scanned', $next_to_scan );
 			}
 		}
 
 		// Set the scan in progress to false because scan is complete.
-		wfm_save_setting( 'scan-in-progress', false );
+		wfcm_save_setting( 'scan-in-progress', false );
 	}
 
 	/**
@@ -525,7 +525,7 @@ class WFM_Monitor {
 		 */
 		if ( ! $this->dir_left_to_scan( $this->scan_settings['directories'] ) ) {
 			// Get last scan time.
-			$last_scan_start = wfm_get_setting( 'last-scan-start', false );
+			$last_scan_start = wfcm_get_setting( 'last-scan-start', false );
 
 			if ( ! empty( $last_scan_start ) ) {
 				// Check for minimum 24 hours.
@@ -533,8 +533,8 @@ class WFM_Monitor {
 
 				// If scan hours difference has passed 24 hrs limit then remove the options.
 				if ( $scan_hrs > 23 ) {
-					wfm_delete_setting( 'scanned-dirs' ); // Delete already scanned directories option.
-					wfm_delete_setting( 'last-scan-start' ); // Delete last scan complete timestamp option.
+					wfcm_delete_setting( 'scanned-dirs' ); // Delete already scanned directories option.
+					wfcm_delete_setting( 'last-scan-start' ); // Delete last scan complete timestamp option.
 				} else {
 					// Else if they have not passed their limit, then return false.
 					return false;
@@ -588,7 +588,7 @@ class WFM_Monitor {
 		}
 
 		// Get array of already directories scanned from DB.
-		$already_scanned_dirs = wfm_get_setting( 'scanned-dirs', array() );
+		$already_scanned_dirs = wfcm_get_setting( 'scanned-dirs', array() );
 
 		// Check if already scanned directories has `root` directory.
 		if ( in_array( '', $already_scanned_dirs, true ) ) {
@@ -748,7 +748,7 @@ class WFM_Monitor {
 				 *
 				 * @param string $item - Directory name.
 				 */
-				$item = apply_filters( 'wfm_directory_before_file_scan', $item );
+				$item = apply_filters( 'wcfm_directory_before_file_scan', $item );
 				if ( ! $item ) {
 					continue;
 				}
@@ -781,7 +781,7 @@ class WFM_Monitor {
 				 *
 				 * @param string $item – File name.
 				 */
-				$item = apply_filters( 'wfm_filename_before_file_scan', $item );
+				$item = apply_filters( 'wfcm_filename_before_file_scan', $item );
 				if ( ! $item ) {
 					continue;
 				}
@@ -837,8 +837,8 @@ class WFM_Monitor {
 	 *     4. wp-includes (WP Core).
 	 *
 	 * Hooks using this function:
-	 *     1. wfm_file_scan_stored_files.
-	 *     2. wfm_file_scan_scanned_files.
+	 *     1. wfcm_file_scan_stored_files.
+	 *     2. wfcm_file_scan_scanned_files.
 	 *
 	 * @param array  $scan_files   - Scan files array.
 	 * @param string $path_to_scan - Path currently being scanned.
@@ -858,7 +858,7 @@ class WFM_Monitor {
 			|| false !== strpos( $path_to_scan, 'wp-includes' ) // WP Includes.
 		) {
 			// Get `site_content` option.
-			$site_content = wfm_get_setting( WFM_Settings::$site_content );
+			$site_content = wfcm_get_setting( WFCM_Settings::$site_content );
 
 			// If the `skip_core` is set and its value is equal to true then.
 			if ( isset( $site_content->skip_core ) && true === $site_content->skip_core ) {
@@ -891,7 +891,7 @@ class WFM_Monitor {
 		}
 
 		// Get list of excluded plugins/themes.
-		$excluded_contents = wfm_get_setting( WFM_Settings::$site_content );
+		$excluded_contents = wfcm_get_setting( WFCM_Settings::$site_content );
 
 		// If excluded files exists then.
 		if ( ! empty( $excluded_contents ) ) {
@@ -934,9 +934,9 @@ class WFM_Monitor {
 					}
 
 					if ( 'update' === $context ) {
-						if ( 'wfm_file_scan_stored_files' === $current_filter ) {
+						if ( 'wfcm_file_scan_stored_files' === $current_filter ) {
 							$this->files_to_exclude[ $search_path ] = $event_content;
-						} elseif ( 'wfm_file_scan_scanned_files' === $current_filter ) {
+						} elseif ( 'wfcm_file_scan_scanned_files' === $current_filter ) {
 							$this->check_directory_for_updates( $event_content, $search_path );
 						}
 					}
@@ -944,24 +944,24 @@ class WFM_Monitor {
 					if ( ! empty( $event_content ) ) {
 						$dir_path = untrailingslashit( WP_CONTENT_DIR ) . $search_path;
 
-						if ( 'wfm_file_scan_scanned_files' === $current_filter && 'install' === $context ) {
+						if ( 'wfcm_file_scan_scanned_files' === $current_filter && 'install' === $context ) {
 							$event_context = '';
 							if ( 'plugins' === $excluded_type ) {
-								$event_context = __( 'Plugin Install', 'website-files-monitor' );
+								$event_context = __( 'Plugin Install', 'website-file-changes-monitor' );
 							} elseif ( 'themes' === $excluded_type ) {
-								$event_context = __( 'Theme Install', 'website-files-monitor' );
+								$event_context = __( 'Theme Install', 'website-file-changes-monitor' );
 							}
 
-							wfm_create_directory_event( 'added', $dir_path, array_values( $event_content ), $event_context );
-						} elseif ( 'wfm_file_scan_stored_files' === $current_filter && 'uninstall' === $context ) {
+							wfcm_create_directory_event( 'added', $dir_path, array_values( $event_content ), $event_context );
+						} elseif ( 'wfcm_file_scan_stored_files' === $current_filter && 'uninstall' === $context ) {
 							$event_context = '';
 							if ( 'plugins' === $excluded_type ) {
-								$event_context = __( 'Plugin Uninstall', 'website-files-monitor' );
+								$event_context = __( 'Plugin Uninstall', 'website-file-changes-monitor' );
 							} elseif ( 'themes' === $excluded_type ) {
-								$event_context = __( 'Theme Uninstall', 'website-files-monitor' );
+								$event_context = __( 'Theme Uninstall', 'website-file-changes-monitor' );
 							}
 
-							wfm_create_directory_event( 'deleted', $dir_path, array_values( $event_content ), $event_context );
+							wfcm_create_directory_event( 'deleted', $dir_path, array_values( $event_content ), $event_context );
 						}
 					}
 				}
@@ -979,9 +979,9 @@ class WFM_Monitor {
 				}
 
 				if ( ! empty( $event_content ) ) {
-					if ( 'wfm_file_scan_stored_files' === $current_filter ) {
+					if ( 'wfcm_file_scan_stored_files' === $current_filter ) {
 						$this->files_to_exclude[ $directory ] = $event_content;
-					} elseif ( 'wfm_file_scan_scanned_files' === $current_filter ) {
+					} elseif ( 'wfcm_file_scan_scanned_files' === $current_filter ) {
 						$this->check_directory_for_updates( $event_content, $directory );
 					}
 				}
@@ -1016,24 +1016,24 @@ class WFM_Monitor {
 		// If path to scan is of plugins then empty the skip plugins array.
 		if ( false !== strpos( $path_to_scan, 'wp-content/plugins' ) ) {
 			// Get contents list.
-			$site_content = wfm_get_setting( WFM_Settings::$site_content, false );
+			$site_content = wfcm_get_setting( WFCM_Settings::$site_content, false );
 
 			// Empty skip plugins array.
 			$site_content->skip_plugins = array();
 
 			// Save it.
-			wfm_save_setting( WFM_Settings::$site_content, $site_content );
+			wfcm_save_setting( WFCM_Settings::$site_content, $site_content );
 
 			// If path to scan is of themes then empty the skip themes array.
 		} elseif ( false !== strpos( $path_to_scan, 'wp-content/themes' ) ) {
 			// Get contents list.
-			$site_content = wfm_get_setting( WFM_Settings::$site_content, false );
+			$site_content = wfcm_get_setting( WFCM_Settings::$site_content, false );
 
 			// Empty skip themes array.
 			$site_content->skip_themes = array();
 
 			// Save it.
-			wfm_save_setting( WFM_Settings::$site_content, $site_content );
+			wfcm_save_setting( WFCM_Settings::$site_content, $site_content );
 		}
 	}
 
@@ -1046,7 +1046,7 @@ class WFM_Monitor {
 		// Check if last scanned directory exists and it is at last directory.
 		if ( ! empty( $last_scanned_dir ) && 6 === $last_scanned_dir ) {
 			// Get `site_content` option.
-			$site_content = wfm_get_setting( WFM_Settings::$site_content, false );
+			$site_content = wfcm_get_setting( WFCM_Settings::$site_content, false );
 
 			// Check if the option is instance of stdClass.
 			if ( false !== $site_content && $site_content instanceof stdClass ) {
@@ -1054,7 +1054,7 @@ class WFM_Monitor {
 				$site_content->skip_files = array(); // Empty the skip files at the end of the scan.
 				$site_content->skip_exts  = array(); // Empty the skip extensions at the end of the scan.
 				$site_content->skip_dirs  = array(); // Empty the skip directories at the end of the scan.
-				wfm_save_setting( WFM_Settings::$site_content, $site_content ); // Save the option.
+				wfcm_save_setting( WFCM_Settings::$site_content, $site_content ); // Save the option.
 			}
 		}
 	}
@@ -1109,27 +1109,27 @@ class WFM_Monitor {
 
 		if ( '/plugins' === $dirname ) {
 			$dir_path      = untrailingslashit( WP_CONTENT_DIR ) . $directory;
-			$event_context = __( 'Plugin Update', 'website-files-monitor' );
+			$event_context = __( 'Plugin Update', 'website-file-changes-monitor' );
 		} elseif ( '/themes' === $dirname ) {
 			$dir_path      = untrailingslashit( WP_CONTENT_DIR ) . $directory;
-			$event_context = __( 'Theme Update', 'website-files-monitor' );
+			$event_context = __( 'Theme Update', 'website-file-changes-monitor' );
 		} elseif ( ABSPATH === $directory || false !== strpos( $directory, 'wp-admin' ) || false !== strpos( $directory, 'wp-includes' ) ) {
 			$dir_path      = $directory;
-			$event_context = __( 'Core Update', 'website-files-monitor' );
+			$event_context = __( 'Core Update', 'website-file-changes-monitor' );
 		}
 
 		if ( count( $files_added ) > 0 ) {
-			wfm_create_directory_event( 'added', $dir_path, array_values( $files_added ), $event_context );
+			wfcm_create_directory_event( 'added', $dir_path, array_values( $files_added ), $event_context );
 		}
 
 		if ( count( $files_removed ) > 0 ) {
-			wfm_create_directory_event( 'deleted', $dir_path, array_values( $files_removed ), $event_context );
+			wfcm_create_directory_event( 'deleted', $dir_path, array_values( $files_removed ), $event_context );
 		}
 
 		if ( count( $files_changed ) > 0 ) {
-			wfm_create_directory_event( 'modified', $dir_path, array_values( $files_changed ), $event_context );
+			wfcm_create_directory_event( 'modified', $dir_path, array_values( $files_changed ), $event_context );
 		}
 	}
 }
 
-wfm_get_monitor();
+wfcm_get_monitor();

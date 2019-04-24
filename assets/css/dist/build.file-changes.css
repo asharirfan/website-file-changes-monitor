@@ -54,7 +54,7 @@
     width: 23px;
     height: 23px; }
 
-.wfm-modal-header {
+.wfcm-modal-header {
   display: -ms-flexbox;
   display: flex;
   border-bottom: 1px solid #efefef;
@@ -66,10 +66,10 @@
       align-items: center;
   -ms-flex-pack: justify;
       justify-content: space-between; }
-  .wfm-modal-header h2 {
+  .wfcm-modal-header h2 {
     display: inline-block;
     margin: 0; }
-  .wfm-modal-header .button {
+  .wfcm-modal-header .button {
     display: -ms-flexbox;
     display: flex;
     -ms-flex-align: center;
@@ -81,7 +81,7 @@
     background: #fff;
     padding: 0; }
 
-.wfm-modal-body {
+.wfcm-modal-body {
   max-height: 500px;
   overflow-y: scroll; }
 

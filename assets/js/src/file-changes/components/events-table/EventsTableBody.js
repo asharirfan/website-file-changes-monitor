@@ -1,7 +1,6 @@
 /**
  * Events Table Body
  */
-
 import React, { Component } from 'react';
 import EventsTableRow from './EventsTableRow';
 import { EventsContext } from '../context/EventsContext';

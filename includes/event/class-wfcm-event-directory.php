@@ -1,8 +1,8 @@
 <?php
 /**
- * WFM Directory Event.
+ * WFCM Directory Event.
  *
- * @package wfm
+ * @package wfcm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,12 +10,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WFM Directory Event Class.
+ * WFCM Directory Event Class.
  *
  * Handle the events of directories like when a plugin
  * is installed, updated, or removed, etc.
  */
-class WFM_Event_Directory extends WFM_Event {
+class WFCM_Event_Directory extends WFCM_Event {
 
 	/**
 	 * Constructor.

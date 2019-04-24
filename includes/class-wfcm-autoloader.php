@@ -2,7 +2,7 @@
 /**
  * Autoloader Class.
  *
- * @package wfm
+ * @package wfcm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Autoloader Class.
  */
-class WFM_Autoloader {
+class WFCM_Autoloader {
 
 	/**
 	 * Path to the includes directory.
@@ -26,7 +26,7 @@ class WFM_Autoloader {
 	 */
 	public function __construct() {
 		spl_autoload_register( array( $this, 'autoload' ) );
-		$this->include_path = WFM_BASE_DIR . 'includes/';
+		$this->include_path = WFCM_BASE_DIR . 'includes/';
 	}
 
 	/**
@@ -61,16 +61,16 @@ class WFM_Autoloader {
 	public function autoload( $class ) {
 		$class = strtolower( $class );
 
-		if ( 0 !== strpos( $class, 'wfm_' ) ) {
+		if ( 0 !== strpos( $class, 'wfcm_' ) ) {
 			return;
 		}
 
 		$file = $this->get_file_name( $class );
 		$path = '';
 
-		if ( 0 === strpos( $class, 'wfm_admin_' ) ) {
+		if ( 0 === strpos( $class, 'wfcm_admin' ) ) {
 			$path = $this->include_path . 'admin/';
-		} elseif ( 0 === strpos( $class, 'wfm_event' ) ) {
+		} elseif ( 0 === strpos( $class, 'wfcm_event' ) ) {
 			$path = $this->include_path . 'event/';
 		}
 
@@ -79,4 +79,5 @@ class WFM_Autoloader {
 		}
 	}
 }
-new WFM_Autoloader();
+
+new WFCM_Autoloader();

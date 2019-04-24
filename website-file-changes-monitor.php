@@ -1,16 +1,16 @@
 <?php
 /**
- * Plugin Name: Website Files Monitor
+ * Plugin Name: Website File Changes Monitor
  * Plugin URI: http://www.wpwhitesecurity.com/
  * Description: A hassle-free way to get alerted of file changes on your WordPress site & boost security.
  * Author: WP White Security
  * Contributors: WP White Security, mrasharirfan
  * Version: 1.0
- * Text Domain: website-files-monitor
+ * Text Domain: website-file-changes-monitor
  * Author URI: http://www.wpwhitesecurity.com/
  * License: GPL3
  *
- * @package wfm
+ * @package wfcm
  */
 
 /*
@@ -32,24 +32,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-// Define plugin file.
-if ( ! defined( 'WFM_PLUGIN_FILE' ) ) {
-	define( 'WFM_PLUGIN_FILE', __FILE__ );
+// Define plugin file
+if ( ! defined( 'WFCM_PLUGIN_FILE' ) ) {
+	define( 'WFCM_PLUGIN_FILE', __FILE__ );
 }
 
-// Include main plugin class.
-if ( ! class_exists( 'Website_Files_Monitor' ) ) {
-	include_once dirname( __FILE__ ) . '/includes/class-website-files-monitor.php';
+// Include main plugin class
+if ( ! class_exists( 'Website_File_Changes_Monitor' ) ) {
+	include_once dirname( __FILE__ ) . '/includes/class-website-file-changes-monitor.php';
 }
 
 /**
- * Main instance of Website Files Monitor.
+ * Main instance of Website File Changes Monitor.
  *
  * Returns the main instance of the plugin.
  *
- * @return Website_Files_Monitor
+ * @return Website_File_Changes_Monitor
  */
-function wfm_instance() {
-	return Website_Files_Monitor::instance();
+function wfcm_instance() {
+	return Website_File_Changes_Monitor::instance();
 }
-wfm_instance();
+wfcm_instance();

@@ -6,6 +6,9 @@ import Modal from 'react-modal';
 
 export default class ContentModal extends Component {
 
+	/**
+	 * Constructor.
+	 */
 	constructor() {
 		super();
 
@@ -17,14 +20,23 @@ export default class ContentModal extends Component {
 		this.closeModal = this.closeModal.bind( this );
 	}
 
+	/**
+	 * Open modal.
+	 */
 	openModal() {
 		this.setState({modalIsOpen: true});
 	}
 
+	/**
+	 * Close modal.
+	 */
 	closeModal() {
 		this.setState({modalIsOpen: false});
 	}
 
+	/**
+	 * Render component.
+	 */
 	render() {
 		const { eventFiles } = this.props;
 
@@ -36,12 +48,12 @@ export default class ContentModal extends Component {
 		return (
 			<React.Fragment>
 				<button className="btn-event-content" onClick={this.openModal}><span className="dashicons dashicons-info"></span></button>
-				<Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} style={modalStyles} contentLabel="WFM Event File Changes">
-					<div className="wfm-modal-header">
+				<Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} style={modalStyles} contentLabel="WFCM Event File Changes">
+					<div className="wfcm-modal-header">
 						<h2>List of Event Files</h2>
 						<button className="button" onClick={this.closeModal}><span class="dashicons dashicons-no-alt"></span></button>
 					</div>
-					<div className="wfm-modal-body">
+					<div className="wfcm-modal-body">
 						<p>Number of files: {eventFiles.length}</p>
 						<table className="wp-list-table widefat fixed striped">
 							<thead><td>Filename</td></thead>
@@ -70,4 +82,4 @@ const modalStyles = {
 };
 
 Modal.defaultStyles.overlay.backgroundColor = 'rgba(0,0,0,0.5)';
-Modal.setAppElement( '#wfm-file-changes-views' );
+Modal.setAppElement( '#wfcm-file-changes-view' );

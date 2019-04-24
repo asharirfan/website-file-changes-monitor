@@ -21,7 +21,7 @@ Identify possible malicious hack attacks during the early stages. Easily spot th
 
 ### Why Do You Need a Website File Changes Monitor?
 
-No WordPress security solution is bullet proof. They all have their pros and cons. So the more tools you have at your disposal that can help you block and identify hack attacks the better it is. 
+No WordPress security solution is bullet proof. They all have their pros and cons. So the more tools you have at your disposal that can help you block and identify hack attacks the better it is.
 
 The Website File Changes Monitor plugin provides you with much needed visibility about modifications of files on your site. File changes on your WordPress website can be an early sign of a malicious hack attack. Hence why many security professionals recommend a website files monitor plugin.
 
@@ -50,9 +50,9 @@ However don’t let the simplicity and ease of use fool you. Under the hood the 
 
 #### No False Alarms - Just Genuine Alerts!
 
-The Website File Changes Monitor plugin uses an exclusive smart technology that detects WordPress core updates, plugins and themes installs, uninstalls and updates. 
+The Website File Changes Monitor plugin uses an exclusive smart technology that detects WordPress core updates, plugins and themes installs, uninstalls and updates.
 
-So when you update the WordPress core, install a new plugin, update a theme or delete a plugin it won’t flood you with hundreds of files changes alerts, prompting a false alarm! 
+So when you update the WordPress core, install a new plugin, update a theme or delete a plugin it won’t flood you with hundreds of files changes alerts, prompting a false alarm!
 
 You only get alerted of genuine file changes that can have an effect on your WordPress site!
 
@@ -60,7 +60,7 @@ You only get alerted of genuine file changes that can have an effect on your Wor
 
 The Website File Changes Monitor plugin scans all the files on your WordPress site. It scans the WordPress core files, plugin files, theme files and also any other custom code files that you might have on your WordPress site.
 
-It does not compare your files to a remote installation or list of files. It compares files to the last scan, so it takes into account any modifications you might have made to your site, plugins and themes. In fact it scan any type of file and is not limited to just PHP and JavaScripts. 
+It does not compare your files to a remote installation or list of files. It compares files to the last scan, so it takes into account any modifications you might have made to your site, plugins and themes. In fact it scan any type of file and is not limited to just PHP and JavaScripts.
 
 #### WordPress Multisite Networks Support
 
@@ -78,7 +78,7 @@ The Website File Changes Monitor plugin can also detect file changes on WordPres
 ### FREE Plugin Support
 Support for the WordPress Files Monitor plugin is available for free via:
 
-* [forums](https://wordpress.org/support/plugins/website-files-monitor/)
+* [forums](https://wordpress.org/support/plugins/website-file-changes-monitor/)
 * [email](https://www.wpwhitesecurity.com/contact-wp-white-security/)
 
 For any other queries, feedback, or if you simply want to get in touch with us please use our [contact form](https://www.wpwhitesecurity.com/contact-wp-white-security/).
@@ -98,8 +98,8 @@ We have more than a decade of experience in the security and WordPress plugin de
 
 === Manually ===
 
-1. Download the plugin from the [WordPress plugins repository](https://wordpress.org/plugins/website-files-monitor/)
-1. Unzip the zip file and upload the `website-files-monitor` folder to the `/wp-content/plugins/` directory
+1. Download the plugin from the [WordPress plugins repository](https://wordpress.org/plugins/website-file-changes-monitor/)
+1. Unzip the zip file and upload the `website-file-changes-monitor` folder to the `/wp-content/plugins/` directory
 1. Activate the Website File Changes Monitor plugin through the 'Plugins' menu in WordPress
 
 == Frequently Asked Questions ==

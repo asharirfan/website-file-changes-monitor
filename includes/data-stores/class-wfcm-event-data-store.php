@@ -1,8 +1,8 @@
 <?php
 /**
- * WFM Event Post Type Data Store.
+ * WFCM Event Post Type Data Store.
  *
- * @package wfm
+ * @package wfcm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Event post type data store.
  */
-class WFM_Event_Data_Store {
+class WFCM_Event_Data_Store {
 
 	/**
 	 * Event meta keys.
@@ -69,7 +69,7 @@ class WFM_Event_Data_Store {
 
 		$query = new WP_Query( $wp_query_args );
 
-		$events = isset( $query->posts ) ? array_map( 'wfm_get_event', $query->posts ) : array();
+		$events = isset( $query->posts ) ? array_map( 'wfcm_get_event', $query->posts ) : array();
 
 		if ( isset( $query_args['paginate'] ) && $query_args['paginate'] ) {
 			return (object) array(

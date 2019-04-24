@@ -1,8 +1,8 @@
 <?php
 /**
- * WFM Settings File.
+ * WFCM Settings File.
  *
- * @package wfm
+ * @package wfcm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,13 +10,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Get WP File Changes Monitor Settings.
+ * Get all monitor settings.
  *
  * @return array
  */
-function wfm_get_monitor_settings() {
-	if ( class_exists( 'WFM_Settings' ) ) {
-		return WFM_Settings::get_monitor_settings();
+function wfcm_get_monitor_settings() {
+	if ( class_exists( 'WFCM_Settings' ) ) {
+		return WFCM_Settings::get_monitor_settings();
 	}
 	return array();
 }
@@ -28,9 +28,9 @@ function wfm_get_monitor_settings() {
  * @param mixed  $default - Default value.
  * @return mixed
  */
-function wfm_get_setting( $setting, $default = '' ) {
-	if ( class_exists( 'WFM_Settings' ) ) {
-		return WFM_Settings::get_setting( $setting, $default );
+function wfcm_get_setting( $setting, $default = '' ) {
+	if ( class_exists( 'WFCM_Settings' ) ) {
+		return WFCM_Settings::get_setting( $setting, $default );
 	}
 	return false;
 }
@@ -41,9 +41,9 @@ function wfm_get_setting( $setting, $default = '' ) {
  * @param string $setting - Setting name.
  * @param mixed  $value   - Setting value.
  */
-function wfm_save_setting( $setting, $value ) {
-	if ( class_exists( 'WFM_Settings' ) ) {
-		WFM_Settings::save_setting( $setting, $value );
+function wfcm_save_setting( $setting, $value ) {
+	if ( class_exists( 'WFCM_Settings' ) ) {
+		WFCM_Settings::save_setting( $setting, $value );
 	}
 }
 
@@ -52,9 +52,9 @@ function wfm_save_setting( $setting, $value ) {
  *
  * @param string $setting - Setting name.
  */
-function wfm_delete_setting( $setting ) {
-	if ( class_exists( 'WFM_Settings' ) ) {
-		WFM_Settings::delete_setting( $setting );
+function wfcm_delete_setting( $setting ) {
+	if ( class_exists( 'WFCM_Settings' ) ) {
+		WFCM_Settings::delete_setting( $setting );
 	}
 }
 
@@ -63,7 +63,7 @@ function wfm_delete_setting( $setting ) {
  *
  * @return array
  */
-function wfm_get_site_plugins() {
+function wfcm_get_site_plugins() {
 	return array_map( 'dirname', array_keys( get_plugins() ) ); // Get plugin directories.
 }
 
@@ -72,7 +72,7 @@ function wfm_get_site_plugins() {
  *
  * @return array
  */
-function wfm_get_site_themes() {
+function wfcm_get_site_themes() {
 	return array_keys( wp_get_themes() ); // Get themes.
 }
 
@@ -81,23 +81,23 @@ function wfm_get_site_themes() {
  *
  * Add plugins and themes to site content setting of the plugin.
  */
-function wfm_set_site_content() {
+function wfcm_set_site_content() {
 	// Get site plugins options.
-	$site_content = wfm_get_setting( WFM_Settings::$site_content, false );
+	$site_content = wfcm_get_setting( WFCM_Settings::$site_content, false );
 
 	// Initiate the site content option.
 	if ( false === $site_content ) {
 		// New stdClass object.
 		$site_content = new stdClass();
 
-		$plugins               = array_map( 'strtolower', wfm_get_site_plugins() );
+		$plugins               = array_map( 'strtolower', wfcm_get_site_plugins() );
 		$site_content->plugins = $plugins;
 
 		foreach ( $plugins as $plugin ) {
 			$site_content->skip_plugins[ $plugin ] = 'init';
 		}
 
-		$themes               = array_map( 'strtolower', wfm_get_site_themes() );
+		$themes               = array_map( 'strtolower', wfcm_get_site_themes() );
 		$site_content->themes = $themes;
 
 		foreach ( $themes as $theme ) {
@@ -105,7 +105,7 @@ function wfm_set_site_content() {
 		}
 
 		// Save site content.
-		wfm_save_setting( WFM_Settings::$site_content, $site_content );
+		wfcm_save_setting( WFCM_Settings::$site_content, $site_content );
 	}
 }
 
@@ -114,8 +114,8 @@ function wfm_set_site_content() {
  *
  * @param string $plugin - (Optional) Plugin directory name.
  */
-function wfm_add_site_plugin( $plugin = '' ) {
-	WFM_Settings::set_site_content( 'plugins', $plugin );
+function wfcm_add_site_plugin( $plugin = '' ) {
+	WFCM_Settings::set_site_content( 'plugins', $plugin );
 }
 
 /**
@@ -123,8 +123,8 @@ function wfm_add_site_plugin( $plugin = '' ) {
  *
  * @param string $theme - (Optional) Theme name.
  */
-function wfm_add_site_theme( $theme = '' ) {
-	WFM_Settings::set_site_content( 'themes', $theme );
+function wfcm_add_site_theme( $theme = '' ) {
+	WFCM_Settings::set_site_content( 'themes', $theme );
 }
 
 /**
@@ -132,8 +132,8 @@ function wfm_add_site_theme( $theme = '' ) {
  *
  * @param string $plugin - Plugin directory.
  */
-function wfm_remove_site_plugin( $plugin ) {
-	WFM_Settings::remove_site_content( 'plugins', $plugin );
+function wfcm_remove_site_plugin( $plugin ) {
+	WFCM_Settings::remove_site_content( 'plugins', $plugin );
 }
 
 /**
@@ -141,8 +141,8 @@ function wfm_remove_site_plugin( $plugin ) {
  *
  * @param string $theme - Theme directory.
  */
-function wfm_remove_site_theme( $theme ) {
-	WFM_Settings::remove_site_content( 'themes', $theme );
+function wfcm_remove_site_theme( $theme ) {
+	WFCM_Settings::remove_site_content( 'themes', $theme );
 }
 
 /**
@@ -151,8 +151,8 @@ function wfm_remove_site_theme( $theme ) {
  * @param string $plugin  - Plugin directory.
  * @param string $context - Context of the change, i.e., update or uninstall.
  */
-function wfm_skip_plugin_scan( $plugin, $context ) {
-	WFM_Settings::set_skip_site_content( 'plugins', $plugin, $context );
+function wfcm_skip_plugin_scan( $plugin, $context ) {
+	WFCM_Settings::set_skip_site_content( 'plugins', $plugin, $context );
 }
 
 /**
@@ -161,17 +161,17 @@ function wfm_skip_plugin_scan( $plugin, $context ) {
  * @param string $theme   - Theme directory.
  * @param string $context - Context of the change, i.e., update or uninstall.
  */
-function wfm_skip_theme_scan( $theme, $context ) {
-	WFM_Settings::set_skip_site_content( 'themes', $theme, $context );
+function wfcm_skip_theme_scan( $theme, $context ) {
+	WFCM_Settings::set_skip_site_content( 'themes', $theme, $context );
 }
 
 /**
  * Returns the instance of file changes montior.
  *
- * @return WFM_Monitor
+ * @return WFCM_Monitor
  */
-function wfm_get_monitor() {
-	return WFM_Monitor::get_instance();
+function wfcm_get_monitor() {
+	return WFCM_Monitor::get_instance();
 }
 
 /**
@@ -181,7 +181,7 @@ function wfm_get_monitor() {
  * @param string $file       - File.
  * @param string $file_hash  - File hash.
  */
-function wfm_create_event( $event_type, $file, $file_hash ) {
+function wfcm_create_event( $event_type, $file, $file_hash ) {
 	// Create the content object.
 	$content = (object) array(
 		'file' => $file,
@@ -189,7 +189,7 @@ function wfm_create_event( $event_type, $file, $file_hash ) {
 	);
 
 	// Create a new event object.
-	$event = new WFM_Event_File();
+	$event = new WFCM_Event_File();
 	$event->set_event_title( $file );      // Set event title.
 	$event->set_event_type( $event_type ); // Set event type.
 	$event->set_content( $content );       // Set event content.
@@ -204,9 +204,9 @@ function wfm_create_event( $event_type, $file, $file_hash ) {
  * @param array  $content       - Array of directory contents.
  * @param string $event_context - (Optional) Event context.
  */
-function wfm_create_directory_event( $event_type, $directory, $content, $event_context = '' ) {
+function wfcm_create_directory_event( $event_type, $directory, $content, $event_context = '' ) {
 	// Create a new directory event object.
-	$event = new WFM_Event_Directory();
+	$event = new WFCM_Event_Directory();
 
 	// Set event data.
 	$event->set_event_title( $directory );
@@ -227,8 +227,8 @@ function wfm_create_directory_event( $event_type, $directory, $content, $event_c
  * @param array $args - Array of query arguments.
  * @return array|object
  */
-function wfm_get_events( $args ) {
-	$query = new WFM_Event_Query( $args );
+function wfcm_get_events( $args ) {
+	$query = new WFCM_Event_Query( $args );
 	return $query->get_events();
 }
 
@@ -236,9 +236,9 @@ function wfm_get_events( $args ) {
  * Get event object.
  *
  * @param int|WP_Post $the_event - ID or WP_Post object of an event.
- * @return WFM_Event|array
+ * @return WFCM_Event|array
  */
-function wfm_get_event( $the_event ) {
+function wfcm_get_event( $the_event ) {
 	// Get event id.
 	if ( is_numeric( $the_event ) ) {
 		$event_id = $the_event;
@@ -247,10 +247,10 @@ function wfm_get_event( $the_event ) {
 	}
 
 	// Get event content type.
-	$content_type = WFM_Data_Store::load( 'event' )->get_event_content_type( $event_id );
+	$content_type = WFCM_Data_Store::load( 'event' )->get_event_content_type( $event_id );
 
 	if ( $content_type ) {
-		$event_class = 'WFM_Event_' . ucwords( $content_type );
+		$event_class = 'WFCM_Event_' . ucwords( $content_type );
 		return new $event_class( $the_event );
 	}
 
@@ -268,12 +268,12 @@ function wfm_get_event( $the_event ) {
  * @param array $events - Array of events.
  * @return array
  */
-function wfm_get_events_for_js( $events ) {
+function wfcm_get_events_for_js( $events ) {
 	$js_events = array();
 
 	if ( ! empty( $events ) && is_array( $events ) ) {
 		foreach ( $events as $event ) {
-			if ( ! $event instanceof WFM_Event ) {
+			if ( ! $event instanceof WFCM_Event ) {
 				continue;
 			}
 
@@ -296,23 +296,23 @@ function wfm_get_events_for_js( $events ) {
 }
 
 /**
- * Install WFM.
+ * Install WFCM.
  *
  * Install routine that executes on every plugin update.
  */
-function wfm_install() {
+function wfcm_install() {
 	// WSAL plugins.
 	$wsal_plugins = array( 'wp-security-audit-log/wp-security-audit-log.php', 'wp-security-audit-log-premium/wp-security-audit-log.php' );
 
 	// Only run this when installing for the first time.
-	if ( ! get_option( 'wfm-version', false ) ) {
+	if ( ! get_option( 'wfcm-version', false ) ) {
 		foreach ( $wsal_plugins as $plugin ) {
 			if ( is_plugin_active( $plugin ) ) {
-				wfm_save_setting( 'admin-notices', array( 'wsal' => true ) );
+				wfcm_save_setting( 'admin-notices', array( 'wsal' => true ) );
 			}
 		}
 	}
 
-	update_option( 'wfm-version', wfm_instance()->version );
-	wfm_set_site_content();
+	update_option( 'wfcm-version', wfcm_instance()->version );
+	wfcm_set_site_content();
 }

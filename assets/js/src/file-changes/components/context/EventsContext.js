@@ -4,8 +4,10 @@
 import React, { Component } from 'react';
 import FileEvents from '../helper/FileEvents';
 
+// Create events context.
 export const EventsContext = React.createContext();
 
+// Events Provider Component.
 export class EventsProvider extends Component {
 
 	/**

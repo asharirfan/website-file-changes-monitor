@@ -2,7 +2,7 @@
 /**
  * Admin Menus.
  *
- * @package wfm
+ * @package wfcm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Plugin Admin Menus Class.
  */
-class WFM_Admin_Menus {
+class WFCM_Admin_Menus {
 
 	/**
 	 * Constructor.
@@ -34,15 +34,15 @@ class WFM_Admin_Menus {
 	 * 3. Help & About.
 	 */
 	public function add_admin_menu() {
-		add_menu_page( __( 'Files Monitor', 'website-files-monitor' ), __( 'Files Monitor', 'website-files-monitor' ), 'manage_options', 'wfm-file-changes', null, null, '75' );
-		add_submenu_page( 'wfm-file-changes', __( 'Files Monitor', 'website-files-monitor' ), __( 'Files Monitor', 'website-files-monitor' ), 'manage_options', 'wfm-file-changes', array( $this, 'file_changes_page' ) );
+		add_menu_page( __( 'Website File Changes Monitor', 'website-file-changes-monitor' ), __( 'Files Monitor', 'website-file-changes-monitor' ), 'manage_options', 'wfcm-file-changes', null, null, '75' );
+		add_submenu_page( 'wfcm-file-changes', __( 'Website File Changes Monitor', 'website-file-changes-monitor' ), __( 'Files Monitor', 'website-file-changes-monitor' ), 'manage_options', 'wfcm-file-changes', array( $this, 'file_changes_page' ) );
 	}
 
 	/**
 	 * Add Settings Menu.
 	 */
 	public function settings_menu() {
-		$settings_page = add_submenu_page( 'wfm-file-changes', __( 'Files Monitor Settings', 'website-files-monitor' ), __( 'Settings', 'website-files-monitor' ), 'manage_options', 'wfm-settings', array( $this, 'settings_page' ) );
+		$settings_page = add_submenu_page( 'wfcm-file-changes', __( 'Settings', 'website-file-changes-monitor' ), __( 'Settings', 'website-file-changes-monitor' ), 'manage_options', 'wfcm-settings', array( $this, 'settings_page' ) );
 		add_action( "load-$settings_page", array( $this, 'settings_page_init' ) );
 	}
 
@@ -50,21 +50,21 @@ class WFM_Admin_Menus {
 	 * Add About Menu.
 	 */
 	public function about_menu() {
-		add_submenu_page( 'wfm-file-changes', __( 'Help & About', 'website-files-monitor' ), __( 'Help & About', 'website-files-monitor' ), 'manage_options', 'wfm-about', array( $this, 'about_page' ) );
+		add_submenu_page( 'wfcm-file-changes', __( 'Help & About', 'website-file-changes-monitor' ), __( 'Help & About', 'website-file-changes-monitor' ), 'manage_options', 'wfcm-about', array( $this, 'about_page' ) );
 	}
 
 	/**
 	 * Files Monitor Page.
 	 */
 	public function file_changes_page() {
-		WFM_Admin_File_Changes::output();
+		WFCM_Admin_File_Changes::output();
 	}
 
 	/**
 	 * Settings Page.
 	 */
 	public function settings_page() {
-		WFM_Admin_Settings::output();
+		WFCM_Admin_Settings::output();
 	}
 
 	/**
@@ -72,7 +72,7 @@ class WFM_Admin_Menus {
 	 */
 	public function settings_page_init() {
 		if ( ! empty( $_POST['submit'] ) ) { // @codingStandardsIgnoreLine
-			WFM_Admin_Settings::save();
+			WFCM_Admin_Settings::save();
 		}
 	}
 
@@ -89,13 +89,13 @@ class WFM_Admin_Menus {
 	public function add_events_count() {
 		global $menu;
 
-		$events_count = wp_count_posts( 'wfm_file_event' );
+		$events_count = wp_count_posts( 'wfcm_file_event' );
 
 		if ( isset( $events_count->private ) && $events_count->private ) {
 			$count_html = '<span class="update-plugins"><span class="events-count">' . $events_count->private . '</span></span>';
 
 			foreach ( $menu as $key => $value ) {
-				if ( 'wfm-file-changes' === $menu[ $key ][2] ) {
+				if ( 'wfcm-file-changes' === $menu[ $key ][2] ) {
 					$menu[ $key ][0] .= ' ' . $count_html; // phpcs:ignore
 					break;
 				}
@@ -104,4 +104,4 @@ class WFM_Admin_Menus {
 	}
 }
 
-new WFM_Admin_Menus();
+new WFCM_Admin_Menus();

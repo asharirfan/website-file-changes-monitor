@@ -71,7 +71,7 @@ The Website File Changes Monitor plugin can also detect file changes on WordPres
 ### 🤝 FREE Plugin Support
 Support for the WordPress Files Monitor plugin is available for free via:
 
-- [Forums](https://wordpress.org/support/plugins/website-files-monitor/)
+- [Forums](https://wordpress.org/support/plugins/website-file-changes-monitor/)
 - [Email](https://www.wpwhitesecurity.com/contact-wp-white-security/)
 
 For any other queries, feedback, or if you simply want to get in touch with us please use our [contact form](https://www.wpwhitesecurity.com/contact-wp-white-security/).

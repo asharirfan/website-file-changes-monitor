@@ -1,7 +1,6 @@
 /**
  * Events Table.
  */
-
 import React from 'react';
 import { EventsContext } from '../context/EventsContext';
 import EventsTable from './EventsTable';

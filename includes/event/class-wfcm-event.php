@@ -1,8 +1,8 @@
 <?php
 /**
- * WFM Event.
+ * WFCM Event.
  *
- * @package wfm
+ * @package wfcm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,11 +10,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WFM Event Abstract Class.
+ * WFCM Event Abstract Class.
  *
  * This is the base class for the file change events.
  */
-abstract class WFM_Event {
+abstract class WFCM_Event {
 
 	/**
 	 * Event ID.
@@ -35,7 +35,7 @@ abstract class WFM_Event {
 	 *
 	 * @var string
 	 */
-	protected $event_type = 'wfm_file_event';
+	protected $event_type = 'wfcm_file_event';
 
 	/**
 	 * Event Data.
@@ -164,7 +164,7 @@ abstract class WFM_Event {
 			$this->data[ $key ] = $value;
 			return $value;
 		}
-		return new WP_Error( 'wfm_invalid_event_data', __( 'Invalid event data.', 'website-files-monitor' ) );
+		return new WP_Error( 'wfcm_invalid_event_data', __( 'Invalid event data.', 'website-file-changes-monitor' ) );
 	}
 
 	/**

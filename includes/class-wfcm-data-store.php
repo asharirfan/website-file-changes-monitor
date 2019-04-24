@@ -1,8 +1,8 @@
 <?php
 /**
- * WFM Data Store.
+ * WFCM Data Store.
  *
- * @package wfm
+ * @package wfcm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Data Store Class.
  */
-class WFM_Data_Store {
+class WFCM_Data_Store {
 
 	/**
 	 * Data Store Instance.
@@ -27,7 +27,7 @@ class WFM_Data_Store {
 	 * @var array
 	 */
 	private $stores = array(
-		'event' => 'WFM_Event_Data_Store',
+		'event' => 'WFCM_Event_Data_Store',
 	);
 
 	/**
@@ -50,12 +50,12 @@ class WFM_Data_Store {
 			$store = $this->stores[ $queried_object ];
 
 			if ( ! class_exists( $store ) ) {
-				throw new Exception( __( 'Data store does not exist.', 'website-files-monitor' ) );
+				throw new Exception( __( 'Data store does not exist.', 'website-file-changes-monitor' ) );
 			} else {
 				$this->instance = new $store();
 			}
 		} else {
-			throw new Exception( __( 'Invalid data store.', 'website-files-monitor' ) );
+			throw new Exception( __( 'Invalid data store.', 'website-file-changes-monitor' ) );
 		}
 	}
 
@@ -64,10 +64,10 @@ class WFM_Data_Store {
 	 *
 	 * @param string $queried_object - Queries object.
 	 * @throws Exception - When validation fails.
-	 * @return WFM_Data_Store
+	 * @return WFCM_Data_Store
 	 */
 	public static function load( $queried_object ) {
-		return new WFM_Data_Store( $queried_object );
+		return new WFCM_Data_Store( $queried_object );
 	}
 
 	/**

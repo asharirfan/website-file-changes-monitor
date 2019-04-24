@@ -1,8 +1,8 @@
 <?php
 /**
- * WFM Events Query.
+ * WFCM Events Query.
  *
- * @package wfm
+ * @package wfcm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Events Query Class.
  */
-class WFM_Event_Query {
+class WFCM_Event_Query {
 
 	/**
 	 * Query variables.
@@ -47,7 +47,7 @@ class WFM_Event_Query {
 	private function get_default_query_vars() {
 		return array(
 			'post_status'    => array( 'draft', 'pending', 'private', 'publish' ),
-			'post_type'      => 'wfm_file_event',
+			'post_type'      => 'wfcm_file_event',
 
 			'posts_per_page' => -1,
 			'paginate'       => false,
@@ -69,7 +69,7 @@ class WFM_Event_Query {
 	 */
 	public function get_events() {
 		$args   = $this->get_args();
-		$events = WFM_Data_Store::load( 'event' )->query( $args );
+		$events = WFCM_Data_Store::load( 'event' )->query( $args );
 		return $events;
 	}
 }

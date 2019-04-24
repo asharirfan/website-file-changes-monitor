@@ -3,11 +3,11 @@
  */
 window.addEventListener( 'load', function() {
 
-	const dismissBtns = document.querySelectorAll( '.wfm-admin-notice .button' );
+	const dismissBtns = document.querySelectorAll( '.wfcm-admin-notice .button' );
 
 	// Add Exclude Item.
 	[ ...dismissBtns ].forEach( dismissBtn => {
-		dismissBtn.addEventListener( 'click', wfmDismissAdminNotice );
+		dismissBtn.addEventListener( 'click', wfcmDismissAdminNotice );
 	});
 });
 
@@ -16,15 +16,15 @@ window.addEventListener( 'load', function() {
  *
  * @param {Event} e Event object.
  */
-function wfmDismissAdminNotice( e ) {
+function wfcmDismissAdminNotice( e ) {
 
 	const noticeId = e.target.dataset.noticeId;
 
 	// Rest request object.
-	const request = new Request( `${wfmData.restAdminEndpoint}/${noticeId}`, {
+	const request = new Request( `${wfcmData.restAdminEndpoint}/${noticeId}`, {
 		method: 'GET',
 		headers: {
-			'X-WP-Nonce': wfmData.restNonce
+			'X-WP-Nonce': wfcmData.restNonce
 		}
 	});
 
@@ -33,7 +33,7 @@ function wfmDismissAdminNotice( e ) {
 		.then( response => response.json() )
 		.then( data => {
 			if ( data.success ) {
-				document.getElementById( `wfm-admin-notice-${noticeId}` ).style.display = 'none';
+				document.getElementById( `wfcm-admin-notice-${noticeId}` ).style.display = 'none';
 			}
 		})
 		.catch( error => {

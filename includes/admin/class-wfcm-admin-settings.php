@@ -2,7 +2,7 @@
 /**
  * Settings Class File.
  *
- * @package wfm
+ * @package wfcm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Plugin Settings Class.
  */
-class WFM_Admin_Settings {
+class WFCM_Admin_Settings {
 
 	/**
 	 * Admin Messages.
@@ -48,46 +48,46 @@ class WFM_Admin_Settings {
 		$suffix = ( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? '' : '.min'; // Check for debug mode.
 
 		wp_enqueue_style(
-			'wfm-settings-styles',
-			WFM_BASE_URL . 'assets/css/dist/build.settings' . $suffix . '.css',
+			'wfcm-settings-styles',
+			WFCM_BASE_URL . 'assets/css/dist/build.settings' . $suffix . '.css',
 			array(),
-			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WFM_BASE_DIR . 'assets/css/dist/build.settings.css' ) : WFM_VERSION
+			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WFCM_BASE_DIR . 'assets/css/dist/build.settings.css' ) : WFCM_VERSION
 		);
 
 		wp_register_script(
-			'wfm-settings',
-			WFM_BASE_URL . 'assets/js/dist/settings' . $suffix . '.js',
+			'wfcm-settings',
+			WFCM_BASE_URL . 'assets/js/dist/settings' . $suffix . '.js',
 			array(),
-			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WFM_BASE_DIR . 'assets/js/dist/settings.js' ) : WFM_VERSION,
+			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WFCM_BASE_DIR . 'assets/js/dist/settings.js' ) : WFCM_VERSION,
 			true
 		);
 
 		wp_localize_script(
-			'wfm-settings',
-			'wfmData',
+			'wfcm-settings',
+			'wfcmData',
 			array(
 				'monitor'          => array(
-					'start' => esc_url_raw( rest_url( WFM_REST_NAMESPACE . WFM_REST_API::$monitor_base . '/start' ) ),
-					'stop'  => esc_url_raw( rest_url( WFM_REST_NAMESPACE . WFM_REST_API::$monitor_base . '/stop' ) ),
+					'start' => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$monitor_base . '/start' ) ),
+					'stop'  => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$monitor_base . '/stop' ) ),
 				),
 				'restRequestNonce' => wp_create_nonce( 'wp_rest' ),
 				'scanButtons'      => array(
-					'scanNow'    => esc_html__( 'Scan Now', 'website-files-monitor' ),
-					'scanStop'   => esc_html__( 'Stop Scan', 'website-files-monitor' ),
-					'scanning'   => esc_html__( 'Scanning...', 'website-files-monitor' ),
-					'stopping'   => esc_html__( 'Stopping scan...', 'website-files-monitor' ),
-					'scanFailed' => esc_html__( 'Scan Failed!', 'website-files-monitor' ),
+					'scanNow'    => esc_html__( 'Scan Now', 'website-file-changes-monitor' ),
+					'scanStop'   => esc_html__( 'Stop Scan', 'website-file-changes-monitor' ),
+					'scanning'   => esc_html__( 'Scanning...', 'website-file-changes-monitor' ),
+					'stopping'   => esc_html__( 'Stopping scan...', 'website-file-changes-monitor' ),
+					'scanFailed' => esc_html__( 'Scan Failed!', 'website-file-changes-monitor' ),
 				),
-				'fileInvalid'      => esc_html__( 'Filename cannot be added because it contains invalid characters.', 'website-files-monitor' ),
-				'extensionInvalid' => esc_html__( 'File extension cannot be added because it contains invalid characters.', 'website-files-monitor' ),
-				'dirInvalid'       => esc_html__( 'Directory cannot be added because it contains invalid characters.', 'website-files-monitor' ),
+				'fileInvalid'      => esc_html__( 'Filename cannot be added because it contains invalid characters.', 'website-file-changes-monitor' ),
+				'extensionInvalid' => esc_html__( 'File extension cannot be added because it contains invalid characters.', 'website-file-changes-monitor' ),
+				'dirInvalid'       => esc_html__( 'Directory cannot be added because it contains invalid characters.', 'website-file-changes-monitor' ),
 			)
 		);
 
-		wp_enqueue_script( 'wfm-settings' );
+		wp_enqueue_script( 'wfcm-settings' );
 
 		// Get plugin settings.
-		$settings = wfm_get_monitor_settings();
+		$settings = wfcm_get_monitor_settings();
 
 		// Include the view file.
 		require_once trailingslashit( dirname( __FILE__ ) ) . 'views/html-admin-settings.php';
@@ -97,10 +97,10 @@ class WFM_Admin_Settings {
 	 * Save Settings.
 	 */
 	public static function save() {
-		check_admin_referer( 'wfm-save-admin-settings' );
+		check_admin_referer( 'wfcm-save-admin-settings' );
 
-		if ( isset( $_POST['wfm-settings'] ) ) {
-			$wfm_settings = $_POST['wfm-settings']; // @codingStandardsIgnoreLine
+		if ( isset( $_POST['wfcm-settings'] ) ) {
+			$wfcm_settings = $_POST['wfcm-settings']; // @codingStandardsIgnoreLine
 
 			// This is to handle the empty exclude list case.
 			$exclude_settings = array(
@@ -108,9 +108,9 @@ class WFM_Admin_Settings {
 				'scan-exclude-files' => array(),
 				'scan-exclude-exts'  => array(),
 			);
-			$wfm_settings     = wp_parse_args( $wfm_settings, $exclude_settings );
+			$wfcm_settings    = wp_parse_args( $wfcm_settings, $exclude_settings );
 
-			foreach ( $wfm_settings as $key => $value ) {
+			foreach ( $wfcm_settings as $key => $value ) {
 				if ( is_array( $value ) ) {
 					$value = array_map( 'sanitize_text_field', wp_unslash( $value ) );
 				} else {
@@ -127,10 +127,10 @@ class WFM_Admin_Settings {
 					self::set_skip_monitor_content( $key, $value );
 				}
 
-				wfm_save_setting( $key, $value );
+				wfcm_save_setting( $key, $value );
 			}
 
-			self::add_message( __( 'Your settings have been saved.', 'website-files-monitor' ) );
+			self::add_message( __( 'Your settings have been saved.', 'website-file-changes-monitor' ) );
 		}
 	}
 
@@ -174,9 +174,9 @@ class WFM_Admin_Settings {
 	 */
 	private static function set_skip_monitor_content( $setting, $value ) {
 		$site_content = new stdClass();
-		$site_content = wfm_get_setting( WFM_Settings::$site_content, $site_content );
+		$site_content = wfcm_get_setting( WFCM_Settings::$site_content, $site_content );
 
-		$stored_setting  = wfm_get_setting( $setting, array() );
+		$stored_setting  = wfcm_get_setting( $setting, array() );
 		$removed_content = array_diff( $stored_setting, $value );
 
 		if ( ! empty( $removed_content ) ) {
@@ -189,7 +189,7 @@ class WFM_Admin_Settings {
 				$site_content->$content_type = $removed_content;
 			}
 
-			wfm_save_setting( WFM_Settings::$site_content, $site_content );
+			wfcm_save_setting( WFCM_Settings::$site_content, $site_content );
 		}
 	}
 }

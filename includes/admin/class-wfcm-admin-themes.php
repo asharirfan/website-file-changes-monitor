@@ -1,8 +1,8 @@
 <?php
 /**
- * WFM Admin Themes.
+ * WFCM Admin Themes.
  *
- * @package wfm
+ * @package wfcm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * This class monitors the theme install, uninstall, and
  * update events for file changes monitoring.
  */
-class WFM_Admin_Themes {
+class WFCM_Admin_Themes {
 
 	/**
 	 * List of themes already installed.
@@ -70,7 +70,7 @@ class WFM_Admin_Themes {
 
 			if ( ! empty( $themes ) ) {
 				foreach ( $themes as $directory => $theme ) {
-					wfm_add_site_theme( $directory );
+					wfcm_add_site_theme( $directory );
 				}
 			}
 		}
@@ -78,8 +78,8 @@ class WFM_Admin_Themes {
 		// Handle theme uninstall event.
 		if ( ( 'delete-theme' === $action && current_user_can( 'delete_themes' ) ) || ( $is_themes_page && 'delete' === $action && current_user_can( 'delete_themes' ) ) ) {
 			foreach ( $this->get_removed_themes() as $theme ) {
-				wfm_skip_theme_scan( $theme->stylesheet, 'uninstall' );
-				wfm_remove_site_theme( $theme->stylesheet );
+				wfcm_skip_theme_scan( $theme->stylesheet, 'uninstall' );
+				wfcm_remove_site_theme( $theme->stylesheet );
 			}
 		}
 
@@ -97,7 +97,7 @@ class WFM_Admin_Themes {
 
 			if ( ! empty( $updated_themes ) ) {
 				foreach ( $updated_themes as $updated_theme ) {
-					wfm_skip_theme_scan( $updated_theme, 'update' );
+					wfcm_skip_theme_scan( $updated_theme, 'update' );
 				}
 			}
 		}
@@ -119,4 +119,4 @@ class WFM_Admin_Themes {
 	}
 }
 
-new WFM_Admin_Themes();
+new WFCM_Admin_Themes();

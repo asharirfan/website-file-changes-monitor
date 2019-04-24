@@ -1,8 +1,8 @@
 <?php
 /**
- * WP File Changes Monitor.
+ * Website File Changes Monitor.
  *
- * @package wfm
+ * @package wfcm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Main Plugin Class.
  */
-final class Website_Files_Monitor {
+final class Website_File_Changes_Monitor {
 
 	/**
 	 * Plugin version.
@@ -24,7 +24,7 @@ final class Website_Files_Monitor {
 	/**
 	 * Single instance of the plugin.
 	 *
-	 * @var Website_Files_Monitor
+	 * @var Website_File_Changes_Monitor
 	 */
 	protected static $instance = null;
 
@@ -33,7 +33,7 @@ final class Website_Files_Monitor {
 	 *
 	 * Ensures only one instance of WP File Changes Monitor is loaded or can be loaded.
 	 *
-	 * @return Website_Files_Monitor
+	 * @return Website_File_Changes_Monitor
 	 */
 	public static function instance() {
 		if ( is_null( self::$instance ) ) {
@@ -49,20 +49,20 @@ final class Website_Files_Monitor {
 		$this->define_constants();
 		$this->includes();
 		$this->register_hooks();
-		do_action( 'website_files_monitor_loaded' );
+		do_action( 'website_file_changes_monitor_loaded' );
 	}
 
 	/**
 	 * Define constants.
 	 */
 	public function define_constants() {
-		$this->define( 'WFM_VERSION', $this->version );
-		$this->define( 'WFM_BASE_NAME', plugin_basename( WFM_PLUGIN_FILE ) );
-		$this->define( 'WFM_BASE_URL', trailingslashit( plugin_dir_url( WFM_PLUGIN_FILE ) ) );
-		$this->define( 'WFM_BASE_DIR', trailingslashit( plugin_dir_path( WFM_PLUGIN_FILE ) ) );
-		$this->define( 'WFM_REST_NAMESPACE', 'website-files-monitor/v1' );
-		$this->define( 'WFM_OPT_PREFIX', 'wfm-' );
-		$this->define( 'WFM_MIN_PHP_VERSION', '5.5.0' );
+		$this->define( 'WFCM_VERSION', $this->version );
+		$this->define( 'WFCM_BASE_NAME', plugin_basename( WFCM_PLUGIN_FILE ) );
+		$this->define( 'WFCM_BASE_URL', trailingslashit( plugin_dir_url( WFCM_PLUGIN_FILE ) ) );
+		$this->define( 'WFCM_BASE_DIR', trailingslashit( plugin_dir_path( WFCM_PLUGIN_FILE ) ) );
+		$this->define( 'WFCM_REST_NAMESPACE', 'website-file-changes-monitor/v1' );
+		$this->define( 'WFCM_OPT_PREFIX', 'wfcm-' );
+		$this->define( 'WFCM_MIN_PHP_VERSION', '5.5.0' );
 	}
 
 	/**
@@ -81,18 +81,18 @@ final class Website_Files_Monitor {
 	 * Include plugin files.
 	 */
 	public function includes() {
-		require_once WFM_BASE_DIR . 'includes/class-wfm-autoloader.php';
-		require_once WFM_BASE_DIR . 'includes/wfm-functions.php';
-		require_once WFM_BASE_DIR . 'includes/class-wfm-post-types.php';
-		require_once WFM_BASE_DIR . 'includes/class-wfm-monitor.php';
-		require_once WFM_BASE_DIR . 'includes/class-wfm-rest-api.php';
+		require_once WFCM_BASE_DIR . 'includes/class-wfcm-autoloader.php';
+		require_once WFCM_BASE_DIR . 'includes/wfcm-functions.php';
+		require_once WFCM_BASE_DIR . 'includes/class-wfcm-post-types.php';
+		require_once WFCM_BASE_DIR . 'includes/class-wfcm-monitor.php';
+		require_once WFCM_BASE_DIR . 'includes/class-wfcm-rest-api.php';
 
 		// Data stores.
-		require_once WFM_BASE_DIR . 'includes/class-wfm-data-store.php';
-		require_once WFM_BASE_DIR . 'includes/data-stores/class-wfm-event-data-store.php';
+		require_once WFCM_BASE_DIR . 'includes/class-wfcm-data-store.php';
+		require_once WFCM_BASE_DIR . 'includes/data-stores/class-wfcm-event-data-store.php';
 
 		if ( is_admin() ) {
-			require_once WFM_BASE_DIR . 'includes/admin/class-wfm-admin.php';
+			require_once WFCM_BASE_DIR . 'includes/admin/class-wfcm-admin.php';
 		}
 	}
 
@@ -100,7 +100,7 @@ final class Website_Files_Monitor {
 	 * Register Hooks.
 	 */
 	public function register_hooks() {
-		register_activation_hook( WFM_PLUGIN_FILE, 'wfm_install' );
+		register_activation_hook( WFCM_PLUGIN_FILE, 'wfcm_install' );
 	}
 
 	/**

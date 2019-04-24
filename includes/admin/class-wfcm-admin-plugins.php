@@ -1,8 +1,8 @@
 <?php
 /**
- * WFM Admin Plugins.
+ * WFCM Admin Plugins.
  *
- * @package wfm
+ * @package wfcm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * This class monitors the plugin install, uninstall, and
  * update events for file changes monitoring.
  */
-class WFM_Admin_Plugins {
+class WFCM_Admin_Plugins {
 
 	/**
 	 * List of plugins already installed.
@@ -71,7 +71,7 @@ class WFM_Admin_Plugins {
 			$added_plugin = reset( $plugin );
 
 			if ( false !== $added_plugin ) {
-				wfm_add_site_plugin( dirname( $added_plugin ) );
+				wfcm_add_site_plugin( dirname( $added_plugin ) );
 			}
 		}
 
@@ -81,8 +81,8 @@ class WFM_Admin_Plugins {
 			$deleted_plugin = dirname( $deleted_plugin );
 
 			if ( $deleted_plugin ) {
-				wfm_skip_plugin_scan( $deleted_plugin, 'uninstall' );
-				wfm_remove_site_plugin( $deleted_plugin );
+				wfcm_skip_plugin_scan( $deleted_plugin, 'uninstall' );
+				wfcm_remove_site_plugin( $deleted_plugin );
 			}
 		} elseif ( $is_plugins_page && isset( $_POST['verify-delete'] ) && 'delete-selected' === $action && isset( $_POST['checked'] ) ) { // phpcs:ignore
 			// Get plugins.
@@ -92,8 +92,8 @@ class WFM_Admin_Plugins {
 				$deleted_plugin = dirname( $plugin );
 
 				if ( $deleted_plugin ) {
-					wfm_skip_plugin_scan( $deleted_plugin, 'uninstall' );
-					wfm_remove_site_plugin( $deleted_plugin );
+					wfcm_skip_plugin_scan( $deleted_plugin, 'uninstall' );
+					wfcm_remove_site_plugin( $deleted_plugin );
 				}
 			}
 		}
@@ -104,7 +104,7 @@ class WFM_Admin_Plugins {
 			$updated_plugin = dirname( $updated_plugin );
 
 			if ( $updated_plugin ) {
-				wfm_skip_plugin_scan( $updated_plugin, 'update' );
+				wfcm_skip_plugin_scan( $updated_plugin, 'update' );
 			}
 		} elseif ( $is_update_page && in_array( $action, $update_actions, true ) && current_user_can( 'update_plugins' ) && isset( $_GET['plugins'] ) ) { // phpcs:ignore
 			$plugins = sanitize_text_field( wp_unslash( $_GET['plugins'] ) ); // phpcs:ignore
@@ -114,11 +114,11 @@ class WFM_Admin_Plugins {
 				$updated_plugin = dirname( $plugin );
 
 				if ( $updated_plugin ) {
-					wfm_skip_plugin_scan( $updated_plugin, 'update' );
+					wfcm_skip_plugin_scan( $updated_plugin, 'update' );
 				}
 			}
 		}
 	}
 }
 
-new WFM_Admin_Plugins();
+new WFCM_Admin_Plugins();

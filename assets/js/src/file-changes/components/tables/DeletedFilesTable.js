@@ -1,7 +1,6 @@
 /**
  * Deleted Files Table
  */
-
 import React, { Component } from 'react';
 import EventsTable from '../events-table';
 import Navigation from '../navigation';

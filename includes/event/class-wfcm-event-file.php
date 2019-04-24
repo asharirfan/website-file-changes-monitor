@@ -1,8 +1,8 @@
 <?php
 /**
- * WFM File Event.
+ * WFCM File Event.
  *
- * @package wfm
+ * @package wfcm
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,11 +10,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WFM File Event Class.
+ * WFCM File Event Class.
  *
  * Handle the event of a single file.
  */
-class WFM_Event_File extends WFM_Event {
+class WFCM_Event_File extends WFCM_Event {
 
 	/**
 	 * Constructor.
