@@ -32,12 +32,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-// Define plugin file
+// Define plugin file.
 if ( ! defined( 'WFCM_PLUGIN_FILE' ) ) {
 	define( 'WFCM_PLUGIN_FILE', __FILE__ );
 }
 
-// Include main plugin class
+// Include main plugin class.
 if ( ! class_exists( 'Website_File_Changes_Monitor' ) ) {
 	include_once dirname( __FILE__ ) . '/includes/class-website-file-changes-monitor.php';
 }

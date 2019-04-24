@@ -377,7 +377,7 @@ class WFCM_Monitor {
 				}
 
 				// Files added alert.
-				if ( count( $files_added ) > 0 ) {
+				if ( in_array( 'added', $this->scan_settings['type'], true ) && count( $files_added ) > 0 ) {
 					// Get excluded site content.
 					$site_content = wfcm_get_setting( WFCM_Settings::$site_content );
 
@@ -410,7 +410,7 @@ class WFCM_Monitor {
 				}
 
 				// Files removed alert.
-				if ( count( $files_removed ) > 0 ) {
+				if ( in_array( 'deleted', $this->scan_settings['type'], true ) && count( $files_removed ) > 0 ) {
 					// Log the alert.
 					foreach ( $files_removed as $file => $file_hash ) {
 						// Get directory name.
@@ -440,7 +440,7 @@ class WFCM_Monitor {
 				}
 
 				// Files edited alert.
-				if ( count( $files_changed ) > 0 ) {
+				if ( in_array( 'modified', $this->scan_settings['type'], true ) && count( $files_changed ) > 0 ) {
 					foreach ( $files_changed as $file => $file_hash ) {
 						// Create event for each changed file.
 						wfcm_create_event( 'modified', $file, $file_hash );
@@ -944,7 +944,7 @@ class WFCM_Monitor {
 					if ( ! empty( $event_content ) ) {
 						$dir_path = untrailingslashit( WP_CONTENT_DIR ) . $search_path;
 
-						if ( 'wfcm_file_scan_scanned_files' === $current_filter && 'install' === $context ) {
+						if ( in_array( 'added', $this->scan_settings['type'], true ) && 'wfcm_file_scan_scanned_files' === $current_filter && 'install' === $context ) {
 							$event_context = '';
 							if ( 'plugins' === $excluded_type ) {
 								$event_context = __( 'Plugin Install', 'website-file-changes-monitor' );
@@ -953,7 +953,7 @@ class WFCM_Monitor {
 							}
 
 							wfcm_create_directory_event( 'added', $dir_path, array_values( $event_content ), $event_context );
-						} elseif ( 'wfcm_file_scan_stored_files' === $current_filter && 'uninstall' === $context ) {
+						} elseif ( in_array( 'deleted', $this->scan_settings['type'], true ) && 'wfcm_file_scan_stored_files' === $current_filter && 'uninstall' === $context ) {
 							$event_context = '';
 							if ( 'plugins' === $excluded_type ) {
 								$event_context = __( 'Plugin Uninstall', 'website-file-changes-monitor' );
@@ -1118,15 +1118,15 @@ class WFCM_Monitor {
 			$event_context = __( 'Core Update', 'website-file-changes-monitor' );
 		}
 
-		if ( count( $files_added ) > 0 ) {
+		if ( in_array( 'added', $this->scan_settings['type'], true ) && count( $files_added ) > 0 ) {
 			wfcm_create_directory_event( 'added', $dir_path, array_values( $files_added ), $event_context );
 		}
 
-		if ( count( $files_removed ) > 0 ) {
+		if ( in_array( 'deleted', $this->scan_settings['type'], true ) && count( $files_removed ) > 0 ) {
 			wfcm_create_directory_event( 'deleted', $dir_path, array_values( $files_removed ), $event_context );
 		}
 
-		if ( count( $files_changed ) > 0 ) {
+		if ( in_array( 'modified', $this->scan_settings['type'], true ) && count( $files_changed ) > 0 ) {
 			wfcm_create_directory_event( 'modified', $dir_path, array_values( $files_changed ), $event_context );
 		}
 	}
