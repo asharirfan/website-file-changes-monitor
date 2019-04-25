@@ -88,11 +88,11 @@ window.addEventListener( 'load', function() {
 			excludeNameInput.value = '';
 		} else {
 			if ( 'dirs' === excludeType ) {
-				alert( wfcmData.dirInvalid ); // eslint-disable-line no-undef
+				alert( wfcmSettingsData.dirInvalid ); // eslint-disable-line no-undef
 			} else if ( 'files' === excludeType ) {
-				alert( wfcmData.fileInvalid ); // eslint-disable-line no-undef
+				alert( wfcmSettingsData.fileInvalid ); // eslint-disable-line no-undef
 			} else if ( 'exts' === excludeType ) {
-				alert( wfcmData.extensionInvalid ); // eslint-disable-line no-undef
+				alert( wfcmSettingsData.extensionInvalid ); // eslint-disable-line no-undef
 			}
 		}
 	}
@@ -150,15 +150,15 @@ window.addEventListener( 'load', function() {
 	 * Send request to start manual scan.
 	 */
 	manualScanStart.addEventListener( 'click', function( e ) {
-		e.target.value = wfcmData.scanButtons.scanning; // eslint-disable-line no-undef
+		e.target.value = wfcmSettingsData.scanButtons.scanning; // eslint-disable-line no-undef
 		e.target.disabled = true;
 		manualScanStop.disabled = false;
 
 		// Rest request object.
-		const request = new Request( wfcmData.monitor.start, { // eslint-disable-line no-undef
+		const request = new Request( wfcmSettingsData.monitor.start, { // eslint-disable-line no-undef
 			method: 'GET',
 			headers: {
-				'X-WP-Nonce': wfcmData.restRequestNonce // eslint-disable-line no-undef
+				'X-WP-Nonce': wfcmSettingsData.restRequestNonce // eslint-disable-line no-undef
 			}
 		});
 
@@ -167,13 +167,13 @@ window.addEventListener( 'load', function() {
 			.then( response => response.json() )
 			.then( data => {
 				if ( data ) {
-					e.target.value = wfcmData.scanButtons.scanNow; // eslint-disable-line no-undef
+					e.target.value = wfcmSettingsData.scanButtons.scanNow; // eslint-disable-line no-undef
 					e.target.disabled = false;
 					manualScanStop.disabled = true;
 				}
 			})
 			.catch( error => {
-				e.target.value = wfcmData.scanButtons.scanFailed; // eslint-disable-line no-undef
+				e.target.value = wfcmSettingsData.scanButtons.scanFailed; // eslint-disable-line no-undef
 				e.target.disabled = false;
 				manualScanStop.disabled = true;
 				console.log( error ); // eslint-disable-line no-console
@@ -184,14 +184,14 @@ window.addEventListener( 'load', function() {
 	 * Send request to stop manual scan.
 	 */
 	manualScanStop.addEventListener( 'click', function( e ) {
-		e.target.value = wfcmData.scanButtons.stopping; // eslint-disable-line no-undef
+		e.target.value = wfcmSettingsData.scanButtons.stopping; // eslint-disable-line no-undef
 		e.target.disabled = true;
 
 		// Rest request object.
-		const request = new Request( wfcmData.monitor.stop, { // eslint-disable-line no-undef
+		const request = new Request( wfcmSettingsData.monitor.stop, { // eslint-disable-line no-undef
 			method: 'GET',
 			headers: {
-				'X-WP-Nonce': wfcmData.restRequestNonce // eslint-disable-line no-undef
+				'X-WP-Nonce': wfcmSettingsData.restRequestNonce // eslint-disable-line no-undef
 			}
 		});
 
@@ -200,7 +200,7 @@ window.addEventListener( 'load', function() {
 			.then( response => response.json() )
 			.then( data => {
 				if ( data ) {
-					e.target.value = wfcmData.scanButtons.scanStop; // eslint-disable-line no-undef
+					e.target.value = wfcmSettingsData.scanButtons.scanStop; // eslint-disable-line no-undef
 					manualScanStart.disabled = false;
 				}
 			})

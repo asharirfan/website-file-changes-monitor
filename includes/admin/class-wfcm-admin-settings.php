@@ -64,7 +64,7 @@ class WFCM_Admin_Settings {
 
 		wp_localize_script(
 			'wfcm-settings',
-			'wfcmData',
+			'wfcmSettingsData',
 			array(
 				'monitor'          => array(
 					'start' => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$monitor_base . '/start' ) ),
