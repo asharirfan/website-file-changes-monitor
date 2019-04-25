@@ -449,15 +449,17 @@ class WFCM_Monitor {
 
 				// Check for files limit alert.
 				if ( $this->scan_limit_file ) {
-					$file_limits = wfcm_get_setting( 'monitor-limits-msgs', array() );
+					$admin_notices = wfcm_get_setting( 'admin-notices', array() );
 
-					if ( ! isset( $file_limits['files_limit'] ) || ! is_array( $file_limits['files_limit'] ) ) {
-						$file_limits['files_limit'] = array();
+					if ( ! isset( $admin_notices['files-limit'] ) || ! is_array( $admin_notices['files-limit'] ) ) {
+						$admin_notices['files-limit'] = array();
 					}
 
-					array_push( $file_limits['files_limit'], $path_to_scan );
+					if ( ! in_array( $path_to_scan, $admin_notices['files-limit'], true ) ) {
+						array_push( $admin_notices['files-limit'], $path_to_scan );
+					}
 
-					wfcm_save_setting( 'monitor-limits-msgs', $file_limits );
+					wfcm_save_setting( 'admin-notices', $admin_notices );
 				}
 
 				/**
@@ -711,11 +713,12 @@ class WFCM_Monitor {
 			return $files; // Return if directory fails to open.
 		}
 
-		$is_multisite     = is_multisite();                      // Multsite checks.
-		$directories      = $this->scan_settings['directories']; // Get directories to be scanned.
-		$file_size_limit  = $this->scan_settings['file-size'];   // Get file size limit.
-		$file_size_limit  = $file_size_limit * 1048576;          // Calculate file size limit in bytes; 1MB = 1024 KB = 1024 * 1024 bytes = 1048576 bytes.
-		$files_over_limit = array();                             // Array of files which are over their file size limit.
+		$is_multisite     = is_multisite();                               // Multsite checks.
+		$directories      = $this->scan_settings['directories'];          // Get directories to be scanned.
+		$file_size_limit  = $this->scan_settings['file-size'];            // Get file size limit.
+		$file_size_limit  = $file_size_limit * 1048576;                   // Calculate file size limit in bytes; 1MB = 1024 KB = 1024 * 1024 bytes = 1048576 bytes.
+		$files_over_limit = array();                                      // Array of files which are over their file size limit.
+		$admin_notices    = wfcm_get_setting( 'admin-notices', array() ); // Get admin notices.
 
 		// Scan the directory for files.
 		while ( false !== ( $item = @readdir( $dir_handle ) ) ) {
@@ -817,8 +820,10 @@ class WFCM_Monitor {
 					// File data.
 					$files[ $absolute_name ] = @md5_file( $absolute_name ); // File hash.
 				} else {
-					// File size is more than the limit.
-					array_push( $files_over_limit, $absolute_name );
+					if ( ! in_array( $absolute_name, $admin_notices['filesize-limit'], true ) ) {
+						// File size is more than the limit.
+						array_push( $files_over_limit, $absolute_name );
+					}
 
 					// File data.
 					$files[ $absolute_name ] = '';
@@ -830,15 +835,13 @@ class WFCM_Monitor {
 		@closedir( $dir_handle );
 
 		if ( ! empty( $files_over_limit ) ) {
-			$file_limits = wfcm_get_setting( 'monitor-limits-msgs', array() );
-
-			if ( ! isset( $file_limits['filesize_limit'] ) || ! is_array( $file_limits['filesize_limit'] ) ) {
-				$file_limits['filesize_limit'] = array();
+			if ( ! isset( $admin_notices['filesize-limit'] ) || ! is_array( $admin_notices['filesize-limit'] ) ) {
+				$admin_notices['filesize-limit'] = array();
 			}
 
-			$file_limits['filesize_limit'] = array_merge( $file_limits['filesize_limit'], $files_over_limit );
+			$admin_notices['filesize-limit'] = array_merge( $admin_notices['filesize-limit'], $files_over_limit );
 
-			wfcm_save_setting( 'monitor-limits-msgs', $file_limits );
+			wfcm_save_setting( 'admin-notices', $admin_notices );
 		}
 
 		// Return files data.
