@@ -40,12 +40,12 @@ class WFCM_Admin_File_Changes {
 	/**
 	 * Add admin message.
 	 *
-	 * @param string $id      - Message id.
+	 * @param string $key     - Message key.
 	 * @param string $type    - Type of message.
 	 * @param string $message - Admin message.
 	 */
-	public static function add_message( $id, $type, $message ) {
-		self::$messages[ $id ] = array(
+	public static function add_message( $key, $type, $message ) {
+		self::$messages[ $key ] = array(
 			'type'    => $type,
 			'message' => $message,
 		);
@@ -56,13 +56,13 @@ class WFCM_Admin_File_Changes {
 	 */
 	public static function add_messages() {
 		// Get file limits message setting.
-		$monitor_limits_msgs = wfcm_get_setting( 'monitor-limits-msgs', array() );
+		$monitor_limits_msgs = wfcm_get_setting( 'admin-notices', array() );
 
 		if ( ! empty( $monitor_limits_msgs ) ) {
-			if ( isset( $monitor_limits_msgs['files_limit'] ) && ! empty( $monitor_limits_msgs['files_limit'] ) ) {
+			if ( isset( $monitor_limits_msgs['files-limit'] ) && ! empty( $monitor_limits_msgs['files-limit'] ) ) {
 				// Append strong tag to each directory name.
 				$dirs = array_reduce(
-					$monitor_limits_msgs['files_limit'],
+					$monitor_limits_msgs['files-limit'],
 					function( $dirs, $dir ) {
 						array_push( $dirs, "<li><strong>$dir</strong></li>" );
 						return $dirs;
@@ -80,10 +80,10 @@ class WFCM_Admin_File_Changes {
 				self::add_message( 'files-limit', 'warning', $msg );
 			}
 
-			if ( isset( $monitor_limits_msgs['filesize_limit'] ) && ! empty( $monitor_limits_msgs['filesize_limit'] ) ) {
+			if ( isset( $monitor_limits_msgs['filesize-limit'] ) && ! empty( $monitor_limits_msgs['filesize-limit'] ) ) {
 				// Append strong tag to each directory name.
 				$files = array_reduce(
-					$monitor_limits_msgs['filesize_limit'],
+					$monitor_limits_msgs['filesize-limit'],
 					function( $files, $file ) {
 						array_push( $files, "<li><strong>$file</strong></li>" );
 						return $files;
@@ -109,9 +109,11 @@ class WFCM_Admin_File_Changes {
 	public static function show_messages() {
 		if ( ! empty( self::$messages ) ) {
 			$messages = apply_filters( 'wfcm_admin_file_changes_messages', self::$messages );
-			foreach ( $messages as $id => $notice ) :
+			foreach ( $messages as $key => $notice ) :
 				?>
-				<div id="wfcm-file-changes-notice-<?php echo esc_attr( $id ); ?>" class="notice notice-<?php echo esc_attr( $notice['type'] ); ?> wfcm-file-changes-notice is-dismissible"><?php echo wp_kses( $notice['message'], self::$allowed_html ); ?></div>
+				<div id="wfcm-admin-notice-<?php echo esc_attr( $key ); ?>" class="notice notice-<?php echo esc_attr( $notice['type'] ); ?> wfcm-admin-notice is-dismissible">
+					<?php echo wp_kses( $notice['message'], self::$allowed_html ); ?>
+				</div>
 				<?php
 			endforeach;
 		}
