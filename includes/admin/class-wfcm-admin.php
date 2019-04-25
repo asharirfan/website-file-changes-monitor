@@ -81,24 +81,21 @@ class WFCM_Admin {
 		// Get admin notices option.
 		$admin_notices = wfcm_get_setting( 'admin-notices', array() );
 
-		foreach ( $admin_notices as $notice_key => $notice_value ) {
-			if ( isset( self::$admin_notices[ $notice_key ] ) && $notice_value ) {
-				$this->display_notice( $notice_key, self::$admin_notices[ $notice_key ] );
-			}
+		if ( isset( $admin_notices['wsal'] ) && $admin_notices['wsal'] ) {
+			$this->display_notice( 'wsal' );
 		}
 	}
 
 	/**
 	 * Display notice.
 	 *
-	 * @param string $id     - Notice id.
-	 * @param string $notice - Message to display in notice.
+	 * @param string $key - Notice key.
 	 */
-	private function display_notice( $id, $notice ) {
+	private function display_notice( $key ) {
+		$notice = self::$admin_notices[ $key ];
 		?>
-		<div id="wfcm-admin-notice-<?php echo esc_attr( $id ); ?>" class="notice notice-<?php echo esc_attr( $notice['type'] ); ?> wfcm-admin-notice">
+		<div id="wfcm-admin-notice-<?php echo esc_attr( $key ); ?>" class="notice notice-<?php echo esc_attr( $notice['type'] ); ?> wfcm-admin-notice is-dismissible">
 			<p><?php echo wp_kses( $notice['message'], self::$allowed_html ); ?></p>
-			<p><input class="button" type="button" data-notice-id="<?php echo esc_attr( $id ); ?>" value="<?php esc_attr_e( 'OK', 'website-file-changes-monitor' ); ?>"></p>
 		</div>
 		<?php
 	}
@@ -107,40 +104,27 @@ class WFCM_Admin {
 	 * Render admin footer scripts (if needed).
 	 */
 	public function admin_footer_scripts() {
-		// Get admin notices option.
-		$admin_notices = wfcm_get_setting( 'admin-notices', array() );
+		// Check for debug mode.
+		$suffix = ( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? '' : '.min';
 
-		$render_js = false;
+		wp_register_script(
+			'wfcm-common',
+			WFCM_BASE_URL . 'assets/js/dist/common' . $suffix . '.js',
+			array(),
+			( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WFCM_BASE_DIR . 'assets/js/dist/common.js' ) : WFCM_VERSION,
+			true
+		);
 
-		foreach ( $admin_notices as $notice_key => $notice_value ) {
-			if ( isset( self::$admin_notices[ $notice_key ] ) && $notice_value ) {
-				$render_js = true;
-				break;
-			}
-		}
+		wp_localize_script(
+			'wfcm-common',
+			'wfcmData',
+			array(
+				'restNonce'         => wp_create_nonce( 'wp_rest' ),
+				'restAdminEndpoint' => rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$admin_notices ),
+			)
+		);
 
-		if ( $render_js ) {
-			$suffix = ( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? '' : '.min'; // Check for debug mode.
-
-			wp_register_script(
-				'wfcm-common',
-				WFCM_BASE_URL . 'assets/js/dist/common' . $suffix . '.js',
-				array(),
-				( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? filemtime( WFCM_BASE_DIR . 'assets/js/dist/common.js' ) : WFCM_VERSION,
-				true
-			);
-
-			wp_localize_script(
-				'wfcm-common',
-				'wfcmData',
-				array(
-					'restNonce'         => wp_create_nonce( 'wp_rest' ),
-					'restAdminEndpoint' => rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$admin_notices ),
-				)
-			);
-
-			wp_enqueue_script( 'wfcm-common' );
-		}
+		wp_enqueue_script( 'wfcm-common' );
 	}
 }
 
