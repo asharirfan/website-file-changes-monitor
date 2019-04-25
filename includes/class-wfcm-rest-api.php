@@ -128,7 +128,7 @@ class WFCM_REST_API {
 		// Register rest route dismissing admin notice.
 		register_rest_route(
 			WFCM_REST_NAMESPACE,
-			self::$admin_notices . '/(?P<admin_notice>[\S]+)',
+			self::$admin_notices . '/(?P<noticeKey>[\S]+)',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'dismiss_admin_notice' ),
@@ -192,6 +192,9 @@ class WFCM_REST_API {
 		// Get event params from request object.
 		$event_type = $rest_request->get_param( 'event_type' );
 		$paged      = $rest_request->get_param( 'paged' );
+
+		// Validate paged variable.
+		$paged = is_int( $paged ) ? $paged : (int) $paged;
 
 		if ( ! $event_type ) {
 			return new WP_Error( 'wfcm_empty_event_type', __( 'No event type specified for the request.', 'website-file-changes-monitor' ), array( 'status' => 404 ) );
@@ -274,20 +277,20 @@ class WFCM_REST_API {
 	 */
 	public function dismiss_admin_notice( $rest_request ) {
 		// Get admin notice id.
-		$notice_id = $rest_request->get_param( 'admin_notice' );
+		$notice_key = $rest_request->get_param( 'noticeKey' );
 
-		if ( ! $notice_id ) {
-			return new WP_Error( 'wfcm_empty_admin_notice_id', __( 'No admin notice id specified for the request.', 'website-file-changes-monitor' ), array( 'status' => 404 ) );
+		if ( ! $notice_key ) {
+			return new WP_Error( 'wfcm_empty_admin_notice_id', __( 'No admin notice key specified for the request.', 'website-file-changes-monitor' ), array( 'status' => 404 ) );
 		}
 
-		$admin_notice = wfcm_get_setting( 'admin-notices', array() );
+		$admin_notices = wfcm_get_setting( 'admin-notices', array() );
 
-		if ( isset( $admin_notice[ $notice_id ] ) ) {
+		if ( isset( $admin_notices[ $notice_key ] ) ) {
 			// Unset the notice.
-			unset( $admin_notice[ $notice_id ] );
+			unset( $admin_notices[ $notice_key ] );
 
 			// Save notice option.
-			wfcm_save_setting( 'admin-notices', $admin_notice );
+			wfcm_save_setting( 'admin-notices', $admin_notices );
 
 			// Prepare response.
 			$response = array( 'success' => true );
