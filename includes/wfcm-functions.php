@@ -235,15 +235,19 @@ function wfcm_get_events( $args ) {
 /**
  * Get event object.
  *
- * @param int|WP_Post $the_event - ID or WP_Post object of an event.
- * @return WFCM_Event|array
+ * @param int|WP_Post $event - ID or WP_Post object of an event.
+ * @return WFCM_Event|bool
  */
-function wfcm_get_event( $the_event ) {
+function wfcm_get_event( $event ) {
 	// Get event id.
-	if ( is_numeric( $the_event ) ) {
-		$event_id = $the_event;
-	} elseif ( $the_event instanceof WP_Post ) {
-		$event_id = $the_event->ID;
+	if ( is_numeric( $event ) ) {
+		$event_id = $event;
+	} elseif ( $event instanceof WP_Post ) {
+		$event_id = $event->ID;
+	} elseif ( ! empty( $event->ID ) ) {
+		$event_id = $event->ID;
+	} else {
+		return false;
 	}
 
 	// Get event content type.
@@ -251,10 +255,10 @@ function wfcm_get_event( $the_event ) {
 
 	if ( $content_type ) {
 		$event_class = 'WFCM_Event_' . ucwords( $content_type );
-		return new $event_class( $the_event );
+		return new $event_class( $event );
 	}
 
-	return array();
+	return false;
 }
 
 /**
