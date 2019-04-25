@@ -3,7 +3,8 @@
  */
 window.addEventListener( 'load', function() {
 
-	const dismissBtns = document.querySelectorAll( '.wfcm-admin-notice .button' );
+	// Dismiss buttons.
+	const dismissBtns = document.querySelectorAll( '.wfcm-admin-notice .notice-dismiss' );
 
 	// Add Exclude Item.
 	[ ...dismissBtns ].forEach( dismissBtn => {
@@ -17,11 +18,10 @@ window.addEventListener( 'load', function() {
  * @param {Event} e Event object.
  */
 function wfcmDismissAdminNotice( e ) {
-
-	const noticeId = e.target.dataset.noticeId;
+	const noticeKey = e.target.parentNode.id.substring( 18 ); // Get notice key from id of the notice.
 
 	// Rest request object.
-	const request = new Request( `${wfcmData.restAdminEndpoint}/${noticeId}`, {
+	const request = new Request( `${wfcmData.restAdminEndpoint}/${noticeKey}`, {
 		method: 'GET',
 		headers: {
 			'X-WP-Nonce': wfcmData.restNonce
@@ -33,7 +33,7 @@ function wfcmDismissAdminNotice( e ) {
 		.then( response => response.json() )
 		.then( data => {
 			if ( data.success ) {
-				document.getElementById( `wfcm-admin-notice-${noticeId}` ).style.display = 'none';
+				document.getElementById( `wfcm-admin-notice-${noticeKey}` ).style.display = 'none';
 			}
 		})
 		.catch( error => {
