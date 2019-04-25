@@ -448,11 +448,18 @@ class WFCM_Monitor {
 				}
 
 				// Check for files limit alert.
-				// if ( $this->scan_limit_file ) {
-				// $this->plugin->alerts->Trigger( 6032, array(
-				// 'CurrentUserID' => '0',
-				// ) );
-				// }
+				if ( $this->scan_limit_file ) {
+					$file_limits = wfcm_get_setting( 'monitor-limits-msgs', array() );
+
+					if ( ! isset( $file_limits['files_limit'] ) || ! is_array( $file_limits['files_limit'] ) ) {
+						$file_limits['files_limit'] = array();
+					}
+
+					array_push( $file_limits['files_limit'], $path_to_scan );
+
+					wfcm_save_setting( 'monitor-limits-msgs', $file_limits );
+				}
+
 				/**
 				 * `Action`: Last scanned directory.
 				 *
@@ -704,10 +711,11 @@ class WFCM_Monitor {
 			return $files; // Return if directory fails to open.
 		}
 
-		$is_multisite    = is_multisite();                      // Multsite checks.
-		$directories     = $this->scan_settings['directories']; // Get directories to be scanned.
-		$file_size_limit = $this->scan_settings['file-size'];   // Get file size limit.
-		$file_size_limit = $file_size_limit * 1048576;          // Calculate file size limit in bytes; 1MB = 1048576 bytes.
+		$is_multisite     = is_multisite();                      // Multsite checks.
+		$directories      = $this->scan_settings['directories']; // Get directories to be scanned.
+		$file_size_limit  = $this->scan_settings['file-size'];   // Get file size limit.
+		$file_size_limit  = $file_size_limit * 1048576;          // Calculate file size limit in bytes; 1MB = 1024 KB = 1024 * 1024 bytes = 1048576 bytes.
+		$files_over_limit = array();                             // Array of files which are over their file size limit.
 
 		// Scan the directory for files.
 		while ( false !== ( $item = @readdir( $dir_handle ) ) ) {
@@ -797,22 +805,21 @@ class WFCM_Monitor {
 				}
 
 				// Check files count.
-				// if ( $this->scan_file_count > self::SCAN_FILE_LIMIT ) { // If file limit is reached.
-				// $this->scan_limit_file = true; // Then set the limit flag.
-				// break; // And break the loop.
-				// }
+				if ( $this->scan_file_count > self::SCAN_FILE_LIMIT ) { // If file limit is reached.
+					$this->scan_limit_file = true; // Then set the limit flag.
+					break; // And break the loop.
+				}
+
 				// Check file size limit.
 				if ( filesize( $absolute_name ) < $file_size_limit ) {
-					$this->scan_file_count = $this->scan_file_count + 1;
+					$this->scan_file_count++;
 
 					// File data.
 					$files[ $absolute_name ] = @md5_file( $absolute_name ); // File hash.
 				} else {
 					// File size is more than the limit.
-					// $this->plugin->alerts->Trigger( 6031, array(
-					// 'FileLocation'  => $absolute_name,
-					// 'CurrentUserID' => '0',
-					// ) );
+					array_push( $files_over_limit, $absolute_name );
+
 					// File data.
 					$files[ $absolute_name ] = '';
 				}
@@ -821,6 +828,18 @@ class WFCM_Monitor {
 
 		// Close the directory.
 		@closedir( $dir_handle );
+
+		if ( ! empty( $files_over_limit ) ) {
+			$file_limits = wfcm_get_setting( 'monitor-limits-msgs', array() );
+
+			if ( ! isset( $file_limits['filesize_limit'] ) || ! is_array( $file_limits['filesize_limit'] ) ) {
+				$file_limits['filesize_limit'] = array();
+			}
+
+			$file_limits['filesize_limit'] = array_merge( $file_limits['filesize_limit'], $files_over_limit );
+
+			wfcm_save_setting( 'monitor-limits-msgs', $file_limits );
+		}
 
 		// Return files data.
 		return $files;
