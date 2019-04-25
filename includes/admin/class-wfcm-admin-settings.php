@@ -15,14 +15,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WFCM_Admin_Settings {
 
 	/**
-	 * Admin Messages.
+	 * Admin messages.
 	 *
 	 * @var array
 	 */
 	private static $messages = array();
 
 	/**
-	 * Add Admin Message.
+	 * Add admin message.
 	 *
 	 * @param string $message - Admin message.
 	 */
@@ -31,18 +31,18 @@ class WFCM_Admin_Settings {
 	}
 
 	/**
-	 * Show Admin Message.
+	 * Show admin message.
 	 */
 	public static function show_messages() {
 		if ( ! empty( self::$messages ) ) {
 			foreach ( self::$messages as $message ) {
-				echo '<div id="message" class="updated"><p><strong>' . esc_html( $message ) . '</strong></p></div>';
+				echo '<div class="notice notice-updated notice-dismiss"><p><strong>' . esc_html( $message ) . '</strong></p></div>';
 			}
 		}
 	}
 
 	/**
-	 * Initiate Settings Page.
+	 * Initiate settings page.
 	 */
 	public static function output() {
 		$suffix = ( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? '' : '.min'; // Check for debug mode.
@@ -94,7 +94,7 @@ class WFCM_Admin_Settings {
 	}
 
 	/**
-	 * Save Settings.
+	 * Save settings.
 	 */
 	public static function save() {
 		check_admin_referer( 'wfcm-save-admin-settings' );
@@ -135,7 +135,7 @@ class WFCM_Admin_Settings {
 	}
 
 	/**
-	 * Filter Excluded Directories.
+	 * Filter excluded directories.
 	 *
 	 * @param string $directory - Excluded directory.
 	 * @return string
@@ -165,7 +165,7 @@ class WFCM_Admin_Settings {
 	}
 
 	/**
-	 * Set Skip Monitor Content.
+	 * Set skip monitor content.
 	 *
 	 * Set skip content for file changes scan to avoid useless notifications.
 	 *
