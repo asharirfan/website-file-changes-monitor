@@ -36,7 +36,7 @@ class WFCM_Admin_Settings {
 	public static function show_messages() {
 		if ( ! empty( self::$messages ) ) {
 			foreach ( self::$messages as $message ) {
-				echo '<div class="notice notice-updated notice-dismiss"><p><strong>' . esc_html( $message ) . '</strong></p></div>';
+				echo '<div class="notice notice-success is-dismissible"><p><strong>' . esc_html( $message ) . '</strong></p></div>';
 			}
 		}
 	}
