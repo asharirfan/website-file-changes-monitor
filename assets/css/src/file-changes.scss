@@ -1,6 +1,15 @@
 /**
  * File Changes Styles
  */
+#adminmenu {
+	#toplevel_page_wfcm-file-changes {
+		a.wp-has-current-submenu {
+			.update-plugins {
+				background-color: #ea683c;
+			}
+		}
+	}
+}
 
 .tablenav {
 	.actions {
