@@ -80,7 +80,7 @@ class WFCM_Admin_Menus {
 	 * About Page.
 	 */
 	public function about_page() {
-		echo 'Hello, World';
+		WFCM_Admin_About::output();
 	}
 
 	/**
