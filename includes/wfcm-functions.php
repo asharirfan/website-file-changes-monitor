@@ -306,7 +306,7 @@ function wfcm_get_events_for_js( $events ) {
  */
 function wfcm_install() {
 	// WSAL plugins.
-	$wsal_plugins = array( 'wp-security-audit-log/wp-security-audit-log.php', 'wp-security-audit-log-premium/wp-security-audit-log.php' );
+	$wsal_plugins = array( 'wp-security-audit-log/wp-security-audit-log.php', 'wp-security-audit-log-premium/wp-security-audit-log.php', 'WP-Security-Audit-Log-Premium/wp-security-audit-log.php' );
 
 	// Only run this when installing for the first time.
 	if ( ! get_option( 'wfcm-version', false ) ) {
