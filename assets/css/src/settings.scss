@@ -123,4 +123,13 @@
 			padding: 0 5px;
 		}
 	}
+
+	#wfcm-system-info-textarea {
+		font-family: monospace;
+		white-space: pre;
+		overflow: auto;
+		width: 100%;
+		height: 400px;
+		margin: 0;
+	}
 }
