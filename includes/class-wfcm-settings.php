@@ -56,6 +56,7 @@ class WFCM_Settings {
 	public static function save_setting( $setting, $value ) {
 		update_option( WFCM_OPT_PREFIX . $setting, $value );
 		self::$settings[ $setting ] = $value;
+		delete_transient( 'wfcm_options' );
 	}
 
 	/**
