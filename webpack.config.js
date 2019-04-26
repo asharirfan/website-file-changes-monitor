@@ -140,6 +140,12 @@ module.exports = ( env, options ) => {
 				{
 					test: /\.s?css$/,
 					use: PluginStylesheetsConfig( mode )
+				},
+				{
+					test: /\.svg/,
+					use: {
+						loader: 'svg-url-loader'
+					}
 				}
 			]
 		},
