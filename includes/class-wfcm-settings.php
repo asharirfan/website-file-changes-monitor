@@ -84,8 +84,8 @@ class WFCM_Settings {
 		return array(
 			'enabled'       => self::get_setting( 'keep-log', 'yes' ),
 			'type'          => self::get_setting( 'scan-type', array( 'added', 'deleted', 'modified' ) ),
-			'frequency'     => self::get_setting( 'scan-frequency', 'weekly' ),
-			'hour'          => self::get_setting( 'scan-hour', '08' ),
+			'frequency'     => self::get_setting( 'scan-frequency', 'daily' ),
+			'hour'          => self::get_setting( 'scan-hour', '02' ),
 			'day'           => self::get_setting( 'scan-day', '1' ),
 			'date'          => self::get_setting( 'scan-date', '01' ),
 			'directories'   => self::get_setting( 'scan-directories', $default_dirs ),
