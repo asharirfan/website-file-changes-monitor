@@ -313,6 +313,13 @@ function wfcm_install() {
 		foreach ( $wsal_plugins as $plugin ) {
 			if ( is_plugin_active( $plugin ) ) {
 				wfcm_save_setting( 'admin-notices', array( 'wsal' => true ) );
+
+				// Get instance of WSAL.
+				$wsal            = WpSecurityAuditLog::GetInstance();
+				$excluded_cpts   = $wsal->GetGlobalOption( 'custom-post-types', '' );
+				$excluded_cpts   = explode( ',', $excluded_cpts );
+				$excluded_cpts[] = 'wfcm_file_event';
+				$wsal->settings->set_excluded_post_types( $excluded_cpts );
 			}
 		}
 	}
