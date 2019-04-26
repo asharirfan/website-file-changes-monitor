@@ -820,7 +820,7 @@ class WFCM_Monitor {
 					// File data.
 					$files[ $absolute_name ] = @md5_file( $absolute_name ); // File hash.
 				} else {
-					if ( ! in_array( $absolute_name, $admin_notices['filesize-limit'], true ) ) {
+					if ( ! isset( $admin_notices['filesize-limit'] ) || ! in_array( $absolute_name, $admin_notices['filesize-limit'], true ) ) {
 						// File size is more than the limit.
 						array_push( $files_over_limit, $absolute_name );
 					}
