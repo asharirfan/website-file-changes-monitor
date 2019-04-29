@@ -327,3 +327,71 @@ function wfcm_install() {
 	update_option( 'wfcm-version', wfcm_instance()->version );
 	wfcm_set_site_content();
 }
+
+/**
+ * Returns site server directories.
+ *
+ * @param string $context - Context of the directories.
+ * @return array
+ */
+function wfcm_get_server_directories( $context = '' ) {
+	$wp_directories = array();
+
+	// Get WP uploads directory.
+	$wp_uploads  = wp_upload_dir();
+	$uploads_dir = $wp_uploads['basedir'];
+
+	if ( 'display' === $context ) {
+		$wp_directories = array(
+			'root'           => __( 'Root directory of WordPress (excluding sub directories)', 'website-file-changes-monitor' ),
+			'wp-admin'       => __( 'WP Admin directory (/wp-admin/)', 'website-file-changes-monitor' ),
+			WPINC            => __( 'WP Includes directory (/wp-includes/)', 'website-file-changes-monitor' ),
+			WP_CONTENT_DIR   => __( '/wp-content/ directory (other than the plugins, themes & upload directories)', 'website-file-changes-monitor' ),
+			get_theme_root() => __( 'Themes directory (/wp-content/themes/)', 'website-file-changes-monitor' ),
+			WP_PLUGIN_DIR    => __( 'Plugins directory (/wp-content/plugins/)', 'website-file-changes-monitor' ),
+			$uploads_dir     => __( 'Uploads directory (/wp-content/uploads/)', 'website-file-changes-monitor' ),
+		);
+
+		if ( is_multisite() ) {
+			// Upload directories of subsites.
+			$wp_directories[ $uploads_dir . '/sites' ] = __( 'Uploads directory of all sub sites on this network (/wp-content/sites/*)', 'website-file-changes-monitor' );
+		}
+	} else {
+		// Server directories.
+		$wp_directories = array(
+			'',               // Root directory.
+			'wp-admin',       // WordPress Admin.
+			WPINC,            // wp-includes.
+			WP_CONTENT_DIR,   // wp-content.
+			get_theme_root(), // Themes.
+			WP_PLUGIN_DIR,    // Plugins.
+			$uploads_dir,     // Uploads.
+		);
+	}
+
+	// Prepare directories path.
+	foreach ( $wp_directories as $index => $server_dir ) {
+		if ( 'display' === $context && false !== strpos( $index, ABSPATH ) ) {
+			unset( $wp_directories[ $index ] );
+			$index = untrailingslashit( $index );
+			$index = wfcm_get_server_directory( $index );
+		} else {
+			$server_dir = untrailingslashit( $server_dir );
+			$server_dir = wfcm_get_server_directory( $server_dir );
+		}
+
+		$wp_directories[ $index ] = $server_dir;
+	}
+
+	return $wp_directories;
+}
+
+/**
+ * Returns a WP directory without ABSPATH.
+ *
+ * @param string $directory - Directory.
+ * @return string
+ */
+function wfcm_get_server_directory( $directory ) {
+	return preg_replace( '/^' . preg_quote( ABSPATH, '/' ) . '/', '', $directory );
+}

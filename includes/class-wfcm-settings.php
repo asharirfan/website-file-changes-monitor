@@ -75,11 +75,7 @@ class WFCM_Settings {
 	 * @return array
 	 */
 	public static function get_monitor_settings() {
-		if ( ! is_multisite() ) {
-			$default_dirs = array( 'root', 'wp-admin', 'wp-includes', 'wp-content', 'wp-content/themes', 'wp-content/plugins', 'wp-content/uploads' );
-		} else {
-			$default_dirs = array( 'root', 'wp-admin', 'wp-includes', 'wp-content', 'wp-content/themes', 'wp-content/plugins', 'wp-content/uploads', 'wp-content/uploads/sites' );
-		}
+		$default_dirs = array_keys( wfcm_get_server_directories( 'display' ) );
 
 		return array(
 			'enabled'       => self::get_setting( 'keep-log', 'yes' ),
