@@ -95,20 +95,7 @@ $scan_date = array(
 );
 
 // WP Directories.
-$wp_directories = array(
-	'root'               => __( 'Root directory of WordPress (excluding sub directories)', 'website-file-changes-monitor' ),
-	'wp-admin'           => __( 'WP Admin directory (/wp-admin/)', 'website-file-changes-monitor' ),
-	'wp-includes'        => __( 'WP Includes directory (/wp-includes/)', 'website-file-changes-monitor' ),
-	'wp-content'         => __( '/wp-content/ directory (other than the plugins, themes & upload directories)', 'website-file-changes-monitor' ),
-	'wp-content/themes'  => __( 'Themes directory (/wp-content/themes/)', 'website-file-changes-monitor' ),
-	'wp-content/plugins' => __( 'Plugins directory (/wp-content/plugins/)', 'website-file-changes-monitor' ),
-	'wp-content/uploads' => __( 'Uploads directory (/wp-content/uploads/)', 'website-file-changes-monitor' ),
-);
-
-if ( is_multisite() ) {
-	// Upload directories of subsites.
-	$wp_directories['wp-content/uploads/sites'] = __( 'Uploads directory of all sub sites on this network (/wp-content/sites/*)', 'website-file-changes-monitor' );
-}
+$wp_directories = wfcm_get_server_directories( 'display' );
 
 $wp_directories = apply_filters( 'wfcm_file_changes_scan_directories', $wp_directories );
 
