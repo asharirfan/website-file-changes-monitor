@@ -5,7 +5,7 @@ License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Tags: file monitor, file integrity scanner, file checker, file scanner, file security, security, file changes, file changes scanner
 Requires at least: 4.5
-Tested up to: 5.1.1
+Tested up to: 5.2
 Stable tag: 1.0.0
 Requires PHP: 5.6.20
 
