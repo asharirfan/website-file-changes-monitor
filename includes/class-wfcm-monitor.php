@@ -101,6 +101,13 @@ class WFCM_Monitor {
 	private $files_to_exclude = array();
 
 	/**
+	 * WP uploads directory.
+	 *
+	 * @var array
+	 */
+	private $uploads_dir = array();
+
+	/**
 	 * Class constants.
 	 */
 	const SCAN_DAILY      = 'daily';
@@ -258,26 +265,8 @@ class WFCM_Monitor {
 		// Set the options name for file list.
 		$file_list = "local-files-$next_to_scan";
 
-		// Prepare directories array.
-		// @todo Store this in transient to cache the value. We don't need to load it every time.
-		$uploads_dir = wp_upload_dir();
-
 		// Server directories.
-		$server_dirs = array(
-			'',                         // Root directory.
-			'wp-admin',                 // WordPress Admin.
-			WPINC,                      // wp-includes.
-			WP_CONTENT_DIR,             // wp-content.
-			WP_CONTENT_DIR . '/themes', // Themes.
-			WP_PLUGIN_DIR,              // Plugins.
-			$uploads_dir['basedir'],    // Uploads.
-		);
-
-		// Prepare directories path.
-		foreach ( $server_dirs as $index => $server_dir ) {
-			$server_dir            = untrailingslashit( $server_dir );
-			$server_dirs[ $index ] = preg_replace( '/^' . preg_quote( ABSPATH, '/' ) . '/', '', $server_dir );
-		}
+		$server_dirs = wfcm_get_server_directories();
 
 		// Get directory path to scan.
 		$path_to_scan = $server_dirs[ $next_to_scan ];
@@ -589,8 +578,11 @@ class WFCM_Monitor {
 
 		// If multisite then remove all the subsites uploads of multisite from scan directories.
 		if ( is_multisite() ) {
+			$uploads_dir         = wfcm_get_server_directory( $this->get_uploads_dir_path() );
+			$mu_uploads_site_dir = $uploads_dir . '/sites'; // Multsite uploads directory.
+
 			foreach ( $scan_directories as $index => $dir ) {
-				if ( false !== strpos( $dir, 'wp-content/uploads/sites' ) ) {
+				if ( false !== strpos( $dir, $mu_uploads_site_dir ) ) {
 					unset( $scan_directories[ $index ] );
 				}
 			}
@@ -720,6 +712,9 @@ class WFCM_Monitor {
 		$files_over_limit = array();                                      // Array of files which are over their file size limit.
 		$admin_notices    = wfcm_get_setting( 'admin-notices', array() ); // Get admin notices.
 
+		$uploads_dir         = wfcm_get_server_directory( $this->get_uploads_dir_path() );
+		$mu_uploads_site_dir = $uploads_dir . '/sites'; // Multsite uploads directory.
+
 		// Scan the directory for files.
 		while ( false !== ( $item = @readdir( $dir_handle ) ) ) {
 			// Ignore `.` and `..` from directory.
@@ -732,12 +727,7 @@ class WFCM_Monitor {
 				continue;
 			}
 
-			// If we're on root then ignore `wp-admin`, `wp-content` & `wp-includes`.
-			if ( empty( $path ) && ( false !== strpos( $item, 'wp-admin' ) || false !== strpos( $item, 'wp-content' ) || false !== strpos( $item, 'wp-includes' ) ) ) {
-				continue;
-			}
-
-			// Ignore `.git`, `.svn`, & `node_modules` from scan.
+			// Ignore .git, .svn, & node_modules from scan.
 			if ( false !== strpos( $item, '.git' ) || false !== strpos( $item, '.svn' ) || false !== strpos( $item, 'node_modules' ) ) {
 				continue;
 			}
@@ -750,6 +740,11 @@ class WFCM_Monitor {
 				// If path is empty then it is root.
 				$relative_name = $path . $item;     // Relative file path w.r.t. the location in 7 major folders.
 				$absolute_name = $dir_path . $item; // Complete file path w.r.t. ABSPATH.
+			}
+
+			// If we're on root then ignore `wp-admin`, `wp-content` & `wp-includes`.
+			if ( empty( $path ) && ( false !== strpos( $absolute_name, 'wp-admin' ) || false !== strpos( $absolute_name, WP_CONTENT_DIR ) || false !== strpos( $absolute_name, WPINC ) ) ) {
+				continue;
 			}
 
 			// Check for directory.
@@ -777,9 +772,9 @@ class WFCM_Monitor {
 					 * Check if `wp-content/uploads/sites` is present in the
 					 * relative name of the directory & it is allowed to scan.
 					 */
-					if ( false !== strpos( $relative_name, 'wp-content/uploads/sites' ) && in_array( 'wp-content/uploads/sites', $directories, true ) ) {
+					if ( false !== strpos( $relative_name, $mu_uploads_site_dir ) && in_array( $mu_uploads_site_dir, $directories, true ) ) {
 						$files = array_merge( $files, $this->scan_path( $relative_name ) );
-					} elseif ( false !== strpos( $relative_name, 'wp-content/uploads/sites' ) && ! in_array( 'wp-content/uploads/sites', $directories, true ) ) {
+					} elseif ( false !== strpos( $relative_name, $mu_uploads_site_dir ) && ! in_array( $mu_uploads_site_dir, $directories, true ) ) {
 						// If `wp-content/uploads/sites` is not allowed to scan then skip the loop.
 						continue;
 					} else {
@@ -868,16 +863,16 @@ class WFCM_Monitor {
 	 */
 	public function filter_scan_files( $scan_files, $path_to_scan ) {
 		// If the path to scan is of plugins.
-		if ( false !== strpos( $path_to_scan, 'wp-content/plugins' ) ) {
+		if ( false !== strpos( $path_to_scan, wfcm_get_server_directory( WP_PLUGIN_DIR ) ) ) {
 			// Filter plugin files.
 			$scan_files = $this->filter_excluded_scan_files( $scan_files, 'plugins' );
-		} elseif ( false !== strpos( $path_to_scan, 'wp-content/themes' ) ) { // And if the path to scan is of themes then.
+		} elseif ( false !== strpos( $path_to_scan, wfcm_get_server_directory( get_theme_root() ) ) ) { // And if the path to scan is of themes then.
 			// Filter theme files.
 			$scan_files = $this->filter_excluded_scan_files( $scan_files, 'themes' );
 		} elseif (
-			empty( $path_to_scan )                              // Root path.
-			|| false !== strpos( $path_to_scan, 'wp-admin' )    // WP Admin.
-			|| false !== strpos( $path_to_scan, 'wp-includes' ) // WP Includes.
+			empty( $path_to_scan )                           // Root path.
+			|| false !== strpos( $path_to_scan, 'wp-admin' ) // WP Admin.
+			|| false !== strpos( $path_to_scan, WPINC )      // WP Includes.
 		) {
 			// Get `site_content` option.
 			$site_content = wfcm_get_setting( WFCM_Settings::$site_content );
@@ -987,7 +982,7 @@ class WFCM_Monitor {
 						}
 					}
 				}
-			} elseif ( ! $excluded_type || in_array( $excluded_type, array( 'wp-admin', 'wp-includes' ), true ) ) {
+			} elseif ( ! $excluded_type || in_array( $excluded_type, array( 'wp-admin', WPINC ), true ) ) {
 				// An array of content to be stored as meta for event.
 				$event_content = array();
 
@@ -1036,7 +1031,7 @@ class WFCM_Monitor {
 		}
 
 		// If path to scan is of plugins then empty the skip plugins array.
-		if ( false !== strpos( $path_to_scan, 'wp-content/plugins' ) ) {
+		if ( false !== strpos( $path_to_scan, wfcm_get_server_directory( WP_PLUGIN_DIR ) ) ) {
 			// Get contents list.
 			$site_content = wfcm_get_setting( WFCM_Settings::$site_content, false );
 
@@ -1047,7 +1042,7 @@ class WFCM_Monitor {
 			wfcm_save_setting( WFCM_Settings::$site_content, $site_content );
 
 			// If path to scan is of themes then empty the skip themes array.
-		} elseif ( false !== strpos( $path_to_scan, 'wp-content/themes' ) ) {
+		} elseif ( false !== strpos( $path_to_scan, wfcm_get_server_directory( get_theme_root() ) ) ) {
 			// Get contents list.
 			$site_content = wfcm_get_setting( WFCM_Settings::$site_content, false );
 
@@ -1135,7 +1130,7 @@ class WFCM_Monitor {
 		} elseif ( '/themes' === $dirname ) {
 			$dir_path      = untrailingslashit( WP_CONTENT_DIR ) . $directory;
 			$event_context = __( 'Theme Update', 'website-file-changes-monitor' );
-		} elseif ( ABSPATH === $directory || false !== strpos( $directory, 'wp-admin' ) || false !== strpos( $directory, 'wp-includes' ) ) {
+		} elseif ( ABSPATH === $directory || false !== strpos( $directory, 'wp-admin' ) || false !== strpos( $directory, WPINC ) ) {
 			$dir_path      = $directory;
 			$event_context = __( 'Core Update', 'website-file-changes-monitor' );
 		}
@@ -1151,6 +1146,18 @@ class WFCM_Monitor {
 		if ( in_array( 'modified', $this->scan_settings['type'], true ) && count( $files_changed ) > 0 ) {
 			wfcm_create_directory_event( 'modified', $dir_path, array_values( $files_changed ), $event_context );
 		}
+	}
+
+	/**
+	 * Returns the path of WP uploads directory.
+	 *
+	 * @return string
+	 */
+	private function get_uploads_dir_path() {
+		if ( empty( $this->uploads_dir ) ) {
+			$this->uploads_dir = wp_upload_dir(); // Get WP uploads directory.
+		}
+		return $this->uploads_dir['basedir'];
 	}
 }
 

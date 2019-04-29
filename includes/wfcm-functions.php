@@ -374,10 +374,10 @@ function wfcm_get_server_directories( $context = '' ) {
 		if ( 'display' === $context && false !== strpos( $index, ABSPATH ) ) {
 			unset( $wp_directories[ $index ] );
 			$index = untrailingslashit( $index );
-			$index = preg_replace( '/^' . preg_quote( ABSPATH, '/' ) . '/', '', $index );
+			$index = wfcm_get_server_directory( $index );
 		} else {
 			$server_dir = untrailingslashit( $server_dir );
-			$server_dir = preg_replace( '/^' . preg_quote( ABSPATH, '/' ) . '/', '', $server_dir );
+			$server_dir = wfcm_get_server_directory( $server_dir );
 		}
 
 		$wp_directories[ $index ] = $server_dir;
