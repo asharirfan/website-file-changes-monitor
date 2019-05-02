@@ -19,7 +19,7 @@ Identify leftover files that can lead to sensitive business & technical data exp
 
 Everyone who owns a WordPress website knows how difficult it is to manage the site's files. Leftover backup and source code files are very common, and they are the number one source of sensitive data breaches. Also, in case of a successful hack attack it is almost impossible to detect the infiltration and identify all the source code changes!
 
-Use the Website File Changes Monitor plugn to easily spot leftover files, injected malware and code changes! Remove files that could leave you expose and clean malware infections at the earliest possible.
+Use the Website File Changes Monitor plugin to easily spot leftover files, injected malware and code changes! Remove files that could leave you expose and clean malware infections at the earliest possible.
 
 ### Why Do You Need a Website File Changes Monitor?
 
