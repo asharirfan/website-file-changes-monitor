@@ -9,11 +9,11 @@ export default class EventsTableHead extends Component {
 		return (
 			<thead>
 				<td className="check-column"><input type="checkbox" name="select-all" checked={this.props.selectAll} onChange={this.props.selectAllEvents} /></td>
-				<th>Path</th>
-				<th className="column-event-name">Name</th>
-				<th className="column-content-type">Type</th>
-				<th className="column-event-action">Mark as Read</th>
-				<th className="column-event-action">Add to Exclude</th>
+				<th>{wfcmFileChanges.tableHead.path}</th>
+				<th className="column-event-name">{wfcmFileChanges.tableHead.name}</th>
+				<th className="column-content-type">{wfcmFileChanges.tableHead.type}</th>
+				<th className="column-event-action">{wfcmFileChanges.tableHead.markAsRead}</th>
+				<th className="column-event-exclude">{wfcmFileChanges.tableHead.exclude}</th>
 				<th className="column-event-content"></th>
 			</thead>
 		);

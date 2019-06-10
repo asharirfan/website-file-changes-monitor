@@ -173,15 +173,30 @@ class WFCM_Admin_File_Changes {
 			'wfcm-file-changes',
 			'wfcmFileChanges',
 			array(
-				'security'   => wp_create_nonce( 'wp_rest' ),
-				'fileEvents' => array(
+				'security'    => wp_create_nonce( 'wp_rest' ),
+				'fileEvents'  => array(
 					'get'    => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$events_base ) ),
 					'delete' => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$events_base ) ),
 				),
-				'labels'     => array(
-					'createdFiles'  => __( 'Created Files', 'website-file-changes-monitor' ),
+				'pageHead'    => __( 'Website File Changes Monitor', 'website-file-changes-monitor' ),
+				'labels'      => array(
+					'addedFiles'    => __( 'Added Files', 'website-file-changes-monitor' ),
 					'deletedFiles'  => __( 'Deleted Files', 'website-file-changes-monitor' ),
 					'modifiedFiles' => __( 'Modified Files', 'website-file-changes-monitor' ),
+				),
+				'bulkActions' => array(
+					'screenReader' => __( 'Select bulk action', 'website-file-changes-monitor' ),
+					'bulkActions'  => __( 'Bulk Actions', 'website-file-changes-monitor' ),
+					'markAsRead'   => __( 'Mark as Read', 'website-file-changes-monitor' ),
+					'exclude'      => __( 'Exclude', 'website-file-changes-monitor' ),
+					'apply'        => __( 'Apply', 'website-file-changes-monitor' ),
+				),
+				'tableHead'   => array(
+					'path'       => __( 'Path', 'website-file-changes-monitor' ),
+					'name'       => __( 'Name', 'website-file-changes-monitor' ),
+					'type'       => __( 'Type', 'website-file-changes-monitor' ),
+					'markAsRead' => __( 'Mark as Read', 'website-file-changes-monitor' ),
+					'exclude'    => __( 'Exclude from scans', 'website-file-changes-monitor' ),
 				),
 			)
 		);

@@ -29,6 +29,9 @@
 .wp-list-table .column-event-action {
   width: 12%; }
 
+.wp-list-table .column-event-exclude {
+  width: 14%; }
+
 .wp-list-table .column-event-content {
   width: 25px; }
 

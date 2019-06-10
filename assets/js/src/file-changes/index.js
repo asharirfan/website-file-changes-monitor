@@ -10,7 +10,7 @@ export default class FileChanges extends Component {
 	render() {
 		return (
 			<div>
-				<h1>Website File Changes Monitor</h1>
+				<h1>{wfcmFileChanges.pageHead}</h1>
 				<AddedFilesTable />
 				<DeletedFilesTable />
 				<ModifiedFilesTable />
