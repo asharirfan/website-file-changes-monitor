@@ -809,11 +809,13 @@ class WFCM_Monitor {
 				}
 
 				// Check file size limit.
-				if ( filesize( $absolute_name ) < $file_size_limit ) {
+				if ( ! is_link( $absolute_name ) && filesize( $absolute_name ) < $file_size_limit ) {
 					$this->scan_file_count++;
 
 					// File data.
 					$files[ $absolute_name ] = @md5_file( $absolute_name ); // File hash.
+				} elseif ( is_link( $absolute_name ) ) {
+					$files[ $absolute_name ] = '';
 				} else {
 					if ( ! isset( $admin_notices['filesize-limit'] ) || ! in_array( $absolute_name, $admin_notices['filesize-limit'], true ) ) {
 						// File size is more than the limit.
