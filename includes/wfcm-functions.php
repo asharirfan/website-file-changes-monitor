@@ -343,7 +343,7 @@ function wfcm_get_server_directories( $context = '' ) {
 
 	if ( 'display' === $context ) {
 		$wp_directories = array(
-			'root'           => __( 'Root directory of WordPress (excluding sub directories)', 'website-file-changes-monitor' ),
+			'root'           => __( 'Root directory of WordPress (except wp-admin, wp-content and wp-includes)', 'website-file-changes-monitor' ),
 			'wp-admin'       => __( 'WP Admin directory (/wp-admin/)', 'website-file-changes-monitor' ),
 			WPINC            => __( 'WP Includes directory (/wp-includes/)', 'website-file-changes-monitor' ),
 			WP_CONTENT_DIR   => __( '/wp-content/ directory (other than the plugins, themes & upload directories)', 'website-file-changes-monitor' ),
