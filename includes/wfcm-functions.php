@@ -456,3 +456,73 @@ function wfcm_get_time_format() {
 	return $time_format;
 }
 
+/**
+ * Send file changes email.
+ *
+ * @param array $scan_changes_count - Array of changes count.
+ */
+function wfcm_send_changes_email( $scan_changes_count ) {
+	$send_mail       = false;
+	$admin_email     = get_bloginfo( 'admin_email' );
+	$home_url        = home_url();
+	$safe_url        = str_replace( array( 'http://', 'https://' ), '', $home_url );
+	$datetime_format = wfcm_get_datetime_format();
+	$date_time       = str_replace(
+		'$$$',
+		substr( number_format( fmod( current_time( 'timestamp' ), 1 ), 3 ), 2 ),
+		date( $datetime_format, current_time( 'timestamp' ) )
+	);
+
+	/* Translators: %s: Home URL */
+	$subject = sprintf( __( 'File changes detected on site %s during last file scan', 'website-file-changes-monitor' ), $safe_url );
+
+	/* Translators: 1. Home URL, 2. Date and time */
+	$body = '<p>' . sprintf( __( 'The Website File Changes Monitor plugin detected the following file changes on the website %1$s during the last scan on %2$s:', 'website-file-changes-monitor' ), '<a href="' . $home_url . '" target="_blank">' . $safe_url . '</a>', $date_time ) . '</p>';
+
+	$body .= '<ul>';
+	if ( $scan_changes_count['files_added'] > 0 ) {
+		/* Translators: %d: Added files count */
+		$body     .= '<li>' . sprintf( __( '%d files added', 'website-file-changes-monitor' ), $scan_changes_count['files_added'] ) . '</li>';
+		$send_mail = true;
+	}
+
+	if ( $scan_changes_count['files_deleted'] > 0 ) {
+		/* Translators: %d: Deleted files count */
+		$body     .= '<li>' . sprintf( __( '%d files deleted', 'website-file-changes-monitor' ), $scan_changes_count['files_deleted'] ) . '</li>';
+		$send_mail = true;
+	}
+
+	if ( $scan_changes_count['files_modified'] > 0 ) {
+		/* Translators: %d: Modified files count */
+		$body     .= '<li>' . sprintf( __( '%d files modified', 'website-file-changes-monitor' ), $scan_changes_count['files_modified'] ) . '</li>';
+		$send_mail = true;
+	}
+
+	if ( $scan_changes_count['plugin_installs'] > 0 || $scan_changes_count['plugin_updates'] > 0 || $scan_changes_count['plugin_uninstalls'] > 0 ) {
+		/* Translators: %d: Plugin installs/updates/deletions count */
+		$body     .= '<li>' . sprintf( __( '%d plugin installs/updates/deletions', 'website-file-changes-monitor' ), $scan_changes_count['plugin_installs'] + $scan_changes_count['plugin_updates'] + $scan_changes_count['plugin_uninstalls'] ) . '</li>';
+		$send_mail = true;
+	}
+
+	if ( $scan_changes_count['theme_installs'] > 0 || $scan_changes_count['theme_updates'] > 0 || $scan_changes_count['theme_uninstalls'] > 0 ) {
+		/* Translators: %d: Themes installs/updates/deletions count */
+		$body     .= '<li>' . sprintf( __( '%d themes installs/updates/deletions', 'website-file-changes-monitor' ), $scan_changes_count['theme_installs'] + $scan_changes_count['theme_updates'] + $scan_changes_count['theme_uninstalls'] ) . '</li>';
+		$send_mail = true;
+	}
+
+	if ( $scan_changes_count['wp_core_update'] > 0 ) {
+		/* Translators: %d: WordPress core update count */
+		$body     .= '<li>' . sprintf( __( '%d WordPress core update', 'website-file-changes-monitor' ), $scan_changes_count['wp_core_update'] ) . '</li>';
+		$send_mail = true;
+	}
+	$body .= '</ul>';
+
+	$body .= '<p>' . __( 'Visit the File Monitor in the WordPress dashboard to check the file changes.', 'website-file-changes-monitor' ) . '</p>';
+
+	/* Translators: %s: Plugin WP Hyperlink */
+	$body .= '<p>' . sprintf( __( 'This file integrity scan was done with the %s.', 'website-file-changes-monitor' ), '<a href="https://wordpress.org/plugins/website-file-changes-monitor/" target="_blank">' . __( 'Website File Changes Monitor plugin', 'website-file-changes-monitor' ) . '</a>' ) . '</p>';
+
+	if ( $send_mail ) {
+		WFCM_Email::send( $admin_email, $subject, $body );
+	}
+}
