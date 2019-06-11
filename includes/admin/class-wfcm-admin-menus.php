@@ -22,6 +22,8 @@ class WFCM_Admin_Menus {
 		add_action( 'admin_menu', array( $this, 'settings_menu' ), 20 );
 		add_action( 'admin_menu', array( $this, 'about_menu' ), 30 );
 		add_action( 'admin_menu', array( $this, 'add_events_count' ), 40 );
+
+		add_action( 'admin_print_styles', array( $this, 'admin_styles' ) );
 	}
 
 	/**
@@ -34,7 +36,16 @@ class WFCM_Admin_Menus {
 	 * 3. Help & About.
 	 */
 	public function add_admin_menu() {
-		add_menu_page( __( 'Website File Changes Monitor', 'website-file-changes-monitor' ), __( 'Files Monitor', 'website-file-changes-monitor' ), 'manage_options', 'wfcm-file-changes', null, null, '75' );
+		add_menu_page(
+			__( 'Website File Changes Monitor', 'website-file-changes-monitor' ),
+			__( 'Files Monitor', 'website-file-changes-monitor' ),
+			'manage_options',
+			'wfcm-file-changes',
+			null,
+			WFCM_BASE_URL . 'assets/img/wfcm-menu-icon.svg',
+			'75'
+		);
+
 		add_submenu_page( 'wfcm-file-changes', __( 'Website File Changes Monitor', 'website-file-changes-monitor' ), __( 'Files Monitor', 'website-file-changes-monitor' ), 'manage_options', 'wfcm-file-changes', array( $this, 'file_changes_page' ) );
 	}
 
@@ -101,6 +112,15 @@ class WFCM_Admin_Menus {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Print admin styles.
+	 */
+	public function admin_styles() {
+		?>
+		<style>#adminmenu .toplevel_page_wfcm-file-changes .wp-menu-image img { padding: 5px 0 0 0; }</style>
+		<?php
 	}
 }
 
