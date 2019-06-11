@@ -353,12 +353,12 @@ $disabled = 'no' === $settings['enabled'] ? 'disabled' : false;
 				<th><label for="wfcm-file-changes"><?php esc_html_e( 'Delete plugin data upon uninstall', 'website-file-changes-monitor' ); ?></label></th>
 				<td>
 					<fieldset>
-						<label><input name="wfcm-settings[keep-data]" type="checkbox" value="1" <?php checked( $settings['keep-data'] ); ?>></label>
+						<label><input name="wfcm-settings[delete-data]" type="checkbox" value="1" <?php checked( $settings['delete-data'] ); ?>></label>
 					</fieldset>
 				</td>
 			</tr>
 		</table>
-		<!-- Disable File Changes -->
+		<!-- Delete plugin data and settings -->
 
 		<?php
 		wp_nonce_field( 'wfcm-save-admin-settings' );
