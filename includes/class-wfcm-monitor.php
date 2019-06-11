@@ -1104,6 +1104,17 @@ class WFCM_Monitor {
 			// Get `site_content` option.
 			$site_content = wfcm_get_setting( WFCM_Settings::$site_content, false );
 
+			// Check WP core update.
+			if ( $site_content->skip_core ) {
+				$this->scan_changes_count['wp_core_update'] = 1;
+			}
+
+			// Send email notification.
+			wfcm_send_changes_email( $this->scan_changes_count );
+
+			// Delete changes count for this scan.
+			$this->scan_changes_count( 'delete' );
+
 			// Check if the option is instance of stdClass.
 			if ( false !== $site_content && $site_content instanceof stdClass ) {
 				$site_content->skip_core  = false;   // Reset skip core after the scan is complete.
@@ -1206,13 +1217,13 @@ class WFCM_Monitor {
 	}
 
 	/**
-	 * Scan changes count; get or save.
+	 * Scan changes count; get, save, or delete.
 	 *
-	 * @param string $action - Count action, get or save.
+	 * @param string $action - Count action; get, save, or delete.
 	 */
 	private function scan_changes_count( $action = 'get' ) {
 		if ( 'get' === $action ) {
-			$this->scan_changes_count = get_transient( 'scan-changes-count' );
+			$this->scan_changes_count = get_transient( 'wfcm-scan-changes-count' );
 
 			if ( false === $this->scan_changes_count ) {
 				$this->scan_changes_count = array(
@@ -1225,12 +1236,13 @@ class WFCM_Monitor {
 					'theme_installs'    => 0,
 					'theme_updates'     => 0,
 					'theme_uninstalls'  => 0,
+					'wp_core_update'    => 0,
 				);
 			}
 		} elseif ( 'save' === $action ) {
-			set_transient( 'scan-changes-count', $this->scan_changes_count, DAY_IN_SECONDS );
+			set_transient( 'wfcm-scan-changes-count', $this->scan_changes_count, DAY_IN_SECONDS );
 		} elseif ( 'delete' === $action ) {
-			delete_transient( 'scan-changes-count' );
+			delete_transient( 'wfcm-scan-changes-count' );
 		}
 	}
 }
