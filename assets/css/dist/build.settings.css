@@ -7,6 +7,11 @@
 .wfcm-settings td fieldset label.hidden {
   display: none; }
 
+.wfcm-settings .wfcm-settings-danger {
+  border: 1px solid #d73a49; }
+  .wfcm-settings .wfcm-settings-danger th {
+    padding: 20px 0 20px 10px; }
+
 .wfcm-files-container {
   display: table;
   margin-bottom: 5px; }

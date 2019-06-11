@@ -107,6 +107,7 @@ class WFCM_Admin_Settings {
 				'scan-exclude-dirs'  => array(),
 				'scan-exclude-files' => array(),
 				'scan-exclude-exts'  => array(),
+				'keep-data'          => false,
 			);
 			$wfcm_settings    = 'no' !== $wfcm_settings['keep-log'] ? wp_parse_args( $wfcm_settings, $exclude_settings ) : $wfcm_settings;
 

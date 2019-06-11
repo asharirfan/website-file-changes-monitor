@@ -348,6 +348,18 @@ $disabled = 'no' === $settings['enabled'] ? 'disabled' : false;
 		</table>
 		<!-- Disable File Changes -->
 
+		<table class="form-table wfcm-settings-danger">
+			<tr>
+				<th><label for="wfcm-file-changes"><?php esc_html_e( 'Delete plugin data upon uninstall', 'website-file-changes-monitor' ); ?></label></th>
+				<td>
+					<fieldset>
+						<label><input name="wfcm-settings[keep-data]" type="checkbox" value="1" <?php checked( $settings['keep-data'] ); ?>></label>
+					</fieldset>
+				</td>
+			</tr>
+		</table>
+		<!-- Disable File Changes -->
+
 		<?php
 		wp_nonce_field( 'wfcm-save-admin-settings' );
 		submit_button();
