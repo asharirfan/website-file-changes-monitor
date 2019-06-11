@@ -9,7 +9,7 @@
 
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
-wp_clear_scheduled_hook( WFCM_Monitor::$schedule_hook );
+wp_clear_scheduled_hook( 'wfcm_monitor_file_changes' );
 
 if ( get_option( 'wfcm-delete-data', false ) ) {
 	global $wpdb;
