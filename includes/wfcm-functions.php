@@ -395,3 +395,64 @@ function wfcm_get_server_directories( $context = '' ) {
 function wfcm_get_server_directory( $directory ) {
 	return preg_replace( '/^' . preg_quote( ABSPATH, '/' ) . '/', '', $directory );
 }
+
+/**
+ * Return the datetime format according the selected format
+ * of the website.
+ *
+ * @return string
+ */
+function wfcm_get_datetime_format() {
+	$date_time_format = wfcm_get_date_format() . ' ' . wfcm_get_time_format();
+	$wp_time_format   = get_option( 'time_format' ); // WP time format.
+
+	// Check if the time format does not have seconds.
+	if ( stripos( $wp_time_format, 's' ) === false ) {
+		if ( stripos( $wp_time_format, '.v' ) !== false ) {
+			$date_time_format = str_replace( '.v', '', $date_time_format );
+		}
+
+		$date_time_format .= ':s'; // Add seconds to time format.
+		$date_time_format .= '.$$$'; // Add milliseconds to time format.
+	} else {
+		// Check if the time format does have milliseconds.
+		if ( stripos( $wp_time_format, '.v' ) !== false ) {
+			$date_time_format = str_replace( '.v', '.$$$', $date_time_format );
+		} else {
+			$date_time_format .= '.$$$';
+		}
+	}
+
+	if ( stripos( $wp_time_format, 'A' ) !== false ) {
+		$date_time_format .= '&\n\b\s\p;A';
+	}
+
+	return $date_time_format;
+}
+
+/**
+ * Date Format from WordPress general settings.
+ *
+ * @return string
+ */
+function wfcm_get_date_format() {
+	$wp_date_format = get_option( 'date_format' );
+	$search         = array( 'F', 'M', 'n', 'j', ' ', '/', 'y', 'S', ',', 'l', 'D' );
+	$replace        = array( 'm', 'm', 'm', 'd', '-', '-', 'Y', '', '', '', '' );
+	$date_format    = str_replace( $search, $replace, $wp_date_format );
+	return $date_format;
+}
+
+/**
+ * Time Format from WordPress general settings.
+ *
+ * @return string
+ */
+function wfcm_get_time_format() {
+	$wp_time_format = get_option( 'time_format' );
+	$search         = array( 'a', 'A', 'T', ' ' );
+	$replace        = array( '', '', '', '' );
+	$time_format    = str_replace( $search, $replace, $wp_time_format );
+	return $time_format;
+}
+
