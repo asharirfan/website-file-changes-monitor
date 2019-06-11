@@ -24,6 +24,7 @@ class WFCM_Admin_Menus {
 		add_action( 'admin_menu', array( $this, 'add_events_count' ), 40 );
 
 		add_action( 'admin_print_styles', array( $this, 'admin_styles' ) );
+		add_filter( 'plugin_action_links_' . WFCM_BASE_NAME, array( $this, 'shortcut_links' ), 10, 1 );
 	}
 
 	/**
@@ -121,6 +122,19 @@ class WFCM_Admin_Menus {
 		?>
 		<style>#adminmenu .toplevel_page_wfcm-file-changes .wp-menu-image img { padding: 5px 0 0 0; }</style>
 		<?php
+	}
+
+	/**
+	 * Add shortcut links to plugins page.
+	 *
+	 * @param array $old_links - Array of old links.
+	 * @return array
+	 */
+	public function shortcut_links( $old_links ) {
+		$new_links[] = '<a href="' . add_query_arg( 'page', 'wfcm-file-changes', admin_url( 'admin.php' ) ) . '">' . __( 'See File Changes', 'website-file-changes-monitor' ) . '</a>';
+		$new_links[] = '<a href="' . add_query_arg( 'page', 'wfcm-settings', admin_url( 'admin.php' ) ) . '">' . __( 'Settings', 'website-file-changes-monitor' ) . '</a>';
+		$new_links[] = '<a href="' . add_query_arg( 'page', 'wfcm-about', admin_url( 'admin.php' ) ) . '">' . __( 'Support', 'website-file-changes-monitor' ) . '</a>';
+		return array_merge( $new_links, $old_links );
 	}
 }
 
