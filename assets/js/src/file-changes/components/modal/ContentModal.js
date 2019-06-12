@@ -77,7 +77,8 @@ const modalStyles = {
 		border: 'none',
 		borderRadius: '0',
 		padding: '0 16px 16px',
-		width: '650px'
+		width: '650px',
+		width: 'calc(100vw - 30%)'
 	}
 };
 
