@@ -192,19 +192,35 @@ class WFCM_REST_API {
 		// Get event params from request object.
 		$event_type = $rest_request->get_param( 'event_type' );
 		$paged      = $rest_request->get_param( 'paged' );
+		$per_page   = $rest_request->get_param( 'per-page' );
 
-		// Validate paged variable.
-		$paged = is_int( $paged ) ? $paged : (int) $paged;
+		// Validate request variables.
+		$paged    = is_int( $paged ) ? $paged : (int) $paged;
+		$per_page = 'false' === $per_page ? false : (int) $per_page;
 
 		if ( ! $event_type ) {
 			return new WP_Error( 'wfcm_empty_event_type', __( 'No event type specified for the request.', 'website-file-changes-monitor' ), array( 'status' => 404 ) );
+		}
+
+		// Get event type stored per page option.
+		$per_page_opt_name = $event_type . '-per-page';
+		$stored_per_page   = wfcm_get_setting( $per_page_opt_name );
+
+		if ( false === $per_page ) {
+			if ( ! $stored_per_page ) {
+				$per_page = 10;
+			} else {
+				$per_page = $stored_per_page;
+			}
+		} elseif ( $per_page !== $stored_per_page ) {
+			wfcm_save_setting( $per_page_opt_name, $per_page );
 		}
 
 		// Set events query arguments.
 		$event_args = array(
 			'status'         => 'unread',
 			'event_type'     => $event_type,
-			'posts_per_page' => 5,
+			'posts_per_page' => $per_page,
 			'paginate'       => true,
 			'paged'          => $paged,
 		);
