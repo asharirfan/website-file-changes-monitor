@@ -4,4 +4,5 @@
 import ReactDOM from 'react-dom';
 import FileChanges from './file-changes/index';
 
-ReactDOM.render( <FileChanges />, document.getElementById( 'wfcm-file-changes-view' ) );
+const fileChanges = document.getElementById( 'wfcm-file-changes-view' );
+ReactDOM.render( <FileChanges fileChangesView={fileChanges.dataset.view} />, fileChanges );

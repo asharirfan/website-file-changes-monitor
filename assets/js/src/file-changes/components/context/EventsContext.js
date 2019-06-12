@@ -64,12 +64,12 @@ export class EventsProvider extends Component {
 	/**
 	 * Query events from WP.
 	 */
-	async getFileEvents( paged = false ) {
+	async getFileEvents( paged = false, perPage = false ) {
 		if ( false === paged ) {
 			paged = this.state.paged;
 		}
 
-		const response = await FileEvents.getEvents( this.props.eventsType, paged );
+		const response = await FileEvents.getEvents( this.props.eventsType, paged, perPage );
 
 		if ( 0 === response.events.length && 0 !== ( paged - 1 ) ) {
 			this.getFileEvents( paged - 1 );
@@ -145,6 +145,15 @@ export class EventsProvider extends Component {
 	}
 
 	/**
+	 * Handles the number of items to display per page.
+	 *
+	 * @param {integer} items Number of items to display per page.
+	 */
+	handleShowItems( items ) {
+		this.getFileEvents( 1, items );
+	}
+
+	/**
 	 * Component render.
 	 */
 	render() {
@@ -158,7 +167,8 @@ export class EventsProvider extends Component {
 					markEventAsRead: this.markEventAsRead.bind( this ),
 					excludeEvent: this.excludeEvent.bind( this ),
 					handleBulkAction: this.handleBulkAction.bind( this ),
-					goToPage: this.goToPage.bind( this )
+					goToPage: this.goToPage.bind( this ),
+					handleShowItems: this.handleShowItems.bind( this )
 				}}
 			>
 				{this.props.children}

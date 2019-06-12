@@ -32,9 +32,10 @@ function getRestRequestObject( method, url, body = false ) {
  *
  * @param {string} eventType Event type: added, modified, deleted.
  * @param {integer} paged Page number.
+ * @param {integer} perPage Number of events per page.
  */
-async function getEvents( eventType, paged ) {
-	const requestUrl = `${wfcmFileChanges.fileEvents.get}/${eventType}?paged=${paged}`;
+async function getEvents( eventType, paged, perPage ) {
+	const requestUrl = `${wfcmFileChanges.fileEvents.get}/${eventType}?paged=${paged}&per-page=${perPage}`;
 	const request = getRestRequestObject( 'GET', requestUrl ); // Get REST request object.
 
 	// Send the request.

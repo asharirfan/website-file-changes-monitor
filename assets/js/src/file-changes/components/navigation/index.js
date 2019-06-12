@@ -5,17 +5,32 @@ import React from 'react';
 import { EventsContext } from '../context/EventsContext';
 import BulkActions from './BulkActions';
 import Pagination from './Pagination';
+import ShowItems from './ShowItems';
 
-const Navigation = () => {
+const Navigation = ( props ) => {
+	const position = props.position;
+
 	return (
-		<EventsContext.Consumer>
-			{ ({totalItems, maxPages, paged, goToPage, handleBulkAction}) => (
-				<div className="tablenav top">
-					<BulkActions handleBulkAction={handleBulkAction} />
-					<Pagination totalItems={totalItems} maxPages={maxPages} paged={paged} goToPage={goToPage} />
-				</div>
-			) }
-		</EventsContext.Consumer>
+		<React.Fragment>
+		{
+			'top' === position ?
+			<EventsContext.Consumer>
+				{ ({totalItems, maxPages, paged, goToPage, handleBulkAction}) => (
+					<div className="tablenav top">
+						<BulkActions handleBulkAction={handleBulkAction} />
+						<Pagination totalItems={totalItems} maxPages={maxPages} paged={paged} goToPage={goToPage} />
+					</div>
+				) }
+			</EventsContext.Consumer> :
+			<EventsContext.Consumer>
+				{ ({handleShowItems}) => (
+					<div className="tablenav botton">
+						<ShowItems handleShowItems={handleShowItems} />
+					</div>
+				) }
+			</EventsContext.Consumer>
+		}
+		</React.Fragment>
 	);
 };
 

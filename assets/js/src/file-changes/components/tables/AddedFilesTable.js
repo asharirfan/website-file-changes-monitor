@@ -12,8 +12,9 @@ export default class AddedFilesTable extends Component {
 			<section>
 				<EventsProvider eventsType="added">
 					<h2>{wfcmFileChanges.labels.addedFiles}</h2>
-					<Navigation />
+					<Navigation position="top" />
 					<EventsTable />
+					<Navigation position="bottom" />
 				</EventsProvider>
 			</section>
 		);
