@@ -38,6 +38,13 @@ class WFCM_Admin_File_Changes {
 	);
 
 	/**
+	 * Page tabs.
+	 *
+	 * @var array
+	 */
+	private static $tabs = array();
+
+	/**
 	 * Add admin message.
 	 *
 	 * @param string $key     - Message key.
@@ -120,11 +127,52 @@ class WFCM_Admin_File_Changes {
 	}
 
 	/**
+	 * Set tabs of the page.
+	 */
+	private static function set_tabs() {
+		self::$tabs = apply_filters(
+			'wfcm_admin_file_changes_page_tabs',
+			array(
+				'added-files'    => array(
+					'title' => __( 'Added Files', 'website-file-changes-monitor' ),
+					'link'  => self::get_page_url(),
+				),
+				'deleted-files'  => array(
+					'title' => __( 'Deleted Files', 'website-file-changes-monitor' ),
+					'link'  => add_query_arg( 'tab', 'deleted-files', self::get_page_url() ),
+				),
+				'modified-files' => array(
+					'title' => __( 'Modified Files', 'website-file-changes-monitor' ),
+					'link'  => add_query_arg( 'tab', 'modified-files', self::get_page_url() ),
+				),
+			)
+		);
+	}
+
+	/**
+	 * Get active tab.
+	 *
+	 * @return string
+	 */
+	private static function get_active_tab() {
+		return isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'added-files'; // phpcs:ignore
+	}
+
+	/**
+	 * Return page url.
+	 *
+	 * @return string
+	 */
+	public static function get_page_url() {
+		return add_query_arg( 'page', 'wfcm-file-changes', admin_url( 'admin.php' ) );
+	}
+
+	/**
 	 * Page View.
 	 */
 	public static function output() {
-		// Add notifications to the view.
-		self::add_messages();
+		self::add_messages(); // Add notifications to the view.
+		self::set_tabs();
 
 		$wp_version        = get_bloginfo( 'version' );
 		$suffix            = ( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? '' : '.min'; // Check for debug mode.
@@ -205,8 +253,7 @@ class WFCM_Admin_File_Changes {
 
 		// Display notifications of the view.
 		self::show_messages();
-		?>
-		<div class="wrap" id="wfcm-file-changes-view"></div>
-		<?php
+
+		require_once trailingslashit( dirname( __FILE__ ) ) . 'views/html-admin-file-changes.php';
 	}
 }
