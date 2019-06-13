@@ -101,6 +101,19 @@ final class Website_File_Changes_Monitor {
 	 */
 	public function register_hooks() {
 		register_activation_hook( WFCM_PLUGIN_FILE, 'wfcm_install' );
+		add_action( 'admin_init', array( $this, 'redirect_on_activation' ) );
+	}
+
+	/**
+	 * Redirect on activation.
+	 */
+	public function redirect_on_activation() {
+		if ( wfcm_get_setting( 'redirect-on-activate', false ) ) {
+			wfcm_delete_setting( 'redirect-on-activate' );
+			$redirect_url = add_query_arg( 'page', 'wfcm-file-changes', admin_url( 'admin.php' ) );
+			wp_safe_redirect( $redirect_url );
+			exit();
+		}
 	}
 
 	/**

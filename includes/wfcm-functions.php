@@ -326,6 +326,9 @@ function wfcm_install() {
 
 	update_option( 'wfcm-version', wfcm_instance()->version );
 	wfcm_set_site_content();
+
+	// Redirect option.
+	add_option( 'wfcm-redirect-on-activate', true );
 }
 
 /**
