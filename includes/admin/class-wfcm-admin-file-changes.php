@@ -246,6 +246,21 @@ class WFCM_Admin_File_Changes {
 					'markAsRead' => __( 'Mark as Read', 'website-file-changes-monitor' ),
 					'exclude'    => __( 'Exclude from scans', 'website-file-changes-monitor' ),
 				),
+				'monitor'     => array(
+					'start' => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$monitor_base . '/start' ) ),
+					'stop'  => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$monitor_base . '/stop' ) ),
+				),
+				'scanModal'   => array(
+					'dismiss'      => wfcm_get_setting( 'dismiss-instant-scan-modal', false ),
+					'adminAjax'    => admin_url( 'admin-ajax.php' ),
+					'scanNow'      => __( 'Launch Instant File Scan', 'website-file-changes-monitor' ),
+					'scanDismiss'  => __( 'Wait for Scheduled Scan', 'website-file-changes-monitor' ),
+					'scanning'     => __( 'Scanning...', 'website-file-changes-monitor' ),
+					'scanComplete' => __( 'Scan Complete!', 'website-file-changes-monitor' ),
+					'scanFailed'   => __( 'Scan Failed!', 'website-file-changes-monitor' ),
+					'initialMsg'   => __( 'The plugin will scan your website for file changes every day at 2:00 AM. You can either wait for the first scan to run or launch an instant scan now.', 'website-file-changes-monitor' ),
+					'afterScan'    => __( 'First scan completed. The plugin now has the signatures of the files and when it detect changes in future scans it will alert you.', 'website-file-changes-monitor' ),
+				),
 			)
 		);
 

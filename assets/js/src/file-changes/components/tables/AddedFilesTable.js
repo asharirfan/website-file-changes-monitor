@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import EventsTable from '../events-table';
 import Navigation from '../navigation';
 import { EventsProvider } from '../context/EventsContext';
+import ScanModal from '../modal/ScanModal';
 
 export default class AddedFilesTable extends Component {
 	render() {
@@ -16,6 +17,11 @@ export default class AddedFilesTable extends Component {
 					<EventsTable />
 					<Navigation position="bottom" />
 				</EventsProvider>
+				{
+					! wfcmFileChanges.scanModal.dismiss ?
+					<ScanModal /> :
+					null
+				}
 			</section>
 		);
 	}

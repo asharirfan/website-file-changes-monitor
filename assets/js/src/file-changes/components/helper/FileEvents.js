@@ -78,6 +78,7 @@ async function excludeEvent( id ) {
 }
 
 export default {
+	getRestRequestObject,
 	getEvents,
 	markEventAsRead,
 	excludeEvent

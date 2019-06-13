@@ -25,6 +25,7 @@ class WFCM_Admin_Menus {
 
 		add_action( 'admin_print_styles', array( $this, 'admin_styles' ) );
 		add_filter( 'plugin_action_links_' . WFCM_BASE_NAME, array( $this, 'shortcut_links' ), 10, 1 );
+		add_action( 'wp_ajax_wfcm_dismiss_instant_scan_modal', array( $this, 'dismiss_instant_scan_modal' ) );
 	}
 
 	/**
@@ -135,6 +136,15 @@ class WFCM_Admin_Menus {
 		$new_links[] = '<a href="' . add_query_arg( 'page', 'wfcm-settings', admin_url( 'admin.php' ) ) . '">' . __( 'Settings', 'website-file-changes-monitor' ) . '</a>';
 		$new_links[] = '<a href="' . add_query_arg( 'page', 'wfcm-about', admin_url( 'admin.php' ) ) . '">' . __( 'Support', 'website-file-changes-monitor' ) . '</a>';
 		return array_merge( $new_links, $old_links );
+	}
+
+	/**
+	 * Ajax handler to dismiss instant scan modal.
+	 */
+	public function dismiss_instant_scan_modal() {
+		check_admin_referer( 'wp_rest', 'security' );
+		wfcm_save_setting( 'dismiss-instant-scan-modal', true );
+		die();
 	}
 }
 
