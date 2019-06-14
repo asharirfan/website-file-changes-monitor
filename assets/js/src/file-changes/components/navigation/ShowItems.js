@@ -5,22 +5,35 @@ import React, { Component } from 'react';
 
 export default class ShowItems extends Component {
 
+	constructor() {
+		super();
+
+		this.state = {
+			selected: false,
+			options: [ 10, 25, 50, 100 ]
+		};
+	}
+
+	componentDidMount() {
+		const showItems = wfcmFileChanges.showItems[this.props.eventsType];
+		this.setState({selected: showItems});
+	}
+
 	handleShowItems( element ) {
-		const items = Number( element.target.value );
-		this.props.handleShowItems( items );
+		const showItems = Number( element.target.value );
+		this.props.handleShowItems( showItems );
+		this.setState({selected: showItems});
 	}
 
 	render() {
+		const options = this.state.options.reduce( ( html, option ) => {
+			return `${html}<option value="${option}"${option === this.state.selected ? ' selected' : ''}>${option}</option>`;
+		}, '' );
+
 		return (
 			<div className="alignleft actions">
 				<label htmlFor="show-items" className="screen-reader-text">Show items</label>
-				<select id="show-items" onChange={this.handleShowItems.bind( this )}>
-					<option value="-1">Show items</option>
-					<option value="10">10</option>
-					<option value="25">25</option>
-					<option value="50">50</option>
-					<option value="100">100</option>
-				</select>
+				<select id="show-items" onChange={this.handleShowItems.bind( this )} dangerouslySetInnerHTML={{__html: options}} />
 			</div>
 		);
 	}

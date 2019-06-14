@@ -247,6 +247,11 @@ class WFCM_Admin_File_Changes {
 					'exclude'      => __( 'Exclude', 'website-file-changes-monitor' ),
 					'apply'        => __( 'Apply', 'website-file-changes-monitor' ),
 				),
+				'showItems'   => array(
+					'added'    => (int) wfcm_get_setting( 'added-per-page', false ),
+					'modified' => (int) wfcm_get_setting( 'modified-per-page', false ),
+					'deleted'  => (int) wfcm_get_setting( 'deleted-per-page', false ),
+				),
 				'table'       => array(
 					'path'       => __( 'Path', 'website-file-changes-monitor' ),
 					'name'       => __( 'Name', 'website-file-changes-monitor' ),

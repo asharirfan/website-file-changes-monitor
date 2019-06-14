@@ -25,7 +25,7 @@ const Navigation = ( props ) => {
 			<EventsContext.Consumer>
 				{ ({handleShowItems}) => (
 					<div className="tablenav botton">
-						<ShowItems handleShowItems={handleShowItems} />
+						<ShowItems handleShowItems={handleShowItems} eventsType={props.eventsType} />
 					</div>
 				) }
 			</EventsContext.Consumer>

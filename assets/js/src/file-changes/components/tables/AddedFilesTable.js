@@ -15,7 +15,7 @@ export default class AddedFilesTable extends Component {
 					<h2>{wfcmFileChanges.labels.addedFiles}</h2>
 					<Navigation position="top" />
 					<EventsTable />
-					<Navigation position="bottom" />
+					<Navigation position="bottom" eventsType="added" />
 				</EventsProvider>
 				{
 					! wfcmFileChanges.scanModal.dismiss ?
