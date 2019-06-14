@@ -227,6 +227,14 @@ class WFCM_Admin_File_Changes {
 					'delete' => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$events_base ) ),
 				),
 				'pageHead'    => __( 'Website File Changes Monitor', 'website-file-changes-monitor' ),
+				'pagination'  => array(
+					'fileChanges'  => __( 'file changes', 'website-file-changes-monitor' ),
+					'firstPage'    => __( 'First page', 'website-file-changes-monitor' ),
+					'previousPage' => __( 'Previous page', 'website-file-changes-monitor' ),
+					'currentPage'  => __( 'Current page', 'website-file-changes-monitor' ),
+					'nextPage'     => __( 'Next page', 'website-file-changes-monitor' ),
+					'lastPage'     => __( 'Last page', 'website-file-changes-monitor' ),
+				),
 				'labels'      => array(
 					'addedFiles'    => __( 'Added Files', 'website-file-changes-monitor' ),
 					'deletedFiles'  => __( 'Deleted Files', 'website-file-changes-monitor' ),
