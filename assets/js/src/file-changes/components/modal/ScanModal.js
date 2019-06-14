@@ -68,8 +68,10 @@ export default class ScanModal extends Component {
 			<React.Fragment>
 				<Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal} style={modalStyles} contentLabel={wfcmFileChanges.scanModal.scanNow}>
 					<div className="wfcm-modal-header">
-						<h2>{wfcmFileChanges.scanModal.scanNow}</h2>
-						<button className="button" onClick={this.closeModal}><span class="dashicons dashicons-no-alt"></span></button>
+						<span>
+							<img src={wfcmFileChanges.scanModal.logoSrc} alt="WFCM" className="logo" />
+							<h2>{wfcmFileChanges.scanModal.scanNow}</h2>
+						</span>
 					</div>
 					<div className="wfcm-modal-body">
 						<p>{this.state.modalMessage}</p>
