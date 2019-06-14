@@ -15,7 +15,8 @@ export default class ScanModal extends Component {
 
 		this.state = {
 			modalIsOpen: true,
-			modalMessage: wfcmFileChanges.scanModal.initialMsg
+			scanning: false,
+			scanComplete: false
 		};
 
 		this.openModal = this.openModal.bind( this );
@@ -45,16 +46,18 @@ export default class ScanModal extends Component {
 	 * Start the scan.
 	 */
 	async startScan( element ) {
+		this.setState({scanning: true});
 		const targetElement = element.target;
-		targetElement.value = wfcmFileChanges.scanModal.scanning;
-		targetElement.disabled = true;
 
 		const scanRequest = fileEvents.getRestRequestObject( 'GET', wfcmFileChanges.monitor.start );
 		let response = await fetch( scanRequest );
 		response = await response.json();
 
 		if ( response ) {
-			this.setState({modalMessage: wfcmFileChanges.scanModal.afterScan});
+			this.setState( () => ({
+				scanning: false,
+				scanComplete: true
+			}) );
 		} else {
 			targetElement.value = wfcmFileChanges.scanModal.scanFailed;
 		}
@@ -70,14 +73,35 @@ export default class ScanModal extends Component {
 					<div className="wfcm-modal-header">
 						<span>
 							<img src={wfcmFileChanges.scanModal.logoSrc} alt="WFCM" className="logo" />
-							<h2>{wfcmFileChanges.scanModal.scanNow}</h2>
+							<h2>
+								{
+									! this.state.scanComplete ?
+									wfcmFileChanges.scanModal.scanNow :
+									wfcmFileChanges.scanModal.headingComplete
+								}
+							</h2>
 						</span>
 					</div>
 					<div className="wfcm-modal-body">
-						<p>{this.state.modalMessage}</p>
 						<p>
-							<input type="button" className="button-primary" value={wfcmFileChanges.scanModal.scanNow} onClick={this.startScan} />&nbsp;
-							<input type="button" className="button" value={wfcmFileChanges.scanModal.scanDismiss} onClick={this.closeModal} />
+							{
+								! this.state.scanComplete ?
+								wfcmFileChanges.scanModal.initialMsg :
+								wfcmFileChanges.scanModal.afterScanMsg
+							}
+						</p>
+						<p>
+							{
+								! this.state.scanComplete ?
+								<input type="button" className="button-primary" value={! this.state.scanning ? wfcmFileChanges.scanModal.scanNow : wfcmFileChanges.scanModal.scanning} onClick={this.startScan} disabled={this.state.scanning} /> :
+								<input type="button" className="button-primary" value={wfcmFileChanges.scanModal.ok} onClick={this.closeModal} />
+							}
+							&nbsp;
+							{
+								! this.state.scanComplete ?
+								<input type="button" className="button" value={wfcmFileChanges.scanModal.scanDismiss} onClick={this.closeModal} disabled={this.state.scanning} /> :
+								null
+							}
 						</p>
 					</div>
 				</Modal>
