@@ -137,13 +137,13 @@ class WFCM_Admin_File_Changes {
 					'title' => __( 'Added Files', 'website-file-changes-monitor' ),
 					'link'  => self::get_page_url(),
 				),
-				'deleted-files'  => array(
-					'title' => __( 'Deleted Files', 'website-file-changes-monitor' ),
-					'link'  => add_query_arg( 'tab', 'deleted-files', self::get_page_url() ),
-				),
 				'modified-files' => array(
 					'title' => __( 'Modified Files', 'website-file-changes-monitor' ),
 					'link'  => add_query_arg( 'tab', 'modified-files', self::get_page_url() ),
+				),
+				'deleted-files'  => array(
+					'title' => __( 'Deleted Files', 'website-file-changes-monitor' ),
+					'link'  => add_query_arg( 'tab', 'deleted-files', self::get_page_url() ),
 				),
 			)
 		);
