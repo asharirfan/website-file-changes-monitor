@@ -1105,7 +1105,7 @@ class WFCM_Monitor {
 			$site_content = wfcm_get_setting( WFCM_Settings::$site_content, false );
 
 			// Check WP core update.
-			if ( $site_content->skip_core ) {
+			if ( isset( $site_content->skip_core ) && $site_content->skip_core ) {
 				$this->scan_changes_count['wp_core_update'] = 1;
 			}
 
