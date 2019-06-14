@@ -21,7 +21,7 @@ export default class EventsTableBody extends Component {
 			);
 		} else {
 			return (
-				<tbody><tr><td colSpan="7">No new events!</td></tr></tbody>
+				<tbody><tr><td colSpan="7">{wfcmFileChanges.table.noEvents}</td></tr></tbody>
 			);
 		}
 	}

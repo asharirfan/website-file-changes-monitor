@@ -239,12 +239,13 @@ class WFCM_Admin_File_Changes {
 					'exclude'      => __( 'Exclude', 'website-file-changes-monitor' ),
 					'apply'        => __( 'Apply', 'website-file-changes-monitor' ),
 				),
-				'tableHead'   => array(
+				'table'       => array(
 					'path'       => __( 'Path', 'website-file-changes-monitor' ),
 					'name'       => __( 'Name', 'website-file-changes-monitor' ),
 					'type'       => __( 'Type', 'website-file-changes-monitor' ),
 					'markAsRead' => __( 'Mark as Read', 'website-file-changes-monitor' ),
 					'exclude'    => __( 'Exclude from scans', 'website-file-changes-monitor' ),
+					'noEvents'   => __( 'No file changes detected!', 'website-file-changes-monitor' ),
 				),
 				'monitor'     => array(
 					'start' => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$monitor_base . '/start' ) ),
