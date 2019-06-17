@@ -53,7 +53,7 @@ export default class ContentModal extends Component {
 						<h2>List of Event Files</h2>
 						<button className="button" onClick={this.closeModal}><span class="dashicons dashicons-no-alt"></span></button>
 					</div>
-					<div className="wfcm-modal-body">
+					<div className="wfcm-modal-body wfcm-modal-body--scrollable">
 						<p>Number of files: {eventFiles.length}</p>
 						<table className="wp-list-table widefat fixed striped">
 							<thead><td>Filename</td></thead>
@@ -77,7 +77,8 @@ const modalStyles = {
 		border: 'none',
 		borderRadius: '0',
 		padding: '0 16px 16px',
-		width: '650px'
+		width: '650px',
+		width: 'calc(100vw - 30%)'
 	}
 };
 

@@ -48,6 +48,9 @@
 	.column-event-action {
 		width: 12%;
 	}
+	.column-event-exclude {
+		width: 14%;
+	}
 	.column-event-content {
 		width: 25px;
 	}
@@ -101,6 +104,14 @@
 	h2 {
 		display: inline-block;
 		margin: 0;
+		vertical-align: middle;
+	}
+
+	.logo {
+		display: inline-block;
+		width: 40px;
+		vertical-align: middle;
+		margin-right: 5px;
 	}
 
 	.button {
@@ -116,5 +127,8 @@
 
 .wfcm-modal-body {
 	max-height: 500px;
+}
+
+.wfcm-modal-body--scrollable {
 	overflow-y: scroll;
 }

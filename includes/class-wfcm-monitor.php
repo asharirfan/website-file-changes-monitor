@@ -108,6 +108,13 @@ class WFCM_Monitor {
 	private $uploads_dir = array();
 
 	/**
+	 * Scan changes count.
+	 *
+	 * @var array
+	 */
+	private $scan_changes_count = array();
+
+	/**
 	 * Class constants.
 	 */
 	const SCAN_DAILY      = 'daily';
@@ -279,6 +286,9 @@ class WFCM_Monitor {
 			// Get list of files to scan from DB.
 			$stored_files = wfcm_get_setting( $file_list, array() );
 
+			// Set scan changes count.
+			$this->scan_changes_count();
+
 			/**
 			 * `Filter`: Stored files filter.
 			 *
@@ -370,6 +380,9 @@ class WFCM_Monitor {
 					// Get excluded site content.
 					$site_content = wfcm_get_setting( WFCM_Settings::$site_content );
 
+					// Add the file count.
+					$this->scan_changes_count['files_added'] += count( $files_added );
+
 					// Log the alert.
 					foreach ( $files_added as $file => $file_hash ) {
 						// Get directory name.
@@ -400,6 +413,9 @@ class WFCM_Monitor {
 
 				// Files removed alert.
 				if ( in_array( 'deleted', $this->scan_settings['type'], true ) && count( $files_removed ) > 0 ) {
+					// Add the file count.
+					$this->scan_changes_count['files_deleted'] += count( $files_removed );
+
 					// Log the alert.
 					foreach ( $files_removed as $file => $file_hash ) {
 						// Get directory name.
@@ -430,6 +446,9 @@ class WFCM_Monitor {
 
 				// Files edited alert.
 				if ( in_array( 'modified', $this->scan_settings['type'], true ) && count( $files_changed ) > 0 ) {
+					// Add the file count.
+					$this->scan_changes_count['files_modified'] += count( $files_changed );
+
 					foreach ( $files_changed as $file => $file_hash ) {
 						// Create event for each changed file.
 						wfcm_create_event( 'modified', $file, $file_hash );
@@ -450,6 +469,8 @@ class WFCM_Monitor {
 
 					wfcm_save_setting( 'admin-notices', $admin_notices );
 				}
+
+				$this->scan_changes_count( 'save' );
 
 				/**
 				 * `Action`: Last scanned directory.
@@ -809,11 +830,13 @@ class WFCM_Monitor {
 				}
 
 				// Check file size limit.
-				if ( filesize( $absolute_name ) < $file_size_limit ) {
+				if ( ! is_link( $absolute_name ) && filesize( $absolute_name ) < $file_size_limit ) {
 					$this->scan_file_count++;
 
 					// File data.
 					$files[ $absolute_name ] = @md5_file( $absolute_name ); // File hash.
+				} elseif ( is_link( $absolute_name ) ) {
+					$files[ $absolute_name ] = '';
 				} else {
 					if ( ! isset( $admin_notices['filesize-limit'] ) || ! in_array( $absolute_name, $admin_notices['filesize-limit'], true ) ) {
 						// File size is more than the limit.
@@ -964,18 +987,34 @@ class WFCM_Monitor {
 						if ( in_array( 'added', $this->scan_settings['type'], true ) && 'wfcm_file_scan_scanned_files' === $current_filter && 'install' === $context ) {
 							$event_context = '';
 							if ( 'plugins' === $excluded_type ) {
+								// Set context.
 								$event_context = __( 'Plugin Install', 'website-file-changes-monitor' );
+
+								// Set the count.
+								$this->scan_changes_count['plugin_installs'] += 1;
 							} elseif ( 'themes' === $excluded_type ) {
+								// Set context.
 								$event_context = __( 'Theme Install', 'website-file-changes-monitor' );
+
+								// Set the count.
+								$this->scan_changes_count['theme_installs'] += 1;
 							}
 
 							wfcm_create_directory_event( 'added', $dir_path, array_values( $event_content ), $event_context );
 						} elseif ( in_array( 'deleted', $this->scan_settings['type'], true ) && 'wfcm_file_scan_stored_files' === $current_filter && 'uninstall' === $context ) {
 							$event_context = '';
 							if ( 'plugins' === $excluded_type ) {
+								// Set context.
 								$event_context = __( 'Plugin Uninstall', 'website-file-changes-monitor' );
+
+								// Set the count.
+								$this->scan_changes_count['plugin_uninstalls'] += 1;
 							} elseif ( 'themes' === $excluded_type ) {
+								// Set context.
 								$event_context = __( 'Theme Uninstall', 'website-file-changes-monitor' );
+
+								// Set the count.
+								$this->scan_changes_count['theme_uninstalls'] += 1;
 							}
 
 							wfcm_create_directory_event( 'deleted', $dir_path, array_values( $event_content ), $event_context );
@@ -1065,6 +1104,17 @@ class WFCM_Monitor {
 			// Get `site_content` option.
 			$site_content = wfcm_get_setting( WFCM_Settings::$site_content, false );
 
+			// Check WP core update.
+			if ( isset( $site_content->skip_core ) && $site_content->skip_core ) {
+				$this->scan_changes_count['wp_core_update'] = 1;
+			}
+
+			// Send email notification.
+			wfcm_send_changes_email( $this->scan_changes_count );
+
+			// Delete changes count for this scan.
+			$this->scan_changes_count( 'delete' );
+
 			// Check if the option is instance of stdClass.
 			if ( false !== $site_content && $site_content instanceof stdClass ) {
 				$site_content->skip_core  = false;   // Reset skip core after the scan is complete.
@@ -1127,9 +1177,15 @@ class WFCM_Monitor {
 		if ( '/plugins' === $dirname ) {
 			$dir_path      = untrailingslashit( WP_CONTENT_DIR ) . $directory;
 			$event_context = __( 'Plugin Update', 'website-file-changes-monitor' );
+
+			// Set the count.
+			$this->scan_changes_count['plugin_updates'] += 1;
 		} elseif ( '/themes' === $dirname ) {
 			$dir_path      = untrailingslashit( WP_CONTENT_DIR ) . $directory;
 			$event_context = __( 'Theme Update', 'website-file-changes-monitor' );
+
+			// Set the count.
+			$this->scan_changes_count['theme_updates'] += 1;
 		} elseif ( ABSPATH === $directory || false !== strpos( $directory, 'wp-admin' ) || false !== strpos( $directory, WPINC ) ) {
 			$dir_path      = $directory;
 			$event_context = __( 'Core Update', 'website-file-changes-monitor' );
@@ -1158,6 +1214,36 @@ class WFCM_Monitor {
 			$this->uploads_dir = wp_upload_dir(); // Get WP uploads directory.
 		}
 		return $this->uploads_dir['basedir'];
+	}
+
+	/**
+	 * Scan changes count; get, save, or delete.
+	 *
+	 * @param string $action - Count action; get, save, or delete.
+	 */
+	private function scan_changes_count( $action = 'get' ) {
+		if ( 'get' === $action ) {
+			$this->scan_changes_count = get_transient( 'wfcm-scan-changes-count' );
+
+			if ( false === $this->scan_changes_count ) {
+				$this->scan_changes_count = array(
+					'files_added'       => 0,
+					'files_deleted'     => 0,
+					'files_modified'    => 0,
+					'plugin_installs'   => 0,
+					'plugin_updates'    => 0,
+					'plugin_uninstalls' => 0,
+					'theme_installs'    => 0,
+					'theme_updates'     => 0,
+					'theme_uninstalls'  => 0,
+					'wp_core_update'    => 0,
+				);
+			}
+		} elseif ( 'save' === $action ) {
+			set_transient( 'wfcm-scan-changes-count', $this->scan_changes_count, DAY_IN_SECONDS );
+		} elseif ( 'delete' === $action ) {
+			delete_transient( 'wfcm-scan-changes-count' );
+		}
 	}
 }
 

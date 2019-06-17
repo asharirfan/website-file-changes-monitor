@@ -326,6 +326,9 @@ function wfcm_install() {
 
 	update_option( 'wfcm-version', wfcm_instance()->version );
 	wfcm_set_site_content();
+
+	// Redirect option.
+	add_option( 'wfcm-redirect-on-activate', true );
 }
 
 /**
@@ -343,7 +346,7 @@ function wfcm_get_server_directories( $context = '' ) {
 
 	if ( 'display' === $context ) {
 		$wp_directories = array(
-			'root'           => __( 'Root directory of WordPress (excluding sub directories)', 'website-file-changes-monitor' ),
+			'root'           => __( 'Root directory of WordPress (except wp-admin, wp-content and wp-includes)', 'website-file-changes-monitor' ),
 			'wp-admin'       => __( 'WP Admin directory (/wp-admin/)', 'website-file-changes-monitor' ),
 			WPINC            => __( 'WP Includes directory (/wp-includes/)', 'website-file-changes-monitor' ),
 			WP_CONTENT_DIR   => __( '/wp-content/ directory (other than the plugins, themes & upload directories)', 'website-file-changes-monitor' ),
@@ -394,4 +397,135 @@ function wfcm_get_server_directories( $context = '' ) {
  */
 function wfcm_get_server_directory( $directory ) {
 	return preg_replace( '/^' . preg_quote( ABSPATH, '/' ) . '/', '', $directory );
+}
+
+/**
+ * Return the datetime format according the selected format
+ * of the website.
+ *
+ * @return string
+ */
+function wfcm_get_datetime_format() {
+	$date_time_format = wfcm_get_date_format() . ' ' . wfcm_get_time_format();
+	$wp_time_format   = get_option( 'time_format' ); // WP time format.
+
+	// Check if the time format does not have seconds.
+	if ( stripos( $wp_time_format, 's' ) === false ) {
+		if ( stripos( $wp_time_format, '.v' ) !== false ) {
+			$date_time_format = str_replace( '.v', '', $date_time_format );
+		}
+
+		$date_time_format .= ':s'; // Add seconds to time format.
+		$date_time_format .= '.$$$'; // Add milliseconds to time format.
+	} else {
+		// Check if the time format does have milliseconds.
+		if ( stripos( $wp_time_format, '.v' ) !== false ) {
+			$date_time_format = str_replace( '.v', '.$$$', $date_time_format );
+		} else {
+			$date_time_format .= '.$$$';
+		}
+	}
+
+	if ( stripos( $wp_time_format, 'A' ) !== false ) {
+		$date_time_format .= '&\n\b\s\p;A';
+	}
+
+	return $date_time_format;
+}
+
+/**
+ * Date Format from WordPress general settings.
+ *
+ * @return string
+ */
+function wfcm_get_date_format() {
+	$wp_date_format = get_option( 'date_format' );
+	$search         = array( 'F', 'M', 'n', 'j', ' ', '/', 'y', 'S', ',', 'l', 'D' );
+	$replace        = array( 'm', 'm', 'm', 'd', '-', '-', 'Y', '', '', '', '' );
+	$date_format    = str_replace( $search, $replace, $wp_date_format );
+	return $date_format;
+}
+
+/**
+ * Time Format from WordPress general settings.
+ *
+ * @return string
+ */
+function wfcm_get_time_format() {
+	$wp_time_format = get_option( 'time_format' );
+	$search         = array( 'a', 'A', 'T', ' ' );
+	$replace        = array( '', '', '', '' );
+	$time_format    = str_replace( $search, $replace, $wp_time_format );
+	return $time_format;
+}
+
+/**
+ * Send file changes email.
+ *
+ * @param array $scan_changes_count - Array of changes count.
+ */
+function wfcm_send_changes_email( $scan_changes_count ) {
+	$send_mail       = false;
+	$admin_email     = get_bloginfo( 'admin_email' );
+	$home_url        = home_url();
+	$safe_url        = str_replace( array( 'http://', 'https://' ), '', $home_url );
+	$datetime_format = wfcm_get_datetime_format();
+	$date_time       = str_replace(
+		'$$$',
+		substr( number_format( fmod( current_time( 'timestamp' ), 1 ), 3 ), 2 ),
+		date( $datetime_format, current_time( 'timestamp' ) )
+	);
+
+	/* Translators: %s: Home URL */
+	$subject = sprintf( __( 'File changes detected on site %s during last file scan', 'website-file-changes-monitor' ), $safe_url );
+
+	/* Translators: 1. Home URL, 2. Date and time */
+	$body = '<p>' . sprintf( __( 'The Website File Changes Monitor plugin detected the following file changes on the website %1$s during the last scan on %2$s:', 'website-file-changes-monitor' ), '<a href="' . $home_url . '" target="_blank">' . $safe_url . '</a>', $date_time ) . '</p>';
+
+	$body .= '<ul>';
+	if ( $scan_changes_count['files_added'] > 0 ) {
+		/* Translators: %d: Added files count */
+		$body     .= '<li>' . sprintf( __( '%d files added', 'website-file-changes-monitor' ), $scan_changes_count['files_added'] ) . '</li>';
+		$send_mail = true;
+	}
+
+	if ( $scan_changes_count['files_deleted'] > 0 ) {
+		/* Translators: %d: Deleted files count */
+		$body     .= '<li>' . sprintf( __( '%d files deleted', 'website-file-changes-monitor' ), $scan_changes_count['files_deleted'] ) . '</li>';
+		$send_mail = true;
+	}
+
+	if ( $scan_changes_count['files_modified'] > 0 ) {
+		/* Translators: %d: Modified files count */
+		$body     .= '<li>' . sprintf( __( '%d files modified', 'website-file-changes-monitor' ), $scan_changes_count['files_modified'] ) . '</li>';
+		$send_mail = true;
+	}
+
+	if ( $scan_changes_count['plugin_installs'] > 0 || $scan_changes_count['plugin_updates'] > 0 || $scan_changes_count['plugin_uninstalls'] > 0 ) {
+		/* Translators: %d: Plugin installs/updates/deletions count */
+		$body     .= '<li>' . sprintf( __( '%d plugin installs/updates/deletions', 'website-file-changes-monitor' ), $scan_changes_count['plugin_installs'] + $scan_changes_count['plugin_updates'] + $scan_changes_count['plugin_uninstalls'] ) . '</li>';
+		$send_mail = true;
+	}
+
+	if ( $scan_changes_count['theme_installs'] > 0 || $scan_changes_count['theme_updates'] > 0 || $scan_changes_count['theme_uninstalls'] > 0 ) {
+		/* Translators: %d: Themes installs/updates/deletions count */
+		$body     .= '<li>' . sprintf( __( '%d themes installs/updates/deletions', 'website-file-changes-monitor' ), $scan_changes_count['theme_installs'] + $scan_changes_count['theme_updates'] + $scan_changes_count['theme_uninstalls'] ) . '</li>';
+		$send_mail = true;
+	}
+
+	if ( $scan_changes_count['wp_core_update'] > 0 ) {
+		/* Translators: %d: WordPress core update count */
+		$body     .= '<li>' . sprintf( __( '%d WordPress core update', 'website-file-changes-monitor' ), $scan_changes_count['wp_core_update'] ) . '</li>';
+		$send_mail = true;
+	}
+	$body .= '</ul>';
+
+	$body .= '<p>' . __( 'Visit the File Monitor in the WordPress dashboard to check the file changes.', 'website-file-changes-monitor' ) . '</p>';
+
+	/* Translators: %s: Plugin WP Hyperlink */
+	$body .= '<p>' . sprintf( __( 'This file integrity scan was done with the %s.', 'website-file-changes-monitor' ), '<a href="https://wordpress.org/plugins/website-file-changes-monitor/" target="_blank">' . __( 'Website File Changes Monitor plugin', 'website-file-changes-monitor' ) . '</a>' ) . '</p>';
+
+	if ( $send_mail ) {
+		WFCM_Email::send( $admin_email, $subject, $body );
+	}
 }

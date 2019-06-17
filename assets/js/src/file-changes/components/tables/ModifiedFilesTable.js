@@ -11,9 +11,10 @@ export default class ModifiedFilesTable extends Component {
 		return (
 			<section>
 				<EventsProvider eventsType="modified">
-					<h2>Modified Files</h2>
-					<Navigation />
+					<h2>{wfcmFileChanges.labels.modifiedFiles}</h2>
+					<Navigation position="top" />
 					<EventsTable />
+					<Navigation position="bottom" eventsType="modified" />
 				</EventsProvider>
 			</section>
 		);

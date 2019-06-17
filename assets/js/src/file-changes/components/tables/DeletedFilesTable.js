@@ -11,9 +11,10 @@ export default class DeletedFilesTable extends Component {
 		return (
 			<section>
 				<EventsProvider eventsType="deleted">
-					<h2>Deleted Files</h2>
-					<Navigation />
+					<h2>{wfcmFileChanges.labels.deletedFiles}</h2>
+					<Navigation position="top" />
 					<EventsTable />
+					<Navigation position="bottom" eventsType="deleted" />
 				</EventsProvider>
 			</section>
 		);

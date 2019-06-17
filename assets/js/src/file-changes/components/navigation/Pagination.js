@@ -40,7 +40,7 @@ export default class Pagination extends Component {
 		} else {
 			pageLinks.push(
 				<button className="first-page button" onClick={this.props.goToPage.bind( this, 1 )}>
-					<span className="screen-reader-text">First page</span><span aria-hidden="true">&laquo;</span>
+					<span className="screen-reader-text">{wfcmFileChanges.pagination.firstPage}</span><span aria-hidden="true">&laquo;</span>
 				</button>
 			);
 		}
@@ -50,7 +50,7 @@ export default class Pagination extends Component {
 		} else {
 			pageLinks.push(
 				<button className="prev-page button" onClick={this.props.goToPage.bind( this, Math.max( 1, paged - 1 ) )}>
-					<span className="screen-reader-text">Previous page</span><span aria-hidden="true">&lsaquo;</span>
+					<span className="screen-reader-text">{wfcmFileChanges.pagination.previousPage}</span><span aria-hidden="true">&lsaquo;</span>
 				</button>
 			);
 		}
@@ -70,7 +70,7 @@ export default class Pagination extends Component {
 		} else {
 			pageLinks.push(
 				<button className="next-page button" onClick={this.props.goToPage.bind( this, Math.min( maxPages, paged + 1 ) )}>
-					<span className="screen-reader-text">Next page</span><span aria-hidden="true">&rsaquo;</span>
+					<span className="screen-reader-text">{wfcmFileChanges.pagination.nextPage}</span><span aria-hidden="true">&rsaquo;</span>
 				</button>
 			);
 		}
@@ -80,7 +80,7 @@ export default class Pagination extends Component {
 		} else {
 			pageLinks.push(
 				<button className="last-page button" onClick={this.props.goToPage.bind( this, maxPages )}>
-					<span className="screen-reader-text">Last page</span><span aria-hidden="true">&raquo;</span>
+					<span className="screen-reader-text">{wfcmFileChanges.pagination.lastPage}</span><span aria-hidden="true">&raquo;</span>
 				</button>
 			);
 		}
@@ -88,13 +88,13 @@ export default class Pagination extends Component {
 		if ( 1 < maxPages ) {
 			return (
 				<div className="tablenav-pages">
-					<span className="displaying-num">{totalItems} events</span>
+					<span className="displaying-num">{totalItems} {wfcmFileChanges.pagination.fileChanges}</span>
 					<span className="pagination-links">{pageLinks}</span>
 				</div>
 			);
 		} else {
 			return (
-				<div className="tablenav-pages"><span className="displaying-num">{totalItems} events</span></div>
+				<div className="tablenav-pages"><span className="displaying-num">{totalItems} {wfcmFileChanges.pagination.fileChanges}</span></div>
 			);
 		}
 	}

@@ -18,8 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 <h3><?php esc_html_e( 'Plugin Support', 'website-file-changes-monitor' ); ?></h3>
 <p><?php esc_html_e( 'Have you encountered or noticed any issues while using WP File Changes Monitor? Or do you want to report something to us? Use any of the options below to get in touch with us.', 'website-file-changes-monitor' ); ?></p>
 <p>
-	<a href="https://wordpress.org/support/plugin/website-file-changes-monitor/" class="button"><?php esc_html_e( 'POST ON FREE SUPPORT FORUM', 'website-file-changes-monitor' ); ?></a>
-	<a href="mailto:support@wpwhitesecurity.com" class="button"><?php esc_html_e( 'FREE EMAIL SUPPORT', 'website-file-changes-monitor' ); ?></a>
+	<a href="https://wordpress.org/support/plugin/website-file-changes-monitor/" class="button" target="_blank"><?php esc_html_e( 'POST ON FREE SUPPORT FORUM', 'website-file-changes-monitor' ); ?></a>
+	<a href="mailto:support@wpwhitesecurity.com" class="button" target="_blank"><?php esc_html_e( 'FREE EMAIL SUPPORT', 'website-file-changes-monitor' ); ?></a>
 </p>
 <h3><?php esc_html_e( 'Rate WP File Changes Monitor', 'website-file-changes-monitor' ); ?></h3>
 <p><?php esc_html_e( 'We work really hard to develop a good plugin with which you can be alerted of file changes. It involves thousands of man-hours and an endless amount of dedication to research, develop, and maintain this plugin. Therefore if you like what you see, and find WP File Changes Monitor useful we ask you nothing more than to please rate our plugin. We appreciate every star!', 'website-file-changes-monitor' ); ?></p>

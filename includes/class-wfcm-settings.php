@@ -79,6 +79,7 @@ class WFCM_Settings {
 
 		return array(
 			'enabled'       => self::get_setting( 'keep-log', 'yes' ),
+			'delete-data'   => self::get_setting( 'delete-data', false ),
 			'type'          => self::get_setting( 'scan-type', array( 'added', 'deleted', 'modified' ) ),
 			'frequency'     => self::get_setting( 'scan-frequency', 'daily' ),
 			'hour'          => self::get_setting( 'scan-hour', '02' ),

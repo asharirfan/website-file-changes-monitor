@@ -38,6 +38,13 @@ class WFCM_Admin_File_Changes {
 	);
 
 	/**
+	 * Page tabs.
+	 *
+	 * @var array
+	 */
+	private static $tabs = array();
+
+	/**
 	 * Add admin message.
 	 *
 	 * @param string $key     - Message key.
@@ -120,11 +127,52 @@ class WFCM_Admin_File_Changes {
 	}
 
 	/**
+	 * Set tabs of the page.
+	 */
+	private static function set_tabs() {
+		self::$tabs = apply_filters(
+			'wfcm_admin_file_changes_page_tabs',
+			array(
+				'added-files'    => array(
+					'title' => __( 'Added Files', 'website-file-changes-monitor' ),
+					'link'  => self::get_page_url(),
+				),
+				'modified-files' => array(
+					'title' => __( 'Modified Files', 'website-file-changes-monitor' ),
+					'link'  => add_query_arg( 'tab', 'modified-files', self::get_page_url() ),
+				),
+				'deleted-files'  => array(
+					'title' => __( 'Deleted Files', 'website-file-changes-monitor' ),
+					'link'  => add_query_arg( 'tab', 'deleted-files', self::get_page_url() ),
+				),
+			)
+		);
+	}
+
+	/**
+	 * Get active tab.
+	 *
+	 * @return string
+	 */
+	private static function get_active_tab() {
+		return isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'added-files'; // phpcs:ignore
+	}
+
+	/**
+	 * Return page url.
+	 *
+	 * @return string
+	 */
+	public static function get_page_url() {
+		return add_query_arg( 'page', 'wfcm-file-changes', admin_url( 'admin.php' ) );
+	}
+
+	/**
 	 * Page View.
 	 */
 	public static function output() {
-		// Add notifications to the view.
-		self::add_messages();
+		self::add_messages(); // Add notifications to the view.
+		self::set_tabs();
 
 		$wp_version        = get_bloginfo( 'version' );
 		$suffix            = ( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? '' : '.min'; // Check for debug mode.
@@ -173,15 +221,62 @@ class WFCM_Admin_File_Changes {
 			'wfcm-file-changes',
 			'wfcmFileChanges',
 			array(
-				'security'   => wp_create_nonce( 'wp_rest' ),
-				'fileEvents' => array(
+				'security'    => wp_create_nonce( 'wp_rest' ),
+				'fileEvents'  => array(
 					'get'    => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$events_base ) ),
 					'delete' => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$events_base ) ),
 				),
-				'labels'     => array(
-					'createdFiles'  => __( 'Created Files', 'website-file-changes-monitor' ),
+				'pageHead'    => __( 'Website File Changes Monitor', 'website-file-changes-monitor' ),
+				'pagination'  => array(
+					'fileChanges'  => __( 'file changes', 'website-file-changes-monitor' ),
+					'firstPage'    => __( 'First page', 'website-file-changes-monitor' ),
+					'previousPage' => __( 'Previous page', 'website-file-changes-monitor' ),
+					'currentPage'  => __( 'Current page', 'website-file-changes-monitor' ),
+					'nextPage'     => __( 'Next page', 'website-file-changes-monitor' ),
+					'lastPage'     => __( 'Last page', 'website-file-changes-monitor' ),
+				),
+				'labels'      => array(
+					'addedFiles'    => __( 'Added Files', 'website-file-changes-monitor' ),
 					'deletedFiles'  => __( 'Deleted Files', 'website-file-changes-monitor' ),
 					'modifiedFiles' => __( 'Modified Files', 'website-file-changes-monitor' ),
+				),
+				'bulkActions' => array(
+					'screenReader' => __( 'Select bulk action', 'website-file-changes-monitor' ),
+					'bulkActions'  => __( 'Bulk Actions', 'website-file-changes-monitor' ),
+					'markAsRead'   => __( 'Mark as Read', 'website-file-changes-monitor' ),
+					'exclude'      => __( 'Exclude', 'website-file-changes-monitor' ),
+					'apply'        => __( 'Apply', 'website-file-changes-monitor' ),
+				),
+				'showItems'   => array(
+					'added'    => (int) wfcm_get_setting( 'added-per-page', false ),
+					'modified' => (int) wfcm_get_setting( 'modified-per-page', false ),
+					'deleted'  => (int) wfcm_get_setting( 'deleted-per-page', false ),
+				),
+				'table'       => array(
+					'path'       => __( 'Path', 'website-file-changes-monitor' ),
+					'name'       => __( 'Name', 'website-file-changes-monitor' ),
+					'type'       => __( 'Type', 'website-file-changes-monitor' ),
+					'markAsRead' => __( 'Mark as Read', 'website-file-changes-monitor' ),
+					'exclude'    => __( 'Exclude from scans', 'website-file-changes-monitor' ),
+					'noEvents'   => __( 'No file changes detected!', 'website-file-changes-monitor' ),
+				),
+				'monitor'     => array(
+					'start' => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$monitor_base . '/start' ) ),
+					'stop'  => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$monitor_base . '/stop' ) ),
+				),
+				'scanModal'   => array(
+					'logoSrc'         => WFCM_BASE_URL . 'assets/img/wfcm-logo.svg',
+					'dismiss'         => wfcm_get_setting( 'dismiss-instant-scan-modal', false ),
+					'adminAjax'       => admin_url( 'admin-ajax.php' ),
+					'headingComplete' => __( 'Instant file scan complete!', 'website-file-changes-monitor' ),
+					'scanNow'         => __( 'Launch Instant File Scan', 'website-file-changes-monitor' ),
+					'scanDismiss'     => __( 'Wait for Scheduled Scan', 'website-file-changes-monitor' ),
+					'scanning'        => __( 'Scanning...', 'website-file-changes-monitor' ),
+					'scanComplete'    => __( 'Scan Complete!', 'website-file-changes-monitor' ),
+					'scanFailed'      => __( 'Scan Failed!', 'website-file-changes-monitor' ),
+					'ok'              => __( 'OK', 'website-file-changes-monitor' ),
+					'initialMsg'      => __( 'The plugin will scan for file changes at 2:00AM every day. You can either wait for the first scan or launch an instant scan.', 'website-file-changes-monitor' ),
+					'afterScanMsg'    => __( 'The first file scan is complete. Now the plugin has the file fingerprints and it will alert you via email when it detect changes.', 'website-file-changes-monitor' ),
 				),
 			)
 		);
@@ -190,8 +285,7 @@ class WFCM_Admin_File_Changes {
 
 		// Display notifications of the view.
 		self::show_messages();
-		?>
-		<div class="wrap" id="wfcm-file-changes-view"></div>
-		<?php
+
+		require_once trailingslashit( dirname( __FILE__ ) ) . 'views/html-admin-file-changes.php';
 	}
 }

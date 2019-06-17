@@ -21,13 +21,13 @@ export default class BulkActions extends Component {
 	render() {
 		return (
 			<div className="alignleft actions">
-				<label htmlFor="bulk-action-selector-top" className="screen-reader-text">Select bulk action</label>
+				<label htmlFor="bulk-action-selector-top" className="screen-reader-text">{wfcmFileChanges.bulkActions.screenReader}</label>
 				<select id="bulk-action-selector-top" name="bulk-action" onChange={this.selectAction.bind( this )}>
-					<option value="-1">Bulk Actions</option>
-					<option value="mark-as-read">Mark as Read</option>
-					<option value="exclude">Exclude</option>
+					<option value="-1">{wfcmFileChanges.bulkActions.bulkActions}</option>
+					<option value="mark-as-read">{wfcmFileChanges.bulkActions.markAsRead}</option>
+					<option value="exclude">{wfcmFileChanges.bulkActions.exclude}</option>
 				</select>
-				<input type="submit" className="button action" value="Apply" onClick={this.props.handleBulkAction.bind( this, this.state.selectedAction )} />
+				<input type="submit" className="button action" value={wfcmFileChanges.bulkActions.apply} onClick={this.props.handleBulkAction.bind( this, this.state.selectedAction )} />
 			</div>
 		);
 	}

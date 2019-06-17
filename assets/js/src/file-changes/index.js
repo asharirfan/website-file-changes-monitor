@@ -8,13 +8,18 @@ import ModifiedFilesTable from './components/tables/ModifiedFilesTable';
 
 export default class FileChanges extends Component {
 	render() {
+		const fileChangesView = this.props.fileChangesView;
+
 		return (
-			<div>
-				<h1>Website File Changes Monitor</h1>
+			<React.Fragment>
+			{
+				'deleted-files' === fileChangesView ?
+				<DeletedFilesTable /> :
+				'modified-files' === fileChangesView ?
+				<ModifiedFilesTable /> :
 				<AddedFilesTable />
-				<DeletedFilesTable />
-				<ModifiedFilesTable />
-			</div>
+			}
+			</React.Fragment>
 		);
 	}
 }

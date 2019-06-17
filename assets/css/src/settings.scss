@@ -19,6 +19,14 @@
 			}
 		}
 	}
+
+	.wfcm-settings-danger {
+		border: 1px solid #d73a49;
+
+		th {
+			padding: 20px 0 20px 10px;
+		}
+	}
 }
 
 .wfcm-files-container {
@@ -74,7 +82,7 @@
 // Help & About page.
 .about-wrap {
 	.wp-badge {
-		background-image: url(../../img/wp-white-security.svg);
+		background-image: url(../../img/wfcm-logo.svg);
 		background-color: #d5dfeb;
 		color: #333333;
 	}

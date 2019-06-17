@@ -106,25 +106,25 @@ $disabled = 'no' === $settings['enabled'] ? 'disabled' : false;
 	<h1><?php esc_html_e( 'Website File Changes Settings', 'website-file-changes-monitor' ); ?></h1>
 	<?php self::show_messages(); ?>
 	<form method="post" action="" enctype="multipart/form-data">
-		<h3><?php esc_html_e( 'Which file changes events do you want to keep a log of in the activity log?', 'website-file-changes-monitor' ); ?></h3>
+		<h3><?php esc_html_e( 'Which file changes do you want to be notified of?', 'website-file-changes-monitor' ); ?></h3>
 		<table class="form-table wfcm-table">
 			<tr>
-				<th><label for="wfcm-file-changes-type"><?php esc_html_e( 'Notify me when', 'website-file-changes-monitor' ); ?></label></th>
+				<th><label for="wfcm-file-changes-type"><?php esc_html_e( 'Notify me when files are', 'website-file-changes-monitor' ); ?></label></th>
 				<td>
 					<fieldset <?php echo esc_attr( $disabled ); ?>>
 						<label for="added">
 							<input type="checkbox" name="wfcm-settings[scan-type][]" value="added" <?php echo in_array( 'added', $settings['type'], true ) ? 'checked' : false; ?>>
-							<span><?php esc_html_e( 'Files are added', 'website-file-changes-monitor' ); ?></span>
+							<span><?php esc_html_e( 'added', 'website-file-changes-monitor' ); ?></span>
 						</label>
 						<br>
 						<label for="deleted">
 							<input type="checkbox" name="wfcm-settings[scan-type][]" value="deleted" <?php echo in_array( 'deleted', $settings['type'], true ) ? 'checked' : false; ?>>
-							<span><?php esc_html_e( 'Files are deleted', 'website-file-changes-monitor' ); ?></span>
+							<span><?php esc_html_e( 'deleted', 'website-file-changes-monitor' ); ?></span>
 						</label>
 						<br>
 						<label for="modified">
 							<input type="checkbox" name="wfcm-settings[scan-type][]" value="modified" <?php echo in_array( 'modified', $settings['type'], true ) ? 'checked' : false; ?>>
-							<span><?php esc_html_e( 'Files are modified', 'website-file-changes-monitor' ); ?></span>
+							<span><?php esc_html_e( 'modified', 'website-file-changes-monitor' ); ?></span>
 						</label>
 					</fieldset>
 				</td>
@@ -347,6 +347,18 @@ $disabled = 'no' === $settings['enabled'] ? 'disabled' : false;
 			</tr>
 		</table>
 		<!-- Disable File Changes -->
+
+		<table class="form-table wfcm-settings-danger">
+			<tr>
+				<th><label for="wfcm-file-changes"><?php esc_html_e( 'Delete plugin data upon uninstall', 'website-file-changes-monitor' ); ?></label></th>
+				<td>
+					<fieldset>
+						<label><input name="wfcm-settings[delete-data]" type="checkbox" value="1" <?php checked( $settings['delete-data'] ); ?>></label>
+					</fieldset>
+				</td>
+			</tr>
+		</table>
+		<!-- Delete plugin data and settings -->
 
 		<?php
 		wp_nonce_field( 'wfcm-save-admin-settings' );
