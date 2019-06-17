@@ -6,20 +6,20 @@ License URI: http://www.gnu.org/licenses/gpl.html
 Tags: file monitor, file integrity scanner, file checker, file scanner, file security, security, file changes, file changes scanner
 Requires at least: 4.5
 Tested up to: 5.2
-Stable tag: 1.0.0
+Stable tag: 1.1
 Requires PHP: 5.6.20
 
-A hassle-free way to get alerted of file changes on your WordPress site & boost security.
+An easy way to get alerted via email of file changes on your WordPress site & boost security.
 
 == Description ==
 
-### Get alerted of file changes on your WordPress site with a hassle-free plugin.
+### Get alerted via email of file changes on your WordPress sites
 
-Identify leftover files that can lead to sensitive business & technical data exposure, and pinpoint malware injections early to avoid irreparable site damage.
+Identify leftover files that can lead to sensitive business & technical data exposure. Pinpoint malware injections early to avoid irreparable site damage with this hassle-free plugin.
 
 Everyone who owns a WordPress website knows how difficult it is to manage the site's files. Leftover backup and source code files are very common, and they are the number one source of sensitive data breaches. Also, in case of a successful hack attack it is almost impossible to detect the infiltration and identify all the source code changes!
 
-Use the Website File Changes Monitor plugin to easily spot leftover files, injected malware and code changes! Remove files that could leave you expose and clean malware infections at the earliest possible.
+Use the Website File Changes Monitor plugin to easily get alerted via email and spot leftover files, injected malware and code changes! Remove files that could leave you expose and clean malware infections at the earliest possible.
 
 ### Why Do You Need a Website File Changes Monitor?
 
@@ -49,6 +49,12 @@ The scope of monitoring for site file changes goes beyond detecting malicious at
 Website File Changes Monitor is a very easy to use and zero admin plugin. Once installed it automatically starts scanning all the files on your WordPress site without requiring any manual intervention.
 
 However don’t let the simplicity and automation fool you. Under the hood the Website File Changes Monitor plugin is a fully blown and configurable tool that every WordPress site administrator should install on their WordPress sites and multisite network.
+
+#### Instant Email Notifications
+
+The Website File Changes Monitor plugin sends you an email when it detects file changes on your WordPress sites and multisite networks.
+
+The email includes all the details about the file changes; how many files were added, modified or deleted. The email will also include site admin changes such as plugins or themes installs, uninstalls and updates.
 
 #### No False Alarms - Just Genuine Alerts!
 
@@ -82,14 +88,16 @@ The Website File Changes Monitor plugin can also detect file changes on WordPres
 Support for the WordPress Files Monitor plugin is available for free via:
 
 * [forums](https://wordpress.org/support/plugins/website-file-changes-monitor/)
-* [email](https://www.wpwhitesecurity.com/contact-wp-white-security/)
+* [email](https://www.wpwhitesecurity.com/support/)
 
 For any other queries, feedback, or if you simply want to get in touch with us please use our [contact form](https://www.wpwhitesecurity.com/contact-wp-white-security/).
 
 ### Further Reading & Information
 The Website File Changes Monitor plugin is developed by [WP White Security](https://www.wpwhitesecurity.com/), developers of niche WordPress security and admin plugins, including [WP Security Audit Log](https://wordpress.org/plugins/wp-security-audit-log/), the most comprehensive WordPress activity log plugin.
 
-We have more than a decade of experience in the security and WordPress plugin development field and often share our thoughts on the [WP White Security Blog](https://www.wpwhitesecurity.com/blog/)
+* We often share our thoughts on the [WP White Security Blog](https://www.wpwhitesecurity.com/blog/)
+* Learn more on [file integrity monitoring for WordPress sites](https://www.wpwhitesecurity.com/wordpress-file-integrity-scanning-site/)
+* Read the [Website File Changes Monitor plugin page](https://www.wpwhitesecurity.com/website-file-changes-monitor/) for more technical details.
 
 == Installation ==
 
@@ -118,6 +126,27 @@ Yes you can, but before installing it please install and activate the [REST API 
 3. It is very easy to configure every aspect of the scan. User friendly WordPress like UI, so there is no learning curve involved.
 
 == Changelog ==
+
+= 1.1 (2019-06-18) =
+
+Release notes: [Email notifications of file changes on WordPress sites](https://www.wpwhitesecurity.com/website-file-changes-monitor-plugin-update-1-1/)
+
+* **New features**
+	* Email notifications to site admin when file changes are detected.
+	* First time install notification to guide the user.
+	* New "Items per page" drop down menu in all file changes views.
+	* New setting to delete all data from WordPress database upon plugin uninstall.
+	
+* **Improvements**
+	* Improved UX: file changes scan results are split in 3 tabs.
+	* Better handling and detection of symbolic links.
+	* Reviewed and improved text in the plugin's settings.
+	* Added links to the file changes viewer in the plugin's listing on the plugins page.
+	* Widtch of pop up window with list of files is now dynamic.
+	* Added plugin logo to WordPress menu entry. 
+
+* **Bug fix**
+	* File extensions exclusion list no longer reset when scanning is switched off.
 
 = 1.0.0 =
 Release Date: April, 2019
