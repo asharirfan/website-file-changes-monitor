@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Website File Changes Monitor
- * Plugin URI: http://www.wpwhitesecurity.com/
+ * Plugin URI: https://www.wpwhitesecurity.com/website-file-changes-monitor/
  * Description: A hassle-free way to get alerted of file changes on your WordPress site & boost security.
  * Author: WP White Security
- * Contributors: WP White Security, mrasharirfan
- * Version: 1.0
+ * Contributors: WP White Security
+ * Version: 1.2
  * Text Domain: website-file-changes-monitor
  * Author URI: http://www.wpwhitesecurity.com/
  * License: GPL3
@@ -15,7 +15,7 @@
 
 /*
 	Website Files Monitor
-	Copyright(c) 2019  Robert Abela  (email : robert@wpwhitesecurity.com)
+	Copyright(c) 2019  WP White Security  (email : info@wpwhitesecurity.com)
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License, version 3, as
 	published by the Free Software Foundation.
