@@ -121,9 +121,11 @@ Yes you can, but before installing it please install and activate the [REST API 
 
 == Screenshots ==
 
-1. The main screen where all the newly added files, modified and deleted files are reported.
+1. The main inteface where the identified added, modified and deleted files are reported.
 2. The plugin's exclusive smart technology alerts you when the file changes are due because of a WordPress core, plugin or theme install, update or uninstallation.
-3. It is very easy to configure every aspect of the scan. User friendly WordPress like UI, so there is no learning curve involved.
+3. The first time you install the plugin you can run an instant scan.
+4. When the plugin has all the file signatures (after the first scan) it will alert you of any file changes.
+5. An instant email is automatically sent to the site admin when file or site admin changes are detected.
 
 == Changelog ==
 
