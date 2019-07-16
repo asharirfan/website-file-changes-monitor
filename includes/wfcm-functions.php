@@ -598,3 +598,12 @@ function wfcm_create_index_file( $dir_path ) {
 function wfcm_create_htaccess_file( $dir_path ) {
 	return wfcm_write_to_file( trailingslashit( $dir_path ) . '.htaccess', 'Deny from all' );
 }
+
+/**
+ * Returns the timestamp for log files.
+ *
+ * @return string
+ */
+function wfcm_get_log_timestamp() {
+	return '[' . date( 'd-M-Y H:i:s' ) . ' UTC]';
+}
