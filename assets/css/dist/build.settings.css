@@ -12,6 +12,48 @@
   .wfcm-settings .wfcm-settings-danger th {
     padding: 20px 0 20px 10px; }
 
+.wfcm-settings .switch-wrap {
+  width: 55px;
+  text-align: center; }
+
+.wfcm-settings .switch {
+  display: none; }
+
+.wfcm-settings .switch + label {
+  width: 50px;
+  height: 20px;
+  position: relative;
+  background: #efefef;
+  border-radius: 20px;
+  display: inline-block;
+  border: 2px solid #444;
+  -webkit-transition: all .4s ease-in-out 0s;
+  -o-transition: all .4s ease-in-out 0s;
+  transition: all .4s ease-in-out 0s; }
+
+.wfcm-settings .switch + label:before {
+  top: 50%;
+  content: '';
+  right: 32px;
+  width: 15px;
+  height: 15px;
+  background: #444;
+  border-radius: 50%;
+  position: absolute;
+  margin-top: -7.5px;
+  -webkit-transition: inherit;
+  -o-transition: inherit;
+  transition: inherit; }
+
+.wfcm-settings .switch:checked + label {
+  background: #35ad68;
+  border-color: #35ad68; }
+
+.wfcm-settings .switch:checked + label:before {
+  right: 3px;
+  background: #fff;
+  border-color: transparent; }
+
 .wfcm-files-container {
   display: table;
   margin-bottom: 5px; }

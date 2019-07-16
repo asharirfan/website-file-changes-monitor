@@ -360,6 +360,21 @@ $disabled = 'no' === $settings['enabled'] ? 'disabled' : false;
 		</table>
 		<!-- Delete plugin data and settings -->
 
+		<br>
+		<p class="description"><?php esc_html_e( 'Enable the debug logging when requested by support. This is used for support.', 'website-file-changes-monitor' ); ?></p>
+		<table class="form-table">
+			<tr>
+				<th><label for="wfcm-debug-logging"><?php esc_html_e( 'Debug Logs', 'website-file-changes-monitor' ); ?></label></th>
+				<td>
+					<fieldset>
+						<div class="switch-wrap">
+							<input class="switch" id="wfcm-debug-logging" type="checkbox" name="wfcm-settings[debug-logging]" value="1" <?php checked( $settings['debug-logging'] ); ?>><label for="wfcm-debug-logging"></label>
+						</div>
+					</fieldset>
+				</td>
+			</tr>
+		</table>
+
 		<?php
 		wp_nonce_field( 'wfcm-save-admin-settings' );
 		submit_button();
