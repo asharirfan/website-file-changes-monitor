@@ -529,3 +529,72 @@ function wfcm_send_changes_email( $scan_changes_count ) {
 		WFCM_Email::send( $admin_email, $subject, $body );
 	}
 }
+
+/**
+ * Write data to log file in the uploads directory.
+ *
+ * @param string $filename - File name.
+ * @param string $content  - Contents of the file.
+ * @param bool   $override - (Optional) True if overriding file contents.
+ * @return bool
+ */
+function wfcm_write_to_file( $filename, $content, $override = false ) {
+	global $wp_filesystem;
+	require_once ABSPATH . 'wp-admin/includes/file.php';
+	WP_Filesystem();
+
+	$filepath = WFCM_UPLOADS_DIR . $filename;
+	$dir_path = dirname( $filepath );
+	$result   = false;
+
+	if ( ! is_dir( $dir_path ) ) {
+		wp_mkdir_p( $dir_path );
+	}
+
+	if ( ! $wp_filesystem->exists( $filepath ) || $override ) {
+		$result = $wp_filesystem->put_contents( $filepath, $content );
+	} else {
+		$existing_content = $wp_filesystem->get_contents( $filepath );
+		$result           = $wp_filesystem->put_contents( $filepath, $existing_content . $content );
+	}
+
+	return $result;
+}
+
+/**
+ * Write data to log file.
+ *
+ * @param string $data     - Data to write to file.
+ * @param bool   $override - Set to true if overriding the file.
+ * @return bool
+ */
+function wfcm_write_to_log( $data, $override = false ) {
+	if ( ! is_dir( WFCM_UPLOADS_DIR . WFCM_LOGS_DIR ) ) {
+		wfcm_create_index_file( WFCM_LOGS_DIR );
+		wfcm_create_htaccess_file( WFCM_LOGS_DIR );
+	}
+
+	return wfcm_write_to_file( trailingslashit( WFCM_LOGS_DIR ) . 'wfcm-debug.log', $data, $override );
+}
+
+/**
+ * Create an index.php file, if none exists, in order to
+ * avoid directory listing in the specified directory.
+ *
+ * @param string $dir_path - Directory Path.
+ * @return bool
+ */
+function wfcm_create_index_file( $dir_path ) {
+	return wfcm_write_to_file( trailingslashit( $dir_path ) . 'index.php', '<?php // Silence is golden' );
+}
+
+/**
+ * Create an .htaccess file, if none exists, in order to
+ * block access to directory listing in the specified directory.
+ *
+ * @param string $dir_path - Directory Path.
+ * @return bool
+ */
+function wfcm_create_htaccess_file( $dir_path ) {
+	return wfcm_write_to_file( trailingslashit( $dir_path ) . '.htaccess', 'Deny from all' );
+}
