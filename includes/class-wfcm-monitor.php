@@ -278,6 +278,14 @@ class WFCM_Monitor {
 		// Get directory path to scan.
 		$path_to_scan = $server_dirs[ $next_to_scan ];
 
+		// Log the scan start time.
+		if ( $this->scan_settings['debug-logging'] ) {
+			$msg  = wfcm_get_log_timestamp() . ' WFCM started scanning: ';
+			$msg .= $path_to_scan ? $path_to_scan : 'root';
+			$msg .= "\n";
+			wfcm_write_to_log( $msg );
+		}
+
 		if ( ( empty( $path_to_scan ) && in_array( 'root', $directories, true ) ) || ( $path_to_scan && in_array( $path_to_scan, $directories, true ) ) ) {
 			// Exclude everything else.
 			unset( $server_dirs[ $next_to_scan ] );
