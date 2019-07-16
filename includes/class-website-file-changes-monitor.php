@@ -56,6 +56,8 @@ final class Website_File_Changes_Monitor {
 	 * Define constants.
 	 */
 	public function define_constants() {
+		$uploads_dir = wp_upload_dir();
+
 		$this->define( 'WFCM_VERSION', $this->version );
 		$this->define( 'WFCM_BASE_NAME', plugin_basename( WFCM_PLUGIN_FILE ) );
 		$this->define( 'WFCM_BASE_URL', trailingslashit( plugin_dir_url( WFCM_PLUGIN_FILE ) ) );
@@ -63,6 +65,8 @@ final class Website_File_Changes_Monitor {
 		$this->define( 'WFCM_REST_NAMESPACE', 'website-file-changes-monitor/v1' );
 		$this->define( 'WFCM_OPT_PREFIX', 'wfcm-' );
 		$this->define( 'WFCM_MIN_PHP_VERSION', '5.5.0' );
+		$this->define( 'WFCM_UPLOADS_DIR', trailingslashit( $uploads_dir['basedir'] ) );
+		$this->define( 'WFCM_LOGS_DIR', 'wfcm-logs' );
 	}
 
 	/**
