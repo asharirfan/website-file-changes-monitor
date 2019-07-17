@@ -542,6 +542,14 @@ class WFCM_Monitor {
 
 		// Set the scan in progress to false because scan is complete.
 		wfcm_save_setting( 'scan-in-progress', false );
+
+		// Log the scan end time.
+		if ( $this->scan_settings['debug-logging'] ) {
+			$msg  = wfcm_get_log_timestamp() . ' WFCM finished scanning: ';
+			$msg .= $path_to_scan ? $path_to_scan : 'root';
+			$msg .= "\n";
+			wfcm_write_to_log( $msg );
+		}
 	}
 
 	/**
