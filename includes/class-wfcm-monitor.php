@@ -1185,6 +1185,12 @@ class WFCM_Monitor {
 			// Send email notification.
 			wfcm_send_changes_email( $this->scan_changes_count );
 
+			// Log the time when WFCM sends the scan email.
+			if ( $this->scan_settings['debug-logging'] ) {
+				$msg = wfcm_get_log_timestamp() . ' WFCM sent an email ' . "\n";
+				wfcm_write_to_log( $msg );
+			}
+
 			// Delete changes count for this scan.
 			$this->scan_changes_count( 'delete' );
 
