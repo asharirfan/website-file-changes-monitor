@@ -348,7 +348,7 @@ $disabled = 'no' === $settings['enabled'] ? 'disabled' : false;
 		</table>
 		<!-- Disable File Changes -->
 
-		<table class="form-table wfcm-settings-danger">
+		<h3><?php esc_html_e( 'Debug & Uninstall Settings', 'website-file-changes-monitor' ); ?></h3>
 			<tr>
 				<th><label for="wfcm-file-changes"><?php esc_html_e( 'Delete plugin data upon uninstall', 'website-file-changes-monitor' ); ?></label></th>
 				<td>
