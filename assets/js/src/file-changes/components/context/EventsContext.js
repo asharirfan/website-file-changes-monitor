@@ -154,6 +154,20 @@ export class EventsProvider extends Component {
 	}
 
 	/**
+	 * Start instant scan.
+	 */
+	async startInstantScan() {
+		let response = await FileEvents.startManualScan();
+
+		if ( response ) {
+			this.getFileEvents();
+			return response;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Component render.
 	 */
 	render() {
@@ -168,7 +182,8 @@ export class EventsProvider extends Component {
 					excludeEvent: this.excludeEvent.bind( this ),
 					handleBulkAction: this.handleBulkAction.bind( this ),
 					goToPage: this.goToPage.bind( this ),
-					handleShowItems: this.handleShowItems.bind( this )
+					handleShowItems: this.handleShowItems.bind( this ),
+					startInstantScan: this.startInstantScan.bind( this )
 				}}
 			>
 				{this.props.children}
