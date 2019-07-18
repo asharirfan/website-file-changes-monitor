@@ -27,50 +27,6 @@
 			padding: 20px 0 20px 10px;
 		}
 	}
-
-	.switch-wrap {
-		width: 55px;
-		text-align: center;
-	}
-
-	.switch {
-		display: none;
-	}
-
-	.switch + label {
-		width: 50px;
-		height: 20px;
-		position: relative;
-		background: #efefef;
-		border-radius: 20px;
-		display: inline-block;
-		border: 2px solid #444;
-		transition: all .4s ease-in-out 0s;
-	}
-
-	.switch + label:before {
-		top: 50%;
-		content: '';
-		right: 32px;
-		width: 15px;
-		height: 15px;
-		background: #444;
-		border-radius: 50%;
-		position: absolute;
-		margin-top: -7.5px;
-		transition: inherit;
-	}
-
-	.switch:checked + label {
-		background: #35ad68;
-		border-color: #35ad68;
-	}
-
-	.switch:checked + label:before {
-		right: 3px;
-		background: #fff;
-		border-color: transparent;
-	}
 }
 
 .wfcm-files-container {
