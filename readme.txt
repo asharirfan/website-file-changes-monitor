@@ -5,8 +5,8 @@ License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Tags: file monitor, file integrity scanner, file checker, file scanner, file security, security, file changes, file changes scanner
 Requires at least: 4.5
-Tested up to: 5.2
-Stable tag: 1.1
+Tested up to: 5.2.2
+Stable tag: 1.2
 Requires PHP: 5.6.20
 
 An easy way to get alerted via email of file changes on your WordPress site & boost security.
@@ -19,7 +19,7 @@ Identify leftover files that can lead to sensitive business & technical data exp
 
 Everyone who owns a WordPress website knows how difficult it is to manage the site's files. Leftover backup and source code files are very common, and they are the number one source of sensitive data breaches. Also, in case of a successful hack attack it is almost impossible to detect the infiltration and identify all the source code changes!
 
-Use the Website File Changes Monitor plugin to easily get alerted via email and spot leftover files, injected malware and code changes! Remove files that could leave you expose and clean malware infections at the earliest possible.
+Use the [Website File Changes Monitor plugin](https://www.wpwhitesecurity.com/website-file-changes-monitor/) to easily get alerted via email and spot leftover files, injected malware and code changes! Remove files that could leave you expose and clean malware infections at the earliest possible.
 
 ### Why Do You Need a Website File Changes Monitor?
 
@@ -129,28 +129,16 @@ Yes you can, but before installing it please install and activate the [REST API 
 
 == Changelog ==
 
-= 1.1 (2019-06-18) =
-
-Release notes: [Email notifications of file changes on WordPress sites](https://www.wpwhitesecurity.com/website-file-changes-monitor-plugin-update-1-1/)
+= 1.2 (2019-06-22) =
 
 * **New features**
-	* Email notifications to site admin when file changes are detected.
-	* First time install notification to guide the user.
-	* New "Items per page" drop down menu in all file changes views.
-	* New setting to delete all data from WordPress database upon plugin uninstall.
+	* Scan Now button added to main plugin interface.
+	* Setting to enable scan debug logs (to help troubleshooting support issues).
 	
-* **Improvements**
-	* Improved UX: file changes scan results are split in 3 tabs.
-	* Better handling and detection of symbolic links.
-	* Reviewed and improved text in the plugin's settings.
-	* Added links to the file changes viewer in the plugin's listing on the plugins page.
-	* Widtch of pop up window with list of files is now dynamic.
-	* Added plugin logo to WordPress menu entry. 
+* **Improvement**
+	* Improved the detection of plugins installed via zip file (not from repo).
+	* Improved alert for when WSAL is also installed on the same website.
+	
+= Earlier versions =
 
-* **Bug fix**
-	* File extensions exclusion list no longer reset when scanning is switched off.
-
-= 1.0.0 =
-Release Date: April, 2019
-
-* First release - everything is new!
+Please refer to the [complete plugin changelog](https://www.wpwhitesecurity.com/support/kb/wfcm-plugin-changelog/) for more detailed information about what was new, improved and fixed in previous versions of the [Website File Changes Monitor plugin for WordPress](https://www.wpwhitesecurity.com/website-file-changes-monitor/).
