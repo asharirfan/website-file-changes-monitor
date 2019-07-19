@@ -278,6 +278,14 @@ class WFCM_Monitor {
 		// Get directory path to scan.
 		$path_to_scan = $server_dirs[ $next_to_scan ];
 
+		// Log the scan start time.
+		if ( $this->scan_settings['debug-logging'] ) {
+			$msg  = wfcm_get_log_timestamp() . ' WFCM started scanning: ';
+			$msg .= $path_to_scan ? $path_to_scan : 'root';
+			$msg .= "\n";
+			wfcm_write_to_log( $msg );
+		}
+
 		if ( ( empty( $path_to_scan ) && in_array( 'root', $directories, true ) ) || ( $path_to_scan && in_array( $path_to_scan, $directories, true ) ) ) {
 			// Exclude everything else.
 			unset( $server_dirs[ $next_to_scan ] );
@@ -408,6 +416,13 @@ class WFCM_Monitor {
 
 						// Created file event.
 						wfcm_create_event( 'added', $file, $file_hash );
+
+						// Log the added files.
+						if ( $this->scan_settings['debug-logging'] ) {
+							$msg  = wfcm_get_log_timestamp() . ' Added file: ' . $file;
+							$msg .= "\n";
+							wfcm_write_to_log( $msg );
+						}
 					}
 				}
 
@@ -441,6 +456,13 @@ class WFCM_Monitor {
 
 						// Removed file event.
 						wfcm_create_event( 'deleted', $file, $file_hash );
+
+						// Log the removed files.
+						if ( $this->scan_settings['debug-logging'] ) {
+							$msg  = wfcm_get_log_timestamp() . ' Deleted file: ' . $file;
+							$msg .= "\n";
+							wfcm_write_to_log( $msg );
+						}
 					}
 				}
 
@@ -452,6 +474,13 @@ class WFCM_Monitor {
 					foreach ( $files_changed as $file => $file_hash ) {
 						// Create event for each changed file.
 						wfcm_create_event( 'modified', $file, $file_hash );
+
+						// Log the modified files.
+						if ( $this->scan_settings['debug-logging'] ) {
+							$msg  = wfcm_get_log_timestamp() . ' Modified file: ' . $file;
+							$msg .= "\n";
+							wfcm_write_to_log( $msg );
+						}
 					}
 				}
 
@@ -513,6 +542,15 @@ class WFCM_Monitor {
 
 		// Set the scan in progress to false because scan is complete.
 		wfcm_save_setting( 'scan-in-progress', false );
+		wfcm_save_setting( 'last-scan-timestamp', time() );
+
+		// Log the scan end time.
+		if ( $this->scan_settings['debug-logging'] ) {
+			$msg  = wfcm_get_log_timestamp() . ' WFCM finished scanning: ';
+			$msg .= $path_to_scan ? $path_to_scan : 'root';
+			$msg .= "\n";
+			wfcm_write_to_log( $msg );
+		}
 	}
 
 	/**
@@ -992,12 +1030,30 @@ class WFCM_Monitor {
 
 								// Set the count.
 								$this->scan_changes_count['plugin_installs'] += 1;
+
+								// Log the installed plugin files.
+								if ( $this->scan_settings['debug-logging'] ) {
+									$msg  = wfcm_get_log_timestamp() . ' Installed plugin: ' . $dir_path . "\n";
+									$msg .= 'Added files:' . "\n";
+									$msg .= implode( "\n", array_keys( $event_content ) );
+									$msg .= "\n";
+									wfcm_write_to_log( $msg );
+								}
 							} elseif ( 'themes' === $excluded_type ) {
 								// Set context.
 								$event_context = __( 'Theme Install', 'website-file-changes-monitor' );
 
 								// Set the count.
 								$this->scan_changes_count['theme_installs'] += 1;
+
+								// Log the installed theme files.
+								if ( $this->scan_settings['debug-logging'] ) {
+									$msg  = wfcm_get_log_timestamp() . ' Installed theme: ' . $dir_path . "\n";
+									$msg .= 'Added files:' . "\n";
+									$msg .= implode( "\n", array_keys( $event_content ) );
+									$msg .= "\n";
+									wfcm_write_to_log( $msg );
+								}
 							}
 
 							wfcm_create_directory_event( 'added', $dir_path, array_values( $event_content ), $event_context );
@@ -1009,12 +1065,30 @@ class WFCM_Monitor {
 
 								// Set the count.
 								$this->scan_changes_count['plugin_uninstalls'] += 1;
+
+								// Log the uninstalled plugin files.
+								if ( $this->scan_settings['debug-logging'] ) {
+									$msg  = wfcm_get_log_timestamp() . ' Uninstalled plugin: ' . $dir_path . "\n";
+									$msg .= 'Deleted files:' . "\n";
+									$msg .= implode( "\n", array_keys( $event_content ) );
+									$msg .= "\n";
+									wfcm_write_to_log( $msg );
+								}
 							} elseif ( 'themes' === $excluded_type ) {
 								// Set context.
 								$event_context = __( 'Theme Uninstall', 'website-file-changes-monitor' );
 
 								// Set the count.
 								$this->scan_changes_count['theme_uninstalls'] += 1;
+
+								// Log the uninstalled theme files.
+								if ( $this->scan_settings['debug-logging'] ) {
+									$msg  = wfcm_get_log_timestamp() . ' Uninstalled theme: ' . $dir_path . "\n";
+									$msg .= 'Deleted files:' . "\n";
+									$msg .= implode( "\n", array_keys( $event_content ) );
+									$msg .= "\n";
+									wfcm_write_to_log( $msg );
+								}
 							}
 
 							wfcm_create_directory_event( 'deleted', $dir_path, array_values( $event_content ), $event_context );
@@ -1112,6 +1186,12 @@ class WFCM_Monitor {
 			// Send email notification.
 			wfcm_send_changes_email( $this->scan_changes_count );
 
+			// Log the time when WFCM sends the scan email.
+			if ( $this->scan_settings['debug-logging'] ) {
+				$msg = wfcm_get_log_timestamp() . ' WFCM sent an email ' . "\n";
+				wfcm_write_to_log( $msg );
+			}
+
 			// Delete changes count for this scan.
 			$this->scan_changes_count( 'delete' );
 
@@ -1173,34 +1253,65 @@ class WFCM_Monitor {
 		$dirname       = ABSPATH !== $directory ? dirname( $directory ) : $directory;
 		$dir_path      = '';
 		$event_context = '';
+		$log_type      = '';
 
 		if ( '/plugins' === $dirname ) {
 			$dir_path      = untrailingslashit( WP_CONTENT_DIR ) . $directory;
 			$event_context = __( 'Plugin Update', 'website-file-changes-monitor' );
+			$log_type      = 'plugin';
 
 			// Set the count.
 			$this->scan_changes_count['plugin_updates'] += 1;
 		} elseif ( '/themes' === $dirname ) {
 			$dir_path      = untrailingslashit( WP_CONTENT_DIR ) . $directory;
 			$event_context = __( 'Theme Update', 'website-file-changes-monitor' );
+			$log_type      = 'theme';
 
 			// Set the count.
 			$this->scan_changes_count['theme_updates'] += 1;
 		} elseif ( ABSPATH === $directory || false !== strpos( $directory, 'wp-admin' ) || false !== strpos( $directory, WPINC ) ) {
 			$dir_path      = $directory;
 			$event_context = __( 'Core Update', 'website-file-changes-monitor' );
+			$log_type      = 'core';
 		}
 
 		if ( in_array( 'added', $this->scan_settings['type'], true ) && count( $files_added ) > 0 ) {
 			wfcm_create_directory_event( 'added', $dir_path, array_values( $files_added ), $event_context );
+
+			// Log the added update files.
+			if ( $this->scan_settings['debug-logging'] ) {
+				$msg  = wfcm_get_log_timestamp() . " Updated $log_type: " . $dir_path . "\n";
+				$msg .= 'Added files:' . "\n";
+				$msg .= implode( "\n", array_keys( $files_added ) );
+				$msg .= "\n";
+				wfcm_write_to_log( $msg );
+			}
 		}
 
 		if ( in_array( 'deleted', $this->scan_settings['type'], true ) && count( $files_removed ) > 0 ) {
 			wfcm_create_directory_event( 'deleted', $dir_path, array_values( $files_removed ), $event_context );
+
+			// Log the deleted update files.
+			if ( $this->scan_settings['debug-logging'] ) {
+				$msg  = wfcm_get_log_timestamp() . " Updated $log_type: " . $dir_path . "\n";
+				$msg .= 'Deleted files:' . "\n";
+				$msg .= implode( "\n", array_keys( $files_removed ) );
+				$msg .= "\n";
+				wfcm_write_to_log( $msg );
+			}
 		}
 
 		if ( in_array( 'modified', $this->scan_settings['type'], true ) && count( $files_changed ) > 0 ) {
 			wfcm_create_directory_event( 'modified', $dir_path, array_values( $files_changed ), $event_context );
+
+			// Log the modified update files.
+			if ( $this->scan_settings['debug-logging'] ) {
+				$msg  = wfcm_get_log_timestamp() . " Updated $log_type: " . $dir_path . "\n";
+				$msg .= 'Modified files:' . "\n";
+				$msg .= implode( "\n", array_keys( $files_changed ) );
+				$msg .= "\n";
+				wfcm_write_to_log( $msg );
+			}
 		}
 	}
 

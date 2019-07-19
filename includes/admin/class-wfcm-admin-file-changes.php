@@ -177,6 +177,10 @@ class WFCM_Admin_File_Changes {
 		$wp_version        = get_bloginfo( 'version' );
 		$suffix            = ( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? '' : '.min'; // Check for debug mode.
 		$wfcm_dependencies = array();
+		$datetime_format   = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+		$last_scan_time    = wfcm_get_setting( 'last-scan-timestamp', false );
+		$last_scan_time    = $last_scan_time + ( get_option( 'gmt_offset' ) * 60 * 60 );
+		$last_scan_time    = date( $datetime_format, $last_scan_time );
 
 		wp_enqueue_style(
 			'wfcm-file-changes-styles',
@@ -221,13 +225,13 @@ class WFCM_Admin_File_Changes {
 			'wfcm-file-changes',
 			'wfcmFileChanges',
 			array(
-				'security'    => wp_create_nonce( 'wp_rest' ),
-				'fileEvents'  => array(
+				'security'       => wp_create_nonce( 'wp_rest' ),
+				'fileEvents'     => array(
 					'get'    => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$events_base ) ),
 					'delete' => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$events_base ) ),
 				),
-				'pageHead'    => __( 'Website File Changes Monitor', 'website-file-changes-monitor' ),
-				'pagination'  => array(
+				'pageHead'       => __( 'Website File Changes Monitor', 'website-file-changes-monitor' ),
+				'pagination'     => array(
 					'fileChanges'  => __( 'file changes', 'website-file-changes-monitor' ),
 					'firstPage'    => __( 'First page', 'website-file-changes-monitor' ),
 					'previousPage' => __( 'Previous page', 'website-file-changes-monitor' ),
@@ -235,24 +239,24 @@ class WFCM_Admin_File_Changes {
 					'nextPage'     => __( 'Next page', 'website-file-changes-monitor' ),
 					'lastPage'     => __( 'Last page', 'website-file-changes-monitor' ),
 				),
-				'labels'      => array(
+				'labels'         => array(
 					'addedFiles'    => __( 'Added Files', 'website-file-changes-monitor' ),
 					'deletedFiles'  => __( 'Deleted Files', 'website-file-changes-monitor' ),
 					'modifiedFiles' => __( 'Modified Files', 'website-file-changes-monitor' ),
 				),
-				'bulkActions' => array(
+				'bulkActions'    => array(
 					'screenReader' => __( 'Select bulk action', 'website-file-changes-monitor' ),
 					'bulkActions'  => __( 'Bulk Actions', 'website-file-changes-monitor' ),
 					'markAsRead'   => __( 'Mark as Read', 'website-file-changes-monitor' ),
 					'exclude'      => __( 'Exclude', 'website-file-changes-monitor' ),
 					'apply'        => __( 'Apply', 'website-file-changes-monitor' ),
 				),
-				'showItems'   => array(
+				'showItems'      => array(
 					'added'    => (int) wfcm_get_setting( 'added-per-page', false ),
 					'modified' => (int) wfcm_get_setting( 'modified-per-page', false ),
 					'deleted'  => (int) wfcm_get_setting( 'deleted-per-page', false ),
 				),
-				'table'       => array(
+				'table'          => array(
 					'path'       => __( 'Path', 'website-file-changes-monitor' ),
 					'name'       => __( 'Name', 'website-file-changes-monitor' ),
 					'type'       => __( 'Type', 'website-file-changes-monitor' ),
@@ -260,11 +264,11 @@ class WFCM_Admin_File_Changes {
 					'exclude'    => __( 'Exclude from scans', 'website-file-changes-monitor' ),
 					'noEvents'   => __( 'No file changes detected!', 'website-file-changes-monitor' ),
 				),
-				'monitor'     => array(
+				'monitor'        => array(
 					'start' => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$monitor_base . '/start' ) ),
 					'stop'  => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$monitor_base . '/stop' ) ),
 				),
-				'scanModal'   => array(
+				'scanModal'      => array(
 					'logoSrc'         => WFCM_BASE_URL . 'assets/img/wfcm-logo.svg',
 					'dismiss'         => wfcm_get_setting( 'dismiss-instant-scan-modal', false ),
 					'adminAjax'       => admin_url( 'admin-ajax.php' ),
@@ -278,6 +282,18 @@ class WFCM_Admin_File_Changes {
 					'initialMsg'      => __( 'The plugin will scan for file changes at 2:00AM every day. You can either wait for the first scan or launch an instant scan.', 'website-file-changes-monitor' ),
 					'afterScanMsg'    => __( 'The first file scan is complete. Now the plugin has the file fingerprints and it will alert you via email when it detect changes.', 'website-file-changes-monitor' ),
 				),
+				'instantScan'    => array(
+					'scanNow'      => __( 'Scan Now', 'website-file-changes-monitor' ),
+					'scanning'     => __( 'Scanning...', 'website-file-changes-monitor' ),
+					'scanFailed'   => __( 'Scan Failed', 'website-file-changes-monitor' ),
+					'lastScan'     => __( 'Last scan', 'website-file-changes-monitor' ),
+					'lastScanTime' => $last_scan_time,
+				),
+				'monitor'        => array(
+					'start' => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$monitor_base . '/start' ) ),
+					'stop'  => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$monitor_base . '/stop' ) ),
+				),
+				'dateTimeFormat' => $datetime_format,
 			)
 		);
 

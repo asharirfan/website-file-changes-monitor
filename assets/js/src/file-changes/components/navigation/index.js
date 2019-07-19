@@ -6,6 +6,7 @@ import { EventsContext } from '../context/EventsContext';
 import BulkActions from './BulkActions';
 import Pagination from './Pagination';
 import ShowItems from './ShowItems';
+import InstantScan from './InstantScan';
 
 const Navigation = ( props ) => {
 	const position = props.position;
@@ -15,9 +16,10 @@ const Navigation = ( props ) => {
 		{
 			'top' === position ?
 			<EventsContext.Consumer>
-				{ ({totalItems, maxPages, paged, goToPage, handleBulkAction}) => (
+				{ ({totalItems, maxPages, paged, goToPage, handleBulkAction, startInstantScan}) => (
 					<div className="tablenav top">
 						<BulkActions handleBulkAction={handleBulkAction} />
+						<InstantScan startInstantScan={startInstantScan} />
 						<Pagination totalItems={totalItems} maxPages={maxPages} paged={paged} goToPage={goToPage} />
 					</div>
 				) }

@@ -348,12 +348,25 @@ $disabled = 'no' === $settings['enabled'] ? 'disabled' : false;
 		</table>
 		<!-- Disable File Changes -->
 
-		<table class="form-table wfcm-settings-danger">
+		<h3><?php esc_html_e( 'Debug & Uninstall Settings', 'website-file-changes-monitor' ); ?></h3>
+		<p class="description"><?php esc_html_e( 'Enable the debug logging when requested by support. This is used for support.', 'website-file-changes-monitor' ); ?></p>
+		<table class="form-table">
 			<tr>
-				<th><label for="wfcm-file-changes"><?php esc_html_e( 'Delete plugin data upon uninstall', 'website-file-changes-monitor' ); ?></label></th>
+				<th><label for="wfcm-debug-logging"><?php esc_html_e( 'Debug Logs', 'website-file-changes-monitor' ); ?></label></th>
 				<td>
 					<fieldset>
-						<label><input name="wfcm-settings[delete-data]" type="checkbox" value="1" <?php checked( $settings['delete-data'] ); ?>></label>
+						<input id="wfcm-debug-logging" type="checkbox" name="wfcm-settings[debug-logging]" value="1" <?php checked( $settings['debug-logging'] ); ?>>
+					</fieldset>
+				</td>
+			</tr>
+		</table>
+
+		<table class="form-table wfcm-settings-danger">
+			<tr>
+				<th><label for="wfcm-delete-data"><?php esc_html_e( 'Delete plugin data upon uninstall', 'website-file-changes-monitor' ); ?></label></th>
+				<td>
+					<fieldset>
+						<input id="wfcm-delete-data" name="wfcm-settings[delete-data]" type="checkbox" value="1" <?php checked( $settings['delete-data'] ); ?>>
 					</fieldset>
 				</td>
 			</tr>

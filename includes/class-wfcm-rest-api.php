@@ -158,7 +158,11 @@ class WFCM_REST_API {
 		}
 
 		wfcm_delete_setting( 'scan-stop' );
-		return true;
+		$datetime_format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+		$last_scan_time  = wfcm_get_setting( 'last-scan-timestamp', false );
+		$last_scan_time  = $last_scan_time + ( get_option( 'gmt_offset' ) * 60 * 60 );
+		$last_scan_time  = date( $datetime_format, $last_scan_time );
+		return $last_scan_time;
 	}
 
 	/**

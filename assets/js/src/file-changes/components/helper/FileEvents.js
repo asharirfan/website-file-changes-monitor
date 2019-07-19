@@ -77,9 +77,23 @@ async function excludeEvent( id ) {
 	return response;
 }
 
+/**
+ * Start the manual scan.
+ */
+async function startManualScan() {
+	const requestUrl = `${wfcmFileChanges.monitor.start}`;
+	const request = getRestRequestObject( 'GET', requestUrl );
+
+	// Send the request.
+	let response = await fetch( request );
+	response = await response.json();
+	return response;
+}
+
 export default {
 	getRestRequestObject,
 	getEvents,
 	markEventAsRead,
-	excludeEvent
+	excludeEvent,
+	startManualScan
 };

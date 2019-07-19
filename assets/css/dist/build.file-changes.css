@@ -6,7 +6,7 @@
 
 .tablenav .actions {
   padding: 0;
-  margin: 3px 0 9px; }
+  margin: 3px 9px 9px 0; }
 
 .tablenav .tablenav-pages .button,
 .tablenav .tablenav-pages .tablenav-pages-navspan,
@@ -98,4 +98,9 @@
 
 .wfcm-modal-body--scrollable {
   overflow-y: scroll; }
+
+#last-scan-timestamp {
+  display: inline-block;
+  vertical-align: top;
+  margin: 4px 9px; }
 
