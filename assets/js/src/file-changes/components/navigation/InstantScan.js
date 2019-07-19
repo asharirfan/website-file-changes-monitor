@@ -44,7 +44,7 @@ export default class InstantScan extends Component {
 	render() {
 		return (
 			<div className="alignleft actions">
-				<input type="submit" className="button action" value={this.state.scanBtnValue} onClick={this.startScan.bind( this )} disabled={this.state.scanning} />
+				<input type="submit" className="button-primary" value={this.state.scanBtnValue} onClick={this.startScan.bind( this )} disabled={this.state.scanning} />
 				{
 					this.state.lastScanTimestamp ?
 					<span id="last-scan-timestamp">{wfcmFileChanges.instantScan.lastScan}: {this.state.lastScanTimestamp}</span> :
