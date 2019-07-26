@@ -9,7 +9,7 @@ Tested up to: 5.2.2
 Stable tag: 1.2
 Requires PHP: 5.6.20
 
-An easy way to get alerted via email of file changes on your WordPress site & boost security.
+Get alerted via email of file changes on your WordPress sites & boost security. No false positives!
 
 == Description ==
 
@@ -20,6 +20,10 @@ Identify leftover files that can lead to sensitive business & technical data exp
 Everyone who owns a WordPress website knows how difficult it is to manage the site's files. Leftover backup and source code files are very common, and they are the number one source of sensitive data breaches. Also, in case of a successful hack attack it is almost impossible to detect the infiltration and identify all the source code changes!
 
 Use the [Website File Changes Monitor plugin](https://www.wpwhitesecurity.com/website-file-changes-monitor/) to easily get alerted via email and spot leftover files, injected malware and code changes! Remove files that could leave you expose and clean malware infections at the earliest possible.
+
+#### Maintained & Supported by WP White Security
+
+WP White Security builds high-quality niche WordPress security & admin plugins like [WP Security Audit Log](https://www.wpsecurityauditlog.com/), the #1 WordPress activity log plugin. Browse our list of [WordPress plugins](https://www.wpwhitesecurity.com/wordpress-plugins/ that help you better manage and improve the security of your WordPress website.
 
 ### Why Do You Need a Website File Changes Monitor?
 
