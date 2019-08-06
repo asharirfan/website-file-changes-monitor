@@ -305,6 +305,32 @@ function wfcm_get_events_for_js( $events ) {
  * Install routine that executes on every plugin update.
  */
 function wfcm_install() {
+	// Installation errors.
+	$errors = false;
+
+	// Check for multisite.
+	if ( is_multisite() && ! is_network_admin() ) {
+		if ( is_super_admin() ) {
+			$errors  = esc_html__( 'The Website File Changes Monitor plugin is a multisite network tool, so it has to be activated at network level.', 'website-file-changes-monitor' );
+			$errors .= '<br />';
+			$errors .= '<a href="javascript:;" onclick="window.top.location.href=\'' . esc_url( network_admin_url( 'plugins.php' ) ) . '\'">' . esc_html__( 'Redirect me to the network dashboard.', 'website-file-changes-monitor' ) . '</a> ';
+		} else {
+			$errors  = esc_html__( 'The Website File Changes Monitor plugin is a multisite network tool, so it has to be activated at network level.', 'website-file-changes-monitor' );
+			$errors .= '<br />';
+			$errors .= esc_html__( 'Please contact your multisite administrator.', 'website-file-changes-monitor' );
+		}
+	}
+
+	if ( $errors ) :
+		?>
+		<html>
+			<head><style>body{margin:0;}.warn-icon-tri{top:7px;left:5px;position:absolute;border-left:16px solid #FFF;border-right:16px solid #FFF;border-bottom:28px solid #C33;height:3px;width:4px}.warn-icon-chr{top:10px;left:18px;position:absolute;color:#FFF;font:26px Georgia}.warn-icon-cir{top:4px;left:0;position:absolute;overflow:hidden;border:6px solid #FFF;border-radius:32px;width:34px;height:34px}.warn-wrap{position:relative;font-size:13px;font-family:sans-serif;padding:6px 48px;line-height:1.4;}</style></head>
+			<body><div class="warn-wrap"><div class="warn-icon-tri"></div><div class="warn-icon-chr">!</div><div class="warn-icon-cir"></div><span><?php echo $errors; // @codingStandardsIgnoreLine ?></span></div></body>
+		</html>
+		<?php
+		die( 1 );
+	endif;
+
 	// WSAL plugins.
 	$wsal_plugins = array( 'wp-security-audit-log/wp-security-audit-log.php', 'wp-security-audit-log-premium/wp-security-audit-log.php', 'WP-Security-Audit-Log-Premium/wp-security-audit-log.php' );
 
