@@ -18,10 +18,12 @@ class WFCM_Admin_Menus {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'add_admin_menu' ), 10 );
-		add_action( 'admin_menu', array( $this, 'settings_menu' ), 20 );
-		add_action( 'admin_menu', array( $this, 'about_menu' ), 30 );
-		add_action( 'admin_menu', array( $this, 'add_events_count' ), 40 );
+		$menu_action = is_multisite() ? 'network_admin_menu' : 'admin_menu';
+
+		add_action( $menu_action, array( $this, 'add_admin_menu' ), 10 );
+		add_action( $menu_action, array( $this, 'settings_menu' ), 20 );
+		add_action( $menu_action, array( $this, 'about_menu' ), 30 );
+		add_action( $menu_action, array( $this, 'add_events_count' ), 40 );
 
 		add_action( 'admin_print_styles', array( $this, 'admin_styles' ) );
 		add_filter( 'plugin_action_links_' . WFCM_BASE_NAME, array( $this, 'shortcut_links' ), 10, 1 );
