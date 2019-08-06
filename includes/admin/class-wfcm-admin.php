@@ -84,6 +84,12 @@ class WFCM_Admin {
 	 * Show plugin admin notices (if any).
 	 */
 	public function show_admin_notices() {
+		if ( ! is_multisite() && ! current_user_can( 'manage_options' ) ) {
+			return;
+		} elseif ( is_multisite() && ! is_super_admin() ) {
+			return;
+		}
+
 		// Get admin notices option.
 		$admin_notices = wfcm_get_setting( 'admin-notices', array() );
 
