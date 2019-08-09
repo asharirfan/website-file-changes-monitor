@@ -26,11 +26,14 @@
 .wp-list-table .column-content-type {
   width: 12%; }
 
+.wp-list-table .column-event-datetime {
+  width: 13%; }
+
 .wp-list-table .column-event-action {
-  width: 12%; }
+  width: 85px; }
 
 .wp-list-table .column-event-exclude {
-  width: 14%; }
+  width: 120px; }
 
 .wp-list-table .column-event-content {
   width: 25px; }
@@ -61,8 +64,7 @@
     height: 23px; }
 
 .wp-list-table td .wfcm-exclude-btn-file {
-  margin-right: 5px;
-  margin-bottom: 5px; }
+  margin-right: 5px; }
 
 .wfcm-modal-header {
   display: -ms-flexbox;
@@ -107,4 +109,17 @@
   display: inline-block;
   vertical-align: top;
   margin: 4px 9px; }
+
+.wfcm-action-button {
+  display: inline-block;
+  vertical-align: middle;
+  background: no-repeat;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: #444444; }
+  .wfcm-action-button .dashicons {
+    width: 27px;
+    height: 27px;
+    font-size: 27px; }
 

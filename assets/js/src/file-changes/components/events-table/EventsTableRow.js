@@ -3,6 +3,7 @@
  */
 import React, { Component } from 'react';
 import ContentModal from '../modal/ContentModal';
+import ReactTooltip from 'react-tooltip';
 
 export default class EventsTableRow extends Component {
 	render() {
@@ -16,28 +17,26 @@ export default class EventsTableRow extends Component {
 				<td>{event.filename}</td>
 				<td>
 					<span className={`content-type ${contentType}`}>
-					{
-						'directory' === contentType && event.eventContext ?
-						event.eventContext :
-						event.contentType
-					}
+						{
+							'directory' === contentType && event.eventContext ?
+								event.eventContext :
+								event.contentType
+						}
 					</span>
 				</td>
-				<td><input className="button-primary" type="button" value="Mark as Read" onClick={this.props.markEventAsRead.bind( this, event.id )} /></td>
+				<td>{event.dateTime}</td>
+				<td><button className="wfcm-action-button"><span className="dashicons dashicons-yes-alt" onClick={this.props.markEventAsRead.bind( this, event.id )}></span></button></td>
 				<td>
-					{
-						'file' === contentType ?
-						<input className="button-secondary wfcm-exclude-btn-file" type="button" value="Exclude File" onClick={this.props.excludeEvent.bind( this, event.id, 'file' )} /> :
-						null
-					}	
-					<input className="button-secondary wfcm-exclude-btn-directory" type="button" value="Exclude Directory" onClick={this.props.excludeEvent.bind( this, event.id, 'dir' )} />
+					{ 'file' === contentType ? <button className="wfcm-action-button wfcm-exclude-btn-file" data-tip={wfcmFileChanges.table.excludeFile} onClick={this.props.excludeEvent.bind( this, event.id, 'file' )}><span className="dashicons dashicons-admin-page"></span></button> : null }
+					<button className="wfcm-action-button wfcm-exclude-btn-directory" data-tip={wfcmFileChanges.table.excludeDir} onClick={this.props.excludeEvent.bind( this, event.id, 'dir' )}><span className="dashicons dashicons-portfolio"></span></button>
+					<ReactTooltip effect="solid" />
 				</td>
 				<td>
-				{
-					'directory' === contentType ?
-					<ContentModal eventFiles={event.content} /> :
-					null
-				}
+					{
+						'directory' === contentType ?
+							<ContentModal eventFiles={ event.content } /> :
+							null
+					}
 				</td>
 			</tr>
 		);

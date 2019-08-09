@@ -284,6 +284,11 @@ function wfcm_get_events_for_js( $events ) {
 			$content_type  = $event->get_content_type();
 			$event_context = 'directory' === $content_type ? $event->get_event_context() : '';
 
+			$event_date      = $event->event_post->post_date;
+			$date_obj        = \DateTime::createFromFormat( 'Y-m-d H:i:s', $event_date );
+			$datetime_format = str_replace( array( '.$$$', '&\n\b\s\p;A' ), '', wfcm_get_datetime_format() );
+			$date_str        = $date_obj ? $date_obj->format( $datetime_format ) : '';
+
 			$js_events[] = (object) array(
 				'id'           => $event->get_event_id(),
 				'path'         => dirname( $event->get_event_title() ),
@@ -292,6 +297,7 @@ function wfcm_get_events_for_js( $events ) {
 				'contentType'  => ucwords( $content_type ),
 				'eventContext' => $event_context,
 				'checked'      => false,
+				'dateTime'     => $date_str,
 			);
 		}
 	}

@@ -12,6 +12,7 @@ export default class EventsTableHead extends Component {
 				<th>{wfcmFileChanges.table.path}</th>
 				<th className="column-event-name">{wfcmFileChanges.table.name}</th>
 				<th className="column-content-type">{wfcmFileChanges.table.type}</th>
+				<th className="column-event-datetime">{wfcmFileChanges.table.dateTime}</th>
 				<th className="column-event-action">{wfcmFileChanges.table.markAsRead}</th>
 				<th className="column-event-exclude">{wfcmFileChanges.table.exclude}</th>
 				<th className="column-event-content"></th>
