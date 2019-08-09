@@ -125,7 +125,7 @@ window.addEventListener( 'load', function() {
 	// Update settings state when keep log options change.
 	[ ...keepLog ].forEach( toggle => {
 		toggle.addEventListener( 'change', function() {
-			toggleSettings( this.value );
+			toggleSettings( toggle.checked );
 		});
 	});
 
@@ -138,7 +138,7 @@ window.addEventListener( 'load', function() {
 		const settingFields = [ ...document.querySelectorAll( '.wfcm-table fieldset' ) ];
 
 		settingFields.forEach( setting => {
-			if ( 'no' === settingValue ) {
+			if ( ! settingValue ) {
 				setting.disabled = true;
 			} else {
 				setting.disabled = false;
