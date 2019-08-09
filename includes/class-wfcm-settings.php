@@ -75,7 +75,9 @@ class WFCM_Settings {
 	 * @return array
 	 */
 	public static function get_monitor_settings() {
-		$default_dirs = array_keys( wfcm_get_server_directories( 'display' ) );
+		$default_dirs  = array_keys( wfcm_get_server_directories( 'display' ) );
+		$content_dir   = trailingslashit( WP_CONTENT_DIR );
+		$excluded_dirs = array( $content_dir . 'cache', $content_dir . 'upgrade' );
 
 		return array(
 			'enabled'       => self::get_setting( 'keep-log', 'yes' ),
@@ -88,7 +90,7 @@ class WFCM_Settings {
 			'date'          => self::get_setting( 'scan-date', '01' ),
 			'directories'   => self::get_setting( 'scan-directories', $default_dirs ),
 			'file-size'     => self::get_setting( 'scan-file-size', 5 ),
-			'exclude-dirs'  => self::get_setting( 'scan-exclude-dirs', array( trailingslashit( WP_CONTENT_DIR ) . 'cache' ) ),
+			'exclude-dirs'  => self::get_setting( 'scan-exclude-dirs', $excluded_dirs ),
 			'exclude-files' => self::get_setting( 'scan-exclude-files', array() ),
 			'exclude-exts'  => self::get_setting( 'scan-exclude-exts', array( 'jpg', 'jpeg', 'png', 'bmp', 'pdf', 'txt', 'log', 'mo', 'po', 'mp3', 'wav', 'gif', 'ico', 'jpe', 'psd', 'raw', 'svg', 'tif', 'tiff', 'aif', 'flac', 'm4a', 'oga', 'ogg', 'ra', 'wma', 'asf', 'avi', 'mkv', 'mov', 'mp4', 'mpe', 'mpeg', 'mpg', 'ogv', 'qt', 'rm', 'vob', 'webm', 'wm', 'wmv' ) ),
 		);
