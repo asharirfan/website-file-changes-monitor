@@ -60,6 +60,10 @@
     width: 23px;
     height: 23px; }
 
+.wp-list-table td .wfcm-exclude-btn-file {
+  margin-right: 5px;
+  margin-bottom: 5px; }
+
 .wfcm-modal-header {
   display: -ms-flexbox;
   display: flex;

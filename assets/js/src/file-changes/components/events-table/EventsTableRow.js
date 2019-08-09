@@ -24,7 +24,14 @@ export default class EventsTableRow extends Component {
 					</span>
 				</td>
 				<td><input className="button-primary" type="button" value="Mark as Read" onClick={this.props.markEventAsRead.bind( this, event.id )} /></td>
-				<td><input className="button-secondary" type="button" value="Exclude" onClick={this.props.excludeEvent.bind( this, event.id )} /></td>
+				<td>
+					{
+						'file' === contentType ?
+						<input className="button-secondary wfcm-exclude-btn-file" type="button" value="Exclude File" onClick={this.props.excludeEvent.bind( this, event.id, 'file' )} /> :
+						null
+					}	
+					<input className="button-secondary wfcm-exclude-btn-directory" type="button" value="Exclude Directory" onClick={this.props.excludeEvent.bind( this, event.id, 'dir' )} />
+				</td>
 				<td>
 				{
 					'directory' === contentType ?

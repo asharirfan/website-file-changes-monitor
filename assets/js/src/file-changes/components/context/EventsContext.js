@@ -105,9 +105,10 @@ export class EventsProvider extends Component {
 	 * Add event to exclude list.
 	 *
 	 * @param {int} eventId Event id.
+	 * @param {string} excludeType Type of exclusion.
 	 */
-	async excludeEvent( eventId ) {
-		const response = await FileEvents.excludeEvent( eventId );
+	async excludeEvent( eventId, excludeType ) {
+		const response = await FileEvents.excludeEvent( eventId, excludeType );
 
 		if ( response.success ) {
 			this.getFileEvents();
