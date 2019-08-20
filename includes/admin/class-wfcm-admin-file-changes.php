@@ -257,7 +257,7 @@ class WFCM_Admin_File_Changes {
 					'modified' => (int) wfcm_get_setting( 'modified-per-page', false ),
 					'deleted'  => (int) wfcm_get_setting( 'deleted-per-page', false ),
 				),
-				'table'           => array(
+				'table'          => array(
 					'path'        => __( 'Path', 'website-file-changes-monitor' ),
 					'name'        => __( 'Name', 'website-file-changes-monitor' ),
 					'type'        => __( 'Type', 'website-file-changes-monitor' ),
@@ -298,6 +298,12 @@ class WFCM_Admin_File_Changes {
 					'stop'  => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$monitor_base . '/stop' ) ),
 				),
 				'dateTimeFormat' => $datetime_format,
+				'scanErrorModal' => array(
+					'heading' => __( 'Instant Scan Failed', 'website-file-changes-monitor' ),
+					/* Translators: Contact us hyperlink */
+					'body'    => sprintf( __( 'Oops! Something went wrong with the scan. Please %s for assistance.', 'website-file-changes-monitor' ), '<a href="https://www.wpwhitesecurity.com/support/" target="_blank">' . __( 'contact us', 'website-file-changes-monitor' ) . '</a>' ),
+					'dismiss' => __( 'Ok', 'website-file-changes-monitor' ),
+				),
 			)
 		);
 
