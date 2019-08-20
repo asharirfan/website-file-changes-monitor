@@ -132,4 +132,83 @@
     width: 100%;
     height: 400px;
     margin: 0; }
+  .wfcm-about-body .our-wordpress-plugins {
+    width: 100%;
+    max-width: 250px;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box; }
+  .wfcm-about-body .our-wordpress-plugins h3 {
+    font-size: 17px;
+    line-height: 28px;
+    color: #23282D;
+    font-weight: 500;
+    margin: 0;
+    padding: 15px 4px 0px;
+    text-align: center; }
+  .wfcm-about-body .our-wordpress-plugins ul {
+    list-style: none;
+    margin: 0;
+    padding: 20px 0 0;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap; }
+  .wfcm-about-body .our-wordpress-plugins ul li {
+    width: 100%;
+    margin-bottom: 20px; }
+  .wfcm-about-body .our-wordpress-plugins ul li .plugin-box {
+    width: 100%;
+    background: #F7F7F7;
+    border: 1px solid #D9D9D9; }
+  .wfcm-about-body .our-wordpress-plugins ul li .plugin-box .plugin-img img {
+    width: 100%;
+    display: block; }
+  .wfcm-about-body .plugin-desc {
+    padding: 20px 15px;
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 400;
+    color: #23282D;
+    text-align: center;
+    border-top: 1px solid #D9D9D9; }
+  .wfcm-about-body .our-wordpress-plugins h4 {
+    font-size: 16px;
+    line-height: 19px;
+    color: #23282D;
+    font-weight: 600;
+    margin: 0;
+    padding-bottom: 10px; }
+  .wfcm-about-body .plugin-desc p {
+    margin: 0 0 15px 0; }
+  .wfcm-about-body .cta-btn a {
+    font-size: 14px;
+    line-height: 24px;
+    color: #fff;
+    font-weight: 700;
+    background: #2B597A;
+    border-radius: 4px;
+    display: inline-block;
+    text-decoration: none;
+    padding: 5px 15px; }
+  .wfcm-about-body .our-wordpress-plugins.full {
+    width: 100%;
+    max-width: 700px; }
+  .wfcm-about-body .our-wordpress-plugins.full ul {
+    margin-left: -10px;
+    margin-right: -10px; }
+  .wfcm-about-body .our-wordpress-plugins.full ul li {
+    width: 33.3%;
+    padding: 0 10px;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box; }
+  .wfcm-about-body .our-wordpress-plugins.full ul li .plugin-box {
+    height: 100%; }
+  .wfcm-about-body .our-wordpress-plugins.side-bar {
+    margin-bottom: 30px; }
+  @media (max-width: 991px) {
+    .wfcm-about-body .our-wordpress-plugins.full ul li {
+      width: 100%;
+      max-width: 255px;
+      margin: 0 auto;
+      margin-bottom: 20px; } }
 
