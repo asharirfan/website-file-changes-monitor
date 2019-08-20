@@ -326,6 +326,10 @@ $disabled = ! $settings['enabled'] ? 'disabled' : false;
 								<input type="button" class="button button-secondary" id="wfcm-scan-stop" value="<?php esc_attr_e( 'Stop Scan', 'website-file-changes-monitor' ); ?>" disabled>
 							<?php endif; ?>
 						</fieldset>
+						<div id="wfcm-scan-response" class="hidden">
+							<?php /* Translators: Contact us hyperlink */ ?>
+							<p><?php echo sprintf( esc_html__( 'Oops! Something went wrong with the scan. Please %s for assistance.', 'website-file-changes-monitor' ), '<a href="https://www.wpwhitesecurity.com/support/" target="_blank">' . esc_html__( 'contact us', 'website-file-changes-monitor' ) . '</a>' ); ?></p>
+						</div>
 					</td>
 				</tr>
 			</tbody>
