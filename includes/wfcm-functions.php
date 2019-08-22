@@ -500,6 +500,7 @@ function wfcm_get_time_format() {
  * Send file changes email.
  *
  * @param array $scan_changes_count - Array of changes count.
+ * @return bool
  */
 function wfcm_send_changes_email( $scan_changes_count ) {
 	$send_mail       = false;
@@ -565,6 +566,8 @@ function wfcm_send_changes_email( $scan_changes_count ) {
 	if ( $send_mail ) {
 		WFCM_Email::send( $admin_email, $subject, $body );
 	}
+
+	return $send_mail;
 }
 
 /**

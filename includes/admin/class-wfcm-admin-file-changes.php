@@ -63,13 +63,13 @@ class WFCM_Admin_File_Changes {
 	 */
 	public static function add_messages() {
 		// Get file limits message setting.
-		$monitor_limits_msgs = wfcm_get_setting( 'admin-notices', array() );
+		$admin_notices = wfcm_get_setting( 'admin-notices', array() );
 
-		if ( ! empty( $monitor_limits_msgs ) ) {
-			if ( isset( $monitor_limits_msgs['files-limit'] ) && ! empty( $monitor_limits_msgs['files-limit'] ) ) {
+		if ( ! empty( $admin_notices ) ) {
+			if ( isset( $admin_notices['files-limit'] ) && ! empty( $admin_notices['files-limit'] ) ) {
 				// Append strong tag to each directory name.
 				$dirs = array_reduce(
-					$monitor_limits_msgs['files-limit'],
+					$admin_notices['files-limit'],
 					function( $dirs, $dir ) {
 						array_push( $dirs, "<li><strong>$dir</strong></li>" );
 						return $dirs;
@@ -87,10 +87,10 @@ class WFCM_Admin_File_Changes {
 				self::add_message( 'files-limit', 'warning', $msg );
 			}
 
-			if ( isset( $monitor_limits_msgs['filesize-limit'] ) && ! empty( $monitor_limits_msgs['filesize-limit'] ) ) {
+			if ( isset( $admin_notices['filesize-limit'] ) && ! empty( $admin_notices['filesize-limit'] ) ) {
 				// Append strong tag to each directory name.
 				$files = array_reduce(
-					$monitor_limits_msgs['filesize-limit'],
+					$admin_notices['filesize-limit'],
 					function( $files, $file ) {
 						array_push( $files, "<li><strong>$file</strong></li>" );
 						return $files;
@@ -106,6 +106,21 @@ class WFCM_Admin_File_Changes {
 				$msg .= '<ul>' . implode( '', $files ) . '</ul>';
 
 				self::add_message( 'filesize-limit', 'warning', $msg );
+			}
+
+			if ( isset( $admin_notices['empty-scan'] ) && $admin_notices['empty-scan'] ) {
+				// Get last scan timestamp.
+				$last_scan = wfcm_get_setting( 'last-scan-timestamp', false );
+
+				if ( $last_scan ) {
+					$datetime_format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+					$last_scan       = $last_scan + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
+					$last_scan       = date( $datetime_format, $last_scan );
+
+					/* Translators: Date and time */
+					$msg = '<p>' . sprintf( __( 'There were no file changes detected during the last file scan, which ran on %s.', 'website-file-changes-monitor' ), $last_scan ) . '</p>';
+					self::add_message( 'empty-scan', 'info', $msg );
+				}
 			}
 		}
 	}
@@ -180,7 +195,7 @@ class WFCM_Admin_File_Changes {
 		$wfcm_dependencies = array();
 		$datetime_format   = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 		$last_scan_time    = wfcm_get_setting( 'last-scan-timestamp', false );
-		$last_scan_time    = $last_scan_time + ( get_option( 'gmt_offset' ) * 60 * 60 );
+		$last_scan_time    = $last_scan_time + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
 		$last_scan_time    = date( $datetime_format, $last_scan_time );
 
 		wp_enqueue_style(
