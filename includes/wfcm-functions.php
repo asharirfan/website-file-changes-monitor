@@ -347,11 +347,16 @@ function wfcm_install() {
 				wfcm_save_setting( 'admin-notices', array( 'wsal' => true ) );
 
 				// Get instance of WSAL.
-				$wsal            = WpSecurityAuditLog::GetInstance();
+				$wsal = WpSecurityAuditLog::GetInstance();
+
+				// Set excluded post types in WSAL.
 				$excluded_cpts   = $wsal->GetGlobalOption( 'custom-post-types', '' );
 				$excluded_cpts   = explode( ',', $excluded_cpts );
 				$excluded_cpts[] = 'wfcm_file_event';
 				$wsal->settings->set_excluded_post_types( $excluded_cpts );
+
+				// Disable file changes scan of WSAL.
+				$wsal->SetGlobalOption( 'scan-file-changes', 'disable' );
 			}
 		}
 	}
