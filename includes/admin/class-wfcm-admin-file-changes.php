@@ -47,14 +47,16 @@ class WFCM_Admin_File_Changes {
 	/**
 	 * Add admin message.
 	 *
-	 * @param string $key     - Message key.
-	 * @param string $type    - Type of message.
-	 * @param string $message - Admin message.
+	 * @param string $key         - Message key.
+	 * @param string $type        - Type of message.
+	 * @param string $message     - Admin message.
+	 * @param bool   $dismissible - Notice is dismissible or not.
 	 */
-	public static function add_message( $key, $type, $message ) {
+	public static function add_message( $key, $type, $message, $dismissible = true ) {
 		self::$messages[ $key ] = array(
-			'type'    => $type,
-			'message' => $message,
+			'type'        => $type,
+			'message'     => $message,
+			'dismissible' => $dismissible,
 		);
 	}
 
@@ -123,6 +125,18 @@ class WFCM_Admin_File_Changes {
 				}
 			}
 		}
+
+		// Add permalink structure notice.
+		$permalink_structure = get_option( 'permalink_structure', false );
+
+		if ( ! $permalink_structure ) {
+			$msg = '<p>' . sprintf(
+				/* Translators: %s: Website permalink settings hyperlink. */
+				__( 'It seems that your permalinks are not configured. Please %s for the plugin to display the file changes.', 'website-file-changes-monitor' ),
+				'<a href="' . admin_url( 'options-permalink.php' ) . '">' . __( 'configure them', 'website-file-changes-monitor' ) . '</a>'
+			) . '</p>';
+			self::add_message( 'permalink-notice', 'error', $msg, false );
+		}
 	}
 
 	/**
@@ -131,9 +145,12 @@ class WFCM_Admin_File_Changes {
 	public static function show_messages() {
 		if ( ! empty( self::$messages ) ) {
 			$messages = apply_filters( 'wfcm_admin_file_changes_messages', self::$messages );
+
 			foreach ( $messages as $key => $notice ) :
+				$classes  = 'notice notice-' . $notice['type'] . ' wfcm-admin-notice';
+				$classes .= $notice['dismissible'] ? ' is-dismissible' : '';
 				?>
-				<div id="wfcm-admin-notice-<?php echo esc_attr( $key ); ?>" class="notice notice-<?php echo esc_attr( $notice['type'] ); ?> wfcm-admin-notice is-dismissible">
+				<div id="wfcm-admin-notice-<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $classes ); ?>">
 					<?php echo wp_kses( $notice['message'], self::$allowed_html ); ?>
 				</div>
 				<?php
