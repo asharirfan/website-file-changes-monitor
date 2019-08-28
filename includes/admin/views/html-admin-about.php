@@ -12,19 +12,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 $plugins_data = array(
 	array(
 		'img'  => trailingslashit( WFCM_BASE_URL ) . 'assets/img/about/wp-security-audit-log-img.jpg',
-		'desc' => __( 'Keep a log of users & under the hood activity on WordPress', 'wp-security-audit-log' ),
+		'desc' => __( 'Keep a log of users & under the hood activity on WordPress', 'website-file-changes-monitor' ),
 		'alt'  => 'WP Security Audit Log',
 		'link' => 'https://www.wpsecurityauditlog.com/?utm_source=plugin&utm_medium=wsal&utm_campaign=xpromo',
 	),
 	array(
 		'img'  => trailingslashit( WFCM_BASE_URL ) . 'assets/img/about/password-policy-manager.jpg',
-		'desc' => __( 'Enforce strong password policies on WordPress', 'wp-security-audit-log' ),
+		'desc' => __( 'Enforce strong password policies on your WordPress websites', 'website-file-changes-monitor' ),
 		'alt'  => 'Password Policy Manager',
 		'link' => 'https://www.wpwhitesecurity.com/wordpress-plugins/password-policy-manager-wordpress/?utm_source=plugin&utm_medium=wsal&utm_campaign=xpromo',
 	),
 	array(
 		'img'  => trailingslashit( WFCM_BASE_URL ) . 'assets/img/about/activity-log-for-mainwp.jpg',
-		'desc' => __( 'See the child sites activity logs from the central MainWP dashboard', 'wp-security-audit-log' ),
+		'desc' => __( 'See the child sites activity logs from the central MainWP dashboard', 'website-file-changes-monitor' ),
 		'alt'  => 'Activity Log for MainWP',
 		'link' => 'https://www.wpsecurityauditlog.com/activity-log-mainwp-extension/?utm_source=plugin&utm_medium=wsal&utm_campaign=xpromo',
 	),

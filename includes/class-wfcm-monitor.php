@@ -1201,7 +1201,7 @@ class WFCM_Monitor {
 			if ( ! $changes ) {
 				$admin_notices['empty-scan'] = true; // Set scan ready notice to true because there are no file changes.
 			} else {
-				$admin_notices['empty-scan'] = false; // Set scan ready notice to true because there are file changes.
+				$admin_notices['empty-scan'] = false; // Set scan ready notice to false because there are file changes.
 			}
 
 			// Save admin notices.
