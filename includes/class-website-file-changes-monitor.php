@@ -114,7 +114,14 @@ final class Website_File_Changes_Monitor {
 	public function redirect_on_activation() {
 		if ( wfcm_get_setting( 'redirect-on-activate', false ) ) {
 			wfcm_delete_setting( 'redirect-on-activate' );
-			$redirect_url = add_query_arg( 'page', 'wfcm-file-changes', admin_url( 'admin.php' ) );
+
+			// Check for multisite.
+			if ( is_multisite() ) {
+				$redirect_url = add_query_arg( 'page', 'wfcm-file-changes', network_admin_url( 'admin.php' ) );
+			} else {
+				$redirect_url = add_query_arg( 'page', 'wfcm-file-changes', admin_url( 'admin.php' ) );
+			}
+
 			wp_safe_redirect( $redirect_url );
 			exit();
 		}
