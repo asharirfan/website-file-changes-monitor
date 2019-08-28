@@ -1195,16 +1195,17 @@ class WFCM_Monitor {
 			// Delete changes count for this scan.
 			$this->scan_changes_count( 'delete' );
 
+			// Get admin notices.
+			$admin_notices = wfcm_get_setting( 'admin-notices', array() );
+
 			if ( ! $changes ) {
-				// Get admin notices.
-				$admin_notices = wfcm_get_setting( 'admin-notices', array() );
-
-				// Set scan ready notice to true.
-				$admin_notices['empty-scan'] = true;
-
-				// Save admin notices.
-				wfcm_save_setting( 'admin-notices', $admin_notices );
+				$admin_notices['empty-scan'] = true; // Set scan ready notice to true because there are no file changes.
+			} else {
+				$admin_notices['empty-scan'] = false; // Set scan ready notice to true because there are file changes.
 			}
+
+			// Save admin notices.
+			wfcm_save_setting( 'admin-notices', $admin_notices );
 
 			// Check if the option is instance of stdClass.
 			if ( false !== $site_content && $site_content instanceof stdClass ) {
