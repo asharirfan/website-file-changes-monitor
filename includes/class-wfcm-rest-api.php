@@ -116,6 +116,11 @@ class WFCM_REST_API {
 						'default'     => false,
 						'description' => __( 'Whether to exclude the content in future scans or not', 'website-file-changes-monitor' ),
 					),
+					'excludeType' => array(
+						'type'        => 'string',
+						'default'     => 'file',
+						'description' => __( 'The type of exclusion, i.e., file or directory.', 'website-file-changes-monitor' ),
+					),
 				),
 			)
 		);
@@ -256,9 +261,10 @@ class WFCM_REST_API {
 		}
 
 		// Get request body to check if event is excluded.
-		$request_body = $rest_request->get_body();
-		$request_body = json_decode( $request_body );
-		$is_excluded  = isset( $request_body->exclude ) ? $request_body->exclude : false;
+		$request_body  = $rest_request->get_body();
+		$request_body  = json_decode( $request_body );
+		$is_excluded   = isset( $request_body->exclude ) ? $request_body->exclude : false;
+		$excluded_type = isset( $request_body->excludeType ) ? $request_body->excludeType : false;
 
 		if ( $is_excluded ) {
 			// Get event content type.
@@ -266,9 +272,21 @@ class WFCM_REST_API {
 			$content_type = $event->get_content_type();
 
 			if ( 'file' === $content_type ) {
-				$excluded_content   = wfcm_get_setting( 'scan-exclude-files', array() );
-				$excluded_content[] = basename( $event->get_event_title() );
-				wfcm_save_setting( 'scan-exclude-files', $excluded_content );
+				$excluded_setting = 'scan-exclude-files';
+
+				if ( 'dir' === $excluded_type ) {
+					$excluded_setting = 'scan-exclude-dirs';
+				}
+
+				$excluded_content = wfcm_get_setting( $excluded_setting, array() );
+
+				if ( 'dir' === $excluded_type ) {
+					$excluded_content[] = dirname( $event->get_event_title() );
+				} else {
+					$excluded_content[] = basename( $event->get_event_title() );
+				}
+
+				wfcm_save_setting( $excluded_setting, $excluded_content );
 			} elseif ( 'directory' === $content_type ) {
 				$excluded_content   = wfcm_get_setting( 'scan-exclude-dirs', array() );
 				$excluded_content[] = $event->get_event_title();

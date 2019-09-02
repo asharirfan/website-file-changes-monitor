@@ -1184,7 +1184,7 @@ class WFCM_Monitor {
 			}
 
 			// Send email notification.
-			wfcm_send_changes_email( $this->scan_changes_count );
+			$changes = wfcm_send_changes_email( $this->scan_changes_count );
 
 			// Log the time when WFCM sends the scan email.
 			if ( $this->scan_settings['debug-logging'] ) {
@@ -1194,6 +1194,18 @@ class WFCM_Monitor {
 
 			// Delete changes count for this scan.
 			$this->scan_changes_count( 'delete' );
+
+			// Get admin notices.
+			$admin_notices = wfcm_get_setting( 'admin-notices', array() );
+
+			if ( ! $changes ) {
+				$admin_notices['empty-scan'] = true; // Set scan ready notice to true because there are no file changes.
+			} else {
+				$admin_notices['empty-scan'] = false; // Set scan ready notice to false because there are file changes.
+			}
+
+			// Save admin notices.
+			wfcm_save_setting( 'admin-notices', $admin_notices );
 
 			// Check if the option is instance of stdClass.
 			if ( false !== $site_content && $site_content instanceof stdClass ) {

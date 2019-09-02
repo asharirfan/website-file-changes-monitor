@@ -99,7 +99,7 @@ $wp_directories = wfcm_get_server_directories( 'display' );
 
 $wp_directories = apply_filters( 'wfcm_file_changes_scan_directories', $wp_directories );
 
-$disabled = 'no' === $settings['enabled'] ? 'disabled' : false;
+$disabled = ! $settings['enabled'] ? 'disabled' : false;
 ?>
 
 <div class="wrap wfcm-settings">
@@ -326,22 +326,32 @@ $disabled = 'no' === $settings['enabled'] ? 'disabled' : false;
 								<input type="button" class="button button-secondary" id="wfcm-scan-stop" value="<?php esc_attr_e( 'Stop Scan', 'website-file-changes-monitor' ); ?>" disabled>
 							<?php endif; ?>
 						</fieldset>
+						<div id="wfcm-scan-response" class="hidden">
+							<?php /* Translators: Contact us hyperlink */ ?>
+							<p><?php echo sprintf( esc_html__( 'Oops! Something went wrong with the scan. Please %s for assistance.', 'website-file-changes-monitor' ), '<a href="https://www.wpwhitesecurity.com/support/" target="_blank">' . esc_html__( 'contact us', 'website-file-changes-monitor' ) . '</a>' ); ?></p>
+						</div>
 					</td>
 				</tr>
 			</tbody>
 		</table>
 		<!-- / Instant Scan -->
 
-		<h3><?php esc_html_e( 'Enable File Scanning', 'website-file-changes-monitor' ); ?></h3>
-		<p class="description"><?php esc_html_e( 'Use this switch to temporarily disable file scanning. When you disable and re-enable file scanning the plugin will report all the file changes it identifies when it compares the files between the last scan before it was scanning was disabled and the first scan when it was enabled.', 'website-file-changes-monitor' ); ?></p>
+		<h3><?php esc_html_e( 'Temporarily disable file scanning', 'website-file-changes-monitor' ); ?></h3>
+		<p class="description"><?php esc_html_e( 'Use the below switch to disable file scanning. When you disable and re-enable scanning, the plugin will compare the file scan to those of the last scan before it was disabled.', 'website-file-changes-monitor' ); ?></p>
 		<table class="form-table">
 			<tr>
-				<th><label for="wfcm-file-changes"><?php esc_html_e( 'Keep a Log of File Changes', 'website-file-changes-monitor' ); ?></label></th>
+				<th><label for="wfcm-file-changes"><?php esc_html_e( 'File Scanning', 'website-file-changes-monitor' ); ?></label></th>
 				<td>
 					<fieldset>
-						<label><input name="wfcm-settings[keep-log]" type="radio" value="yes" <?php checked( $settings['enabled'], 'yes' ); ?>><?php esc_html_e( 'Yes', 'website-file-changes-monitor' ); ?></label>
-						<br>
-						<label><input name="wfcm-settings[keep-log]" type="radio" value="no" <?php checked( $settings['enabled'], 'no' ); ?>><?php esc_html_e( 'No', 'website-file-changes-monitor' ); ?></label>
+						<?php esc_html_e( 'Off', 'website-file-changes-monitor' ); ?>
+						<div class="wfcm-toggle">
+							<label for="wfcm-toggle__switch-keep-log">
+								<input type="checkbox" id="wfcm-toggle__switch-keep-log" name="wfcm-settings[keep-log]" value="yes" <?php checked( $settings['enabled'], 'yes' ); ?>>
+								<span class="wfcm-toggle__switch"></span>
+								<span class="wfcm-toggle__toggle"></span>
+							</label>
+						</div>
+						<?php esc_html_e( 'On', 'website-file-changes-monitor' ); ?>
 					</fieldset>
 				</td>
 			</tr>

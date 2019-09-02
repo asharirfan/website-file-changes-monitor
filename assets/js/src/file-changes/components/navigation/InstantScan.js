@@ -2,6 +2,7 @@
  * Instant Scan.
  */
 import React, { Component } from 'react';
+import ScanErrorModal from '../modal/ScanErrorModal';
 
 export default class InstantScan extends Component {
 
@@ -10,6 +11,7 @@ export default class InstantScan extends Component {
 
 		this.state = {
 			scanning: false,
+			scanFailed: false,
 			scanBtnValue: wfcmFileChanges.instantScan.scanNow,
 			lastScanTimestamp: wfcmFileChanges.instantScan.lastScanTime
 		};
@@ -25,7 +27,6 @@ export default class InstantScan extends Component {
 		});
 
 		const response = await this.props.startInstantScan();
-		console.log( response );
 
 		if ( response ) {
 			this.setState({
@@ -34,7 +35,10 @@ export default class InstantScan extends Component {
 				lastScanTimestamp: response
 			});
 		} else {
-			this.setState({ scanBtnValue: wfcmFileChanges.instantScan.scanFailed });
+			this.setState({
+				scanFailed: true,
+				scanBtnValue: wfcmFileChanges.instantScan.scanFailed
+			});
 		}
 	}
 
@@ -47,8 +51,13 @@ export default class InstantScan extends Component {
 				<input type="submit" className="button-primary" value={this.state.scanBtnValue} onClick={this.startScan.bind( this )} disabled={this.state.scanning} />
 				{
 					this.state.lastScanTimestamp ?
-					<span id="last-scan-timestamp">{wfcmFileChanges.instantScan.lastScan}: {this.state.lastScanTimestamp}</span> :
-					false
+						<span id="last-scan-timestamp">{wfcmFileChanges.instantScan.lastScan}: {this.state.lastScanTimestamp}</span> :
+						false
+				}
+				{
+					this.state.scanFailed ?
+						<ScanErrorModal /> :
+						null
 				}
 			</div>
 		);

@@ -284,6 +284,11 @@ function wfcm_get_events_for_js( $events ) {
 			$content_type  = $event->get_content_type();
 			$event_context = 'directory' === $content_type ? $event->get_event_context() : '';
 
+			$event_date      = $event->event_post->post_date;
+			$date_obj        = \DateTime::createFromFormat( 'Y-m-d H:i:s', $event_date );
+			$datetime_format = str_replace( array( '.$$$', '&\n\b\s\p;A' ), '', wfcm_get_datetime_format() );
+			$date_str        = $date_obj ? $date_obj->format( $datetime_format ) : '';
+
 			$js_events[] = (object) array(
 				'id'           => $event->get_event_id(),
 				'path'         => dirname( $event->get_event_title() ),
@@ -292,6 +297,7 @@ function wfcm_get_events_for_js( $events ) {
 				'contentType'  => ucwords( $content_type ),
 				'eventContext' => $event_context,
 				'checked'      => false,
+				'dateTime'     => $date_str,
 			);
 		}
 	}
@@ -341,11 +347,16 @@ function wfcm_install() {
 				wfcm_save_setting( 'admin-notices', array( 'wsal' => true ) );
 
 				// Get instance of WSAL.
-				$wsal            = WpSecurityAuditLog::GetInstance();
+				$wsal = WpSecurityAuditLog::GetInstance();
+
+				// Set excluded post types in WSAL.
 				$excluded_cpts   = $wsal->GetGlobalOption( 'custom-post-types', '' );
 				$excluded_cpts   = explode( ',', $excluded_cpts );
 				$excluded_cpts[] = 'wfcm_file_event';
 				$wsal->settings->set_excluded_post_types( $excluded_cpts );
+
+				// Disable file changes scan of WSAL.
+				$wsal->SetGlobalOption( 'scan-file-changes', 'disable' );
 			}
 		}
 	}
@@ -489,6 +500,7 @@ function wfcm_get_time_format() {
  * Send file changes email.
  *
  * @param array $scan_changes_count - Array of changes count.
+ * @return bool
  */
 function wfcm_send_changes_email( $scan_changes_count ) {
 	$send_mail       = false;
@@ -554,6 +566,8 @@ function wfcm_send_changes_email( $scan_changes_count ) {
 	if ( $send_mail ) {
 		WFCM_Email::send( $admin_email, $subject, $body );
 	}
+
+	return $send_mail;
 }
 
 /**

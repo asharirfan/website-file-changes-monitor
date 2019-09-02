@@ -28,14 +28,14 @@ export default class ScanModal extends Component {
 	 * Open modal.
 	 */
 	openModal() {
-		this.setState({modalIsOpen: true});
+		this.setState({ modalIsOpen: true });
 	}
 
 	/**
 	 * Close modal.
 	 */
 	closeModal() {
-		this.setState({modalIsOpen: false});
+		this.setState({ modalIsOpen: false });
 
 		const requestUrl = `${wfcmFileChanges.scanModal.adminAjax}?action=wfcm_dismiss_instant_scan_modal&security=${wfcmFileChanges.security}`;
 		let requestParams = { method: 'GET' };
@@ -46,7 +46,7 @@ export default class ScanModal extends Component {
 	 * Start the scan.
 	 */
 	async startScan( element ) {
-		this.setState({scanning: true});
+		this.setState({ scanning: true });
 		const targetElement = element.target;
 
 		const scanRequest = fileEvents.getRestRequestObject( 'GET', wfcmFileChanges.monitor.start );
@@ -73,34 +73,28 @@ export default class ScanModal extends Component {
 					<div className="wfcm-modal-header">
 						<span>
 							<img src={wfcmFileChanges.scanModal.logoSrc} alt="WFCM" className="logo" />
-							<h2>
-								{
-									! this.state.scanComplete ?
-									wfcmFileChanges.scanModal.scanNow :
-									wfcmFileChanges.scanModal.headingComplete
-								}
-							</h2>
+							<h2>{ ! this.state.scanComplete ? wfcmFileChanges.scanModal.scanNow : wfcmFileChanges.scanModal.headingComplete }</h2>
 						</span>
 					</div>
 					<div className="wfcm-modal-body">
 						<p>
 							{
 								! this.state.scanComplete ?
-								wfcmFileChanges.scanModal.initialMsg :
-								wfcmFileChanges.scanModal.afterScanMsg
+									wfcmFileChanges.scanModal.initialMsg :
+									wfcmFileChanges.scanModal.afterScanMsg
 							}
 						</p>
 						<p>
 							{
 								! this.state.scanComplete ?
-								<input type="button" className="button-primary" value={! this.state.scanning ? wfcmFileChanges.scanModal.scanNow : wfcmFileChanges.scanModal.scanning} onClick={this.startScan} disabled={this.state.scanning} /> :
-								<input type="button" className="button-primary" value={wfcmFileChanges.scanModal.ok} onClick={this.closeModal} />
+									<input type="button" className="button-primary" value={! this.state.scanning ? wfcmFileChanges.scanModal.scanNow : wfcmFileChanges.scanModal.scanning} onClick={this.startScan} disabled={this.state.scanning} /> :
+									<input type="button" className="button-primary" value={wfcmFileChanges.scanModal.ok} onClick={this.closeModal} />
 							}
 							&nbsp;
 							{
 								! this.state.scanComplete ?
-								<input type="button" className="button" value={wfcmFileChanges.scanModal.scanDismiss} onClick={this.closeModal} disabled={this.state.scanning} /> :
-								null
+									<input type="button" className="button" value={wfcmFileChanges.scanModal.scanDismiss} onClick={this.closeModal} disabled={this.state.scanning} /> :
+									null
 							}
 						</p>
 					</div>

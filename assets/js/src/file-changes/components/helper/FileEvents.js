@@ -63,11 +63,13 @@ async function markEventAsRead( id ) {
  * Exclude event from scanning.
  *
  * @param {integer} id Event id.
+ * @param {string} excludeType Type of exclusion.
  */
-async function excludeEvent( id ) {
+async function excludeEvent( id, excludeType ) {
 	const requestUrl = `${wfcmFileChanges.fileEvents.delete}/${id}`;
 	const requestBody = JSON.stringify({
-		exclude: true
+		exclude: true,
+		excludeType: excludeType
 	});
 	const request = getRestRequestObject( 'DELETE', requestUrl, requestBody );
 

@@ -45,11 +45,14 @@
 	.column-content-type {
 		width: 12%;
 	}
+	.column-event-datetime {
+		width: 13%;
+	}
 	.column-event-action {
-		width: 12%;
+		width: 85px;
 	}
 	.column-event-exclude {
-		width: 14%;
+		width: 120px;
 	}
 	.column-event-content {
 		width: 25px;
@@ -87,6 +90,10 @@
 				width: 23px;
 				height: 23px;
 			}
+		}
+
+		.wfcm-exclude-btn-file {
+			margin-right: 5px;
 		}
 	}
 }
@@ -137,4 +144,28 @@
 	display: inline-block;
 	vertical-align: top;
 	margin: 4px 9px;
+}
+
+.wfcm-action-button {
+	display: inline-block;
+	vertical-align: middle;
+	background: no-repeat;
+	border: none;
+	cursor: pointer;
+	padding: 0;
+	color: #444444;
+
+	.dashicons {
+		width: 27px;
+		height: 27px;
+		font-size: 27px;
+	}
+}
+
+#wfcm-file-changes-view {
+	.tablenav {
+		.actions {
+			padding: 0 0 1px;
+		}
+	}
 }

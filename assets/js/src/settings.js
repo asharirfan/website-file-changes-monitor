@@ -12,6 +12,7 @@ window.addEventListener( 'load', function() {
 	const excludeRemove = document.querySelectorAll( '.wfcm-files-container .remove' );
 	const manualScanStart = $( '#wfcm-scan-start' );
 	const manualScanStop = $( '#wfcm-scan-stop' );
+	const manualScanResponse = $( '#wfcm-scan-response' );
 
 	// Frequency handler.
 	frequencySelect.addEventListener( 'change', function() {
@@ -107,14 +108,14 @@ window.addEventListener( 'load', function() {
 		let removedValues = [];
 
 		for ( let index = 0; index < excludeItems.length; index++ ) {
-			if ( ! excludeItems[ index ].checked ) {
-				removedValues.push( excludeItems[ index ].value );
+			if ( ! excludeItems[index].checked ) {
+				removedValues.push( excludeItems[index].value );
 			}
 		}
 
 		if ( removedValues.length ) {
 			for ( let index = 0; index < removedValues.length; index++ ) {
-				let excludeItem = $( 'input[value="' + removedValues[ index ] + '"]' );
+				let excludeItem = $( 'input[value="' + removedValues[index] + '"]' );
 				if ( excludeItem ) {
 					excludeItem.parentNode.remove();
 				}
@@ -125,7 +126,7 @@ window.addEventListener( 'load', function() {
 	// Update settings state when keep log options change.
 	[ ...keepLog ].forEach( toggle => {
 		toggle.addEventListener( 'change', function() {
-			toggleSettings( this.value );
+			toggleSettings( toggle.checked );
 		});
 	});
 
@@ -138,7 +139,7 @@ window.addEventListener( 'load', function() {
 		const settingFields = [ ...document.querySelectorAll( '.wfcm-table fieldset' ) ];
 
 		settingFields.forEach( setting => {
-			if ( 'no' === settingValue ) {
+			if ( ! settingValue ) {
 				setting.disabled = true;
 			} else {
 				setting.disabled = false;
@@ -153,6 +154,8 @@ window.addEventListener( 'load', function() {
 		e.target.value = wfcmSettingsData.scanButtons.scanning; // eslint-disable-line no-undef
 		e.target.disabled = true;
 		manualScanStop.disabled = false;
+		manualScanResponse.classList.add( 'hidden' ); // Hide the notice.
+		manualScanResponse.classList.remove( 'notice', 'notice-error' ); // Remove notice html classes.
 
 		// Rest request object.
 		const request = new Request( wfcmSettingsData.monitor.start, { // eslint-disable-line no-undef
@@ -168,15 +171,22 @@ window.addEventListener( 'load', function() {
 			.then( data => {
 				if ( data ) {
 					e.target.value = wfcmSettingsData.scanButtons.scanNow; // eslint-disable-line no-undef
-					e.target.disabled = false;
-					manualScanStop.disabled = true;
+				} else {
+					e.target.value = wfcmSettingsData.scanButtons.scanFailed; // eslint-disable-line no-undef
+					manualScanResponse.classList.add( 'notice', 'notice-error' );
+					manualScanResponse.classList.remove( 'hidden' );
 				}
+
+				e.target.disabled = false;
+				manualScanStop.disabled = true;
 			})
 			.catch( error => {
 				e.target.value = wfcmSettingsData.scanButtons.scanFailed; // eslint-disable-line no-undef
 				e.target.disabled = false;
 				manualScanStop.disabled = true;
 				console.log( error ); // eslint-disable-line no-console
+				manualScanResponse.classList.add( 'notice', 'notice-error' );
+				manualScanResponse.classList.remove( 'hidden' );
 			});
 	});
 

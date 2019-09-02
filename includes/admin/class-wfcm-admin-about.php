@@ -62,7 +62,8 @@ class WFCM_Admin_About {
 	 * @return string
 	 */
 	public static function get_page_url() {
-		return add_query_arg( 'page', 'wfcm-about', admin_url( 'admin.php' ) );
+		$admin_url = is_multisite() ? network_admin_url( 'admin.php' ) : admin_url( 'admin.php' );
+		return add_query_arg( 'page', 'wfcm-about', $admin_url );
 	}
 
 	/**

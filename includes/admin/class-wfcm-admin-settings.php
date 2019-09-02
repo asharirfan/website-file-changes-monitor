@@ -99,6 +99,10 @@ class WFCM_Admin_Settings {
 	public static function save() {
 		check_admin_referer( 'wfcm-save-admin-settings' );
 
+		if ( ! isset( $_POST['wfcm-settings']['keep-log'] ) ) {
+			$_POST['wfcm-settings']['keep-log'] = false;
+		}
+
 		if ( isset( $_POST['wfcm-settings'] ) ) {
 			$wfcm_settings = $_POST['wfcm-settings']; // @codingStandardsIgnoreLine
 
@@ -110,7 +114,7 @@ class WFCM_Admin_Settings {
 				'delete-data'        => false,
 				'debug-logging'      => false,
 			);
-			$wfcm_settings    = 'no' !== $wfcm_settings['keep-log'] ? wp_parse_args( $wfcm_settings, $exclude_settings ) : $wfcm_settings;
+			$wfcm_settings    = 'yes' === $wfcm_settings['keep-log'] ? wp_parse_args( $wfcm_settings, $exclude_settings ) : $wfcm_settings;
 
 			foreach ( $wfcm_settings as $key => $value ) {
 				if ( is_array( $value ) ) {

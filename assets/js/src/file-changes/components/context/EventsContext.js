@@ -34,10 +34,12 @@ export class EventsProvider extends Component {
 		this.setState({ selectAll: ! this.state.selectAll }); // Change the state of select all.
 
 		// Change states of every event.
-		this.setState({ events: this.state.events.map( event => {
-			event.checked = ! this.state.selectAll;
-			return event;
-		}) });
+		this.setState({
+			events: this.state.events.map( event => {
+				event.checked = ! this.state.selectAll;
+				return event;
+			})
+		});
 	}
 
 	/**
@@ -48,11 +50,13 @@ export class EventsProvider extends Component {
 	selectEvent( id ) {
 		let allSelected = true;
 
-		this.setState({ events: this.state.events.map( event => {
-			event.checked = event.id === id ? ! event.checked : event.checked;
-			allSelected = event.checked && allSelected ? allSelected : false;
-			return event;
-		}) });
+		this.setState({
+			events: this.state.events.map( event => {
+				event.checked = event.id === id ? ! event.checked : event.checked;
+				allSelected = event.checked && allSelected ? allSelected : false;
+				return event;
+			})
+		});
 
 		if ( allSelected ) {
 			this.setState({ selectAll: true });
@@ -101,9 +105,10 @@ export class EventsProvider extends Component {
 	 * Add event to exclude list.
 	 *
 	 * @param {int} eventId Event id.
+	 * @param {string} excludeType Type of exclusion.
 	 */
-	async excludeEvent( eventId ) {
-		const response = await FileEvents.excludeEvent( eventId );
+	async excludeEvent( eventId, excludeType ) {
+		const response = await FileEvents.excludeEvent( eventId, excludeType );
 
 		if ( response.success ) {
 			this.getFileEvents();
@@ -133,6 +138,8 @@ export class EventsProvider extends Component {
 				}
 			}
 		}
+
+		this.setState({ selectAll: false });
 	}
 
 	/**

@@ -54,17 +54,7 @@ class WFCM_Admin {
 			array(
 				'wsal' => array(
 					'type'    => 'warning',
-					'message' => sprintf(
-						/* Translators: WordPress file scanning hyperlink */
-						__( 'The plugin WP Security Audit Log which is installed on this website also does file changes scanning. To avoid duplicate scans, please disable file scanning from the %s.', 'website-file-changes-monitor' ),
-						'<a href="' . add_query_arg(
-							array(
-								'page' => 'wsal-settings',
-								'tab'  => 'file-changes',
-							),
-							admin_url( 'admin.php' )
-						) . '">' . __( 'plugin\'s settings', 'website-file-changes-monitor' ) . '</a>'
-					),
+					'message' => __( 'The Website File Changes Monitor plugin disabled file scanning on the WP Security Audit Log plugin to avoid duplicate processes. Questions?', 'website-file-changes-monitor' ) . ' <a href="mailto:info@wpwhitesecurity.com" target="_blank">' . __( 'Contact us.', 'website-file-changes-monitor' ) . '</a>',
 				),
 			)
 		);
@@ -84,6 +74,12 @@ class WFCM_Admin {
 	 * Show plugin admin notices (if any).
 	 */
 	public function show_admin_notices() {
+		if ( ! is_multisite() && ! current_user_can( 'manage_options' ) ) {
+			return;
+		} elseif ( is_multisite() && ! is_super_admin() ) {
+			return;
+		}
+
 		// Get admin notices option.
 		$admin_notices = wfcm_get_setting( 'admin-notices', array() );
 

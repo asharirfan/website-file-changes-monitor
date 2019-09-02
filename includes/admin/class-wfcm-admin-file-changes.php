@@ -47,14 +47,16 @@ class WFCM_Admin_File_Changes {
 	/**
 	 * Add admin message.
 	 *
-	 * @param string $key     - Message key.
-	 * @param string $type    - Type of message.
-	 * @param string $message - Admin message.
+	 * @param string $key         - Message key.
+	 * @param string $type        - Type of message.
+	 * @param string $message     - Admin message.
+	 * @param bool   $dismissible - Notice is dismissible or not.
 	 */
-	public static function add_message( $key, $type, $message ) {
+	public static function add_message( $key, $type, $message, $dismissible = true ) {
 		self::$messages[ $key ] = array(
-			'type'    => $type,
-			'message' => $message,
+			'type'        => $type,
+			'message'     => $message,
+			'dismissible' => $dismissible,
 		);
 	}
 
@@ -63,13 +65,13 @@ class WFCM_Admin_File_Changes {
 	 */
 	public static function add_messages() {
 		// Get file limits message setting.
-		$monitor_limits_msgs = wfcm_get_setting( 'admin-notices', array() );
+		$admin_notices = wfcm_get_setting( 'admin-notices', array() );
 
-		if ( ! empty( $monitor_limits_msgs ) ) {
-			if ( isset( $monitor_limits_msgs['files-limit'] ) && ! empty( $monitor_limits_msgs['files-limit'] ) ) {
+		if ( ! empty( $admin_notices ) ) {
+			if ( isset( $admin_notices['files-limit'] ) && ! empty( $admin_notices['files-limit'] ) ) {
 				// Append strong tag to each directory name.
 				$dirs = array_reduce(
-					$monitor_limits_msgs['files-limit'],
+					$admin_notices['files-limit'],
 					function( $dirs, $dir ) {
 						array_push( $dirs, "<li><strong>$dir</strong></li>" );
 						return $dirs;
@@ -87,10 +89,10 @@ class WFCM_Admin_File_Changes {
 				self::add_message( 'files-limit', 'warning', $msg );
 			}
 
-			if ( isset( $monitor_limits_msgs['filesize-limit'] ) && ! empty( $monitor_limits_msgs['filesize-limit'] ) ) {
+			if ( isset( $admin_notices['filesize-limit'] ) && ! empty( $admin_notices['filesize-limit'] ) ) {
 				// Append strong tag to each directory name.
 				$files = array_reduce(
-					$monitor_limits_msgs['filesize-limit'],
+					$admin_notices['filesize-limit'],
 					function( $files, $file ) {
 						array_push( $files, "<li><strong>$file</strong></li>" );
 						return $files;
@@ -107,6 +109,33 @@ class WFCM_Admin_File_Changes {
 
 				self::add_message( 'filesize-limit', 'warning', $msg );
 			}
+
+			if ( isset( $admin_notices['empty-scan'] ) && $admin_notices['empty-scan'] ) {
+				// Get last scan timestamp.
+				$last_scan = wfcm_get_setting( 'last-scan-timestamp', false );
+
+				if ( $last_scan ) {
+					$datetime_format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+					$last_scan       = $last_scan + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
+					$last_scan       = date( $datetime_format, $last_scan );
+
+					/* Translators: Date and time */
+					$msg = '<p>' . sprintf( __( 'There were no file changes detected during the last file scan, which ran on %s.', 'website-file-changes-monitor' ), $last_scan ) . '</p>';
+					self::add_message( 'empty-scan', 'info', $msg );
+				}
+			}
+		}
+
+		// Add permalink structure notice.
+		$permalink_structure = get_option( 'permalink_structure', false );
+
+		if ( ! $permalink_structure ) {
+			$msg = '<p>' . sprintf(
+				/* Translators: %s: Website permalink settings hyperlink. */
+				__( 'It seems that your permalinks are not configured. Please %s for the plugin to display the file changes.', 'website-file-changes-monitor' ),
+				'<a href="' . admin_url( 'options-permalink.php' ) . '">' . __( 'configure them', 'website-file-changes-monitor' ) . '</a>'
+			) . '</p>';
+			self::add_message( 'permalink-notice', 'error', $msg, false );
 		}
 	}
 
@@ -116,9 +145,12 @@ class WFCM_Admin_File_Changes {
 	public static function show_messages() {
 		if ( ! empty( self::$messages ) ) {
 			$messages = apply_filters( 'wfcm_admin_file_changes_messages', self::$messages );
+
 			foreach ( $messages as $key => $notice ) :
+				$classes  = 'notice notice-' . $notice['type'] . ' wfcm-admin-notice';
+				$classes .= $notice['dismissible'] ? ' is-dismissible' : '';
 				?>
-				<div id="wfcm-admin-notice-<?php echo esc_attr( $key ); ?>" class="notice notice-<?php echo esc_attr( $notice['type'] ); ?> wfcm-admin-notice is-dismissible">
+				<div id="wfcm-admin-notice-<?php echo esc_attr( $key ); ?>" class="<?php echo esc_attr( $classes ); ?>">
 					<?php echo wp_kses( $notice['message'], self::$allowed_html ); ?>
 				</div>
 				<?php
@@ -164,7 +196,8 @@ class WFCM_Admin_File_Changes {
 	 * @return string
 	 */
 	public static function get_page_url() {
-		return add_query_arg( 'page', 'wfcm-file-changes', admin_url( 'admin.php' ) );
+		$admin_url = is_multisite() ? network_admin_url( 'admin.php' ) : admin_url( 'admin.php' );
+		return add_query_arg( 'page', 'wfcm-file-changes', $admin_url );
 	}
 
 	/**
@@ -179,7 +212,7 @@ class WFCM_Admin_File_Changes {
 		$wfcm_dependencies = array();
 		$datetime_format   = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 		$last_scan_time    = wfcm_get_setting( 'last-scan-timestamp', false );
-		$last_scan_time    = $last_scan_time + ( get_option( 'gmt_offset' ) * 60 * 60 );
+		$last_scan_time    = $last_scan_time + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
 		$last_scan_time    = date( $datetime_format, $last_scan_time );
 
 		wp_enqueue_style(
@@ -257,12 +290,15 @@ class WFCM_Admin_File_Changes {
 					'deleted'  => (int) wfcm_get_setting( 'deleted-per-page', false ),
 				),
 				'table'          => array(
-					'path'       => __( 'Path', 'website-file-changes-monitor' ),
-					'name'       => __( 'Name', 'website-file-changes-monitor' ),
-					'type'       => __( 'Type', 'website-file-changes-monitor' ),
-					'markAsRead' => __( 'Mark as Read', 'website-file-changes-monitor' ),
-					'exclude'    => __( 'Exclude from scans', 'website-file-changes-monitor' ),
-					'noEvents'   => __( 'No file changes detected!', 'website-file-changes-monitor' ),
+					'path'        => __( 'Path', 'website-file-changes-monitor' ),
+					'name'        => __( 'Name', 'website-file-changes-monitor' ),
+					'type'        => __( 'Type', 'website-file-changes-monitor' ),
+					'markAsRead'  => __( 'Mark as Read', 'website-file-changes-monitor' ),
+					'exclude'     => __( 'Exclude from scans', 'website-file-changes-monitor' ),
+					'dateTime'    => __( 'Date', 'website-file-changes-monitor' ),
+					'noEvents'    => __( 'No file changes detected!', 'website-file-changes-monitor' ),
+					'excludeFile' => __( 'Exclude File', 'website-file-changes-monitor' ),
+					'excludeDir'  => __( 'Exclude Directory', 'website-file-changes-monitor' ),
 				),
 				'monitor'        => array(
 					'start' => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$monitor_base . '/start' ) ),
@@ -294,6 +330,12 @@ class WFCM_Admin_File_Changes {
 					'stop'  => esc_url_raw( rest_url( WFCM_REST_NAMESPACE . WFCM_REST_API::$monitor_base . '/stop' ) ),
 				),
 				'dateTimeFormat' => $datetime_format,
+				'scanErrorModal' => array(
+					'heading' => __( 'Instant Scan Failed', 'website-file-changes-monitor' ),
+					/* Translators: Contact us hyperlink */
+					'body'    => sprintf( __( 'Oops! Something went wrong with the scan. Please %s for assistance.', 'website-file-changes-monitor' ), '<a href="https://www.wpwhitesecurity.com/support/" target="_blank">' . __( 'contact us', 'website-file-changes-monitor' ) . '</a>' ),
+					'dismiss' => __( 'Ok', 'website-file-changes-monitor' ),
+				),
 			)
 		);
 
