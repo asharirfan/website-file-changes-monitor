@@ -6,7 +6,7 @@ License URI: http://www.gnu.org/licenses/gpl.html
 Tags: file monitor, file integrity scanner, file checker, file scanner, file security, security, file changes, file changes scanner
 Requires at least: 4.5
 Tested up to: 5.2.2
-Stable tag: 1.2
+Stable tag: 1.3
 Requires PHP: 5.6.20
 
 Get alerted via email of file changes on your WordPress sites & boost security. No false positives!
@@ -133,15 +133,24 @@ Yes you can, but before installing it please install and activate the [REST API 
 
 == Changelog ==
 
-= 1.2 (2019-06-22) =
+= 1.3 (2019-09-04) =
 
 * **New features**
-	* Scan Now button added to main plugin interface.
-	* Setting to enable scan debug logs (to help troubleshooting support issues).
+	* Added the timestamp of when the file change was detected. The date and time format used are those configured in WordPress.
+	* Option to exclude all the directory from [file integrity monitoring](https://www.wpwhitesecurity.com/wordpress-file-integrity-scanning-site/) when a file change is detected in that directory.
+	* New notification to alert user of no file changes during last scan (serves as a confirmation that the scan ran).
+	* Setting to enable debug logs which can be used to troubleshoot technical problems.
+	* Setting to delete all plugin data upon uninstall.
 	
 * **Improvement**
-	* Improved the detection of plugins installed via zip file (not from repo).
-	* Improved alert for when WSAL is also installed on the same website.
+	* Added a user notification for when the permalinks are not configured. Plugin requires permalinks to display the file changes.
+	* Updated / improved some of the settings text.
+	* Excluding the upgrade directory from file integrity monitoring by default.
+	* Plugin now reports actual error when the scan fails (previously there were no notifications).
+	* Upon install, plugin automatically disables file integrity monitoring on [WP Security Audit Log](https://www.wpsecurityauditlog.com/ plugin if installed.
+	
+* **Bug fixes**
+	* Select all checkbox not reset after used for bulk selection.
 	
 = Earlier versions =
 
