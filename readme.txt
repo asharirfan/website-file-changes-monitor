@@ -147,7 +147,7 @@ Yes you can, but before installing it please install and activate the [REST API 
 	* Updated / improved some of the settings text.
 	* Excluding the upgrade directory from file integrity monitoring by default.
 	* Plugin now reports actual error when the scan fails (previously there were no notifications).
-	* Upon install, plugin automatically disables file integrity monitoring on [WP Security Audit Log](https://www.wpsecurityauditlog.com/ plugin if installed.
+	* Upon install, plugin automatically disables file integrity monitoring on [WP Security Audit Log](https://www.wpsecurityauditlog.com/) plugin if installed.
 	
 * **Bug fixes**
 	* Select all checkbox not reset after used for bulk selection.
