@@ -19,7 +19,7 @@ final class Website_File_Changes_Monitor {
 	 *
 	 * @var string
 	 */
-	public $version = '1.2';
+	public $version = '1.3';
 
 	/**
 	 * Single instance of the plugin.
