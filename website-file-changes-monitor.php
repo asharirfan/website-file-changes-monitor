@@ -5,7 +5,7 @@
  * Description: A hassle-free way to get alerted of file changes on your WordPress site & boost security.
  * Author: WP White Security
  * Contributors: WP White Security
- * Version: 1.2
+ * Version: 1.3
  * Text Domain: website-file-changes-monitor
  * Author URI: http://www.wpwhitesecurity.com/
  * License: GPL3
