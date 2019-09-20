@@ -23,7 +23,7 @@ Use the [Website File Changes Monitor plugin](https://www.wpwhitesecurity.com/we
 
 #### Maintained & Supported by WP White Security
 
-WP White Security builds high-quality niche WordPress security & admin plugins like [WP Security Audit Log](https://www.wpsecurityauditlog.com/), the #1 WordPress activity log plugin. Browse our list of [WordPress plugins](https://www.wpwhitesecurity.com/wordpress-plugins/ that help you better manage and improve the security of your WordPress website.
+WP White Security builds high-quality niche WordPress security & admin plugins like [WP Security Audit Log](https://www.wpsecurityauditlog.com/), the #1 WordPress activity log plugin. Browse our list of [WordPress plugins](https://www.wpwhitesecurity.com/wordpress-plugins/) that help you better manage and improve the security of your WordPress website.
 
 ### Why Do You Need a Website File Changes Monitor?
 
