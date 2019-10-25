@@ -2,10 +2,10 @@
 Contributors: WPWhiteSecurity, robert681
 Plugin URI: https://www.wpwhitesecurity.com/
 License: GPLv3
-License URI: http://www.gnu.org/licenses/gpl.html
+License URI: https://www.gnu.org/licenses/gpl.html
 Tags: file monitor, file integrity scanner, file checker, file scanner, file security, security, file changes, file changes scanner
 Requires at least: 4.5
-Tested up to: 5.2.2
+Tested up to: 5.3
 Stable tag: 1.3
 Requires PHP: 5.6.20
 
@@ -19,11 +19,11 @@ Identify leftover files that can lead to sensitive business & technical data exp
 
 Everyone who owns a WordPress website knows how difficult it is to manage the site's files. Leftover backup and source code files are very common, and they are the number one source of sensitive data breaches. Also, in case of a successful hack attack it is almost impossible to detect the infiltration and identify all the source code changes!
 
-Use the [Website File Changes Monitor plugin](https://www.wpwhitesecurity.com/website-file-changes-monitor/) to easily get alerted via email and spot leftover files, injected malware and code changes! Remove files that could leave you expose and clean malware infections at the earliest possible.
+Use the [Website File Changes Monitor plugin](https://www.wpwhitesecurity.com/website-file-changes-monitor/?utm_source=wordpress.org&utm_medium=referral&utm_campaign=WFCM&utm_content=plugin+repos+description) to easily get alerted via email and spot leftover files, injected malware and code changes! Remove files that could leave you expose and clean malware infections at the earliest possible.
 
 #### Maintained & Supported by WP White Security
 
-WP White Security builds high-quality niche WordPress security & admin plugins like [WP Security Audit Log](https://www.wpsecurityauditlog.com/), the #1 WordPress activity log plugin. Browse our list of [WordPress plugins](https://www.wpwhitesecurity.com/wordpress-plugins/) that help you better manage and improve the security of your WordPress website.
+WP White Security builds high-quality niche WordPress security & admin plugins like [WP Security Audit Log](https://www.wpsecurityauditlog.com/?utm_source=wordpress.org&utm_medium=referral&utm_campaign=all+plugins&utm_content=plugin+repos+description), the #1 WordPress activity log plugin. Browse our list of [WordPress plugins](https://www.wpwhitesecurity.com/wordpress-plugins/?utm_source=wordpress.org&utm_medium=referral&utm_campaign=all+plugins&utm_content=plugin+repos+description) that help you better manage and improve the security of your WordPress website.
 
 ### Why Do You Need a Website File Changes Monitor?
 
@@ -92,16 +92,16 @@ The Website File Changes Monitor plugin can also detect file changes on WordPres
 Support for the WordPress Files Monitor plugin is available for free via:
 
 * [forums](https://wordpress.org/support/plugins/website-file-changes-monitor/)
-* [email](https://www.wpwhitesecurity.com/support/)
+* [email](https://www.wpwhitesecurity.com/support/?utm_source=wordpress.org&utm_medium=referral&utm_campaign=all+plugins&utm_content=plugin+repos+description)
 
-For any other queries, feedback, or if you simply want to get in touch with us please use our [contact form](https://www.wpwhitesecurity.com/contact-wp-white-security/).
+For any other queries, feedback, or if you simply want to get in touch with us please use our [contact form](https://www.wpwhitesecurity.com/contact-wp-white-security/?utm_source=wordpress.org&utm_medium=referral&utm_campaign=all+plugins&utm_content=plugin+repos+description).
 
 ### Further Reading & Information
-The Website File Changes Monitor plugin is developed by [WP White Security](https://www.wpwhitesecurity.com/), developers of niche WordPress security and admin plugins, including [WP Security Audit Log](https://wordpress.org/plugins/wp-security-audit-log/), the most comprehensive WordPress activity log plugin.
+The Website File Changes Monitor plugin is developed by [WP White Security](https://www.wpwhitesecurity.com/?utm_source=wordpress.org&utm_medium=referral&utm_campaign=all+plugins&utm_content=plugin+repos+description), developers of niche WordPress security and admin plugins, including [WP Security Audit Log](https://wordpress.org/plugins/wp-security-audit-log/), the most comprehensive WordPress activity log plugin.
 
-* We often share our thoughts on the [WP White Security Blog](https://www.wpwhitesecurity.com/blog/)
-* Learn more on [file integrity monitoring for WordPress sites](https://www.wpwhitesecurity.com/wordpress-file-integrity-scanning-site/)
-* Read the [Website File Changes Monitor plugin page](https://www.wpwhitesecurity.com/website-file-changes-monitor/) for more technical details.
+* We often share our thoughts on the [WP White Security Blog](https://www.wpwhitesecurity.com/blog/?utm_source=wordpress.org&utm_medium=referral&utm_campaign=all+plugins&utm_content=plugin+repos+description)
+* Learn more on [file integrity monitoring for WordPress sites](https://www.wpwhitesecurity.com/wordpress-file-integrity-scanning-site/?utm_source=wordpress.org&utm_medium=referral&utm_campaign=all+plugins&utm_content=plugin+repos+description)
+* Read the [Website File Changes Monitor plugin page](https://www.wpwhitesecurity.com/website-file-changes-monitor/?utm_source=wordpress.org&utm_medium=referral&utm_campaign=WFCM&utm_content=plugin+repos+description) for more technical details.
 
 == Installation ==
 
